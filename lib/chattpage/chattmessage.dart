@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'dart:io';
+
 class ChattMessage extends StatefulWidget {
   final String receiverEmail;
   final String receiverId;
@@ -156,17 +157,6 @@ class _ChattMessageState extends State<ChattMessage> {
     }
   }
 
-  // Test Cloudinary connection
-  Future<void> _testCloudinaryConnection() async {
-    try {
-      print("[CLOUDINARY TEST] Upload Preset: chattphoto");
-      _showCustomSnackBar("Cloudinary configured", Icons.cloud, Colors.blue);
-    } catch (e) {
-      print("[CLOUDINARY TEST ERROR] $e");
-      _showCustomSnackBar("Cloudinary configuration error", Icons.error, Colors.red);
-    }
-  }
-
   void _showCustomSnackBar(String message, IconData icon, Color color) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -184,17 +174,12 @@ class _ChattMessageState extends State<ChattMessage> {
       ),
     );
   }
-
-  // Build each message bubble
   Widget _buildMessageItem(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     bool isMe = data['senderId'] == _firebaseAuth.currentUser!.uid;
     Timestamp timestamp = data['timestamp'] ?? Timestamp.now();
     DateTime time = timestamp.toDate();
-
-    // Check if message is an image (URL starting with http)
     bool isImage = data['message'].toString().startsWith("http");
-
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
       child: Row(
@@ -202,33 +187,13 @@ class _ChattMessageState extends State<ChattMessage> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           if (!isMe) ...[
-            // Receiver's profile photo
-            StreamBuilder<DocumentSnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection("Usersstore")
-                  .doc(data['senderId'])
-                  .snapshots(),
-              builder: (context, userSnapshot) {
-                String? senderPhotoUrl;
-                if (userSnapshot.hasData && userSnapshot.data!.exists) {
-                  final userData = userSnapshot.data!.data() as Map<String, dynamic>?;
-                  senderPhotoUrl = userData?['photoUrl'] as String?;
-                }
-                
-                return CircleAvatar(
-                  backgroundColor: Colors.grey[300],
-                  radius: 14,
-                  backgroundImage: senderPhotoUrl != null && senderPhotoUrl.isNotEmpty
-                      ? NetworkImage(senderPhotoUrl)
-                      : null,
-                  child: senderPhotoUrl == null || senderPhotoUrl.isEmpty
-                      ? Text(
-                          data['senderEmail'][0].toUpperCase(),
-                          style: const TextStyle(fontSize: 10, color: Colors.black54),
-                        )
-                      : null,
-                );
-              },
+            CircleAvatar(
+              backgroundColor: Colors.grey[300],
+              radius: 14,
+              child: Text(
+                data['senderEmail'][0].toUpperCase(),
+                style: const TextStyle(fontSize: 10, color: Colors.black54),
+              ),
             ),
             const SizedBox(width: 8),
           ],
@@ -336,41 +301,19 @@ class _ChattMessageState extends State<ChattMessage> {
           ),
           if (isMe) ...[
             const SizedBox(width: 8),
-            // Current user's profile photo
-            StreamBuilder<DocumentSnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection("Usersstore")
-                  .doc(_firebaseAuth.currentUser!.uid)
-                  .snapshots(),
-              builder: (context, userSnapshot) {
-                String? currentUserPhotoUrl;
-                if (userSnapshot.hasData && userSnapshot.data!.exists) {
-                  final userData = userSnapshot.data!.data() as Map<String, dynamic>?;
-                  currentUserPhotoUrl = userData?['photoUrl'] as String?;
-                }
-                
-                return CircleAvatar(
-                  backgroundColor: Colors.blue[200],
-                  radius: 14,
-                  backgroundImage: currentUserPhotoUrl != null && currentUserPhotoUrl.isNotEmpty
-                      ? NetworkImage(currentUserPhotoUrl)
-                      : null,
-                  child: currentUserPhotoUrl == null || currentUserPhotoUrl.isEmpty
-                      ? Text(
-                          _firebaseAuth.currentUser!.email![0].toUpperCase(),
-                          style: const TextStyle(fontSize: 10, color: Colors.white),
-                        )
-                      : null,
-                );
-              },
+            CircleAvatar(
+              backgroundColor: Colors.blue[200],
+              radius: 14,
+              child: Text(
+                _firebaseAuth.currentUser!.email![0].toUpperCase(),
+                style: const TextStyle(fontSize: 10, color: Colors.white),
+              ),
             ),
           ],
         ],
       ),
     );
   }
-
-  // Stream messages
   Widget _buildMessageList() {
     return StreamBuilder<QuerySnapshot>(
       stream: _chattservices.GetMessage(widget.receiverId, _firebaseAuth.currentUser!.uid),
@@ -384,8 +327,6 @@ class _ChattMessageState extends State<ChattMessage> {
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return _buildEmptyWidget();
         }
-
-        // Sort messages by timestamp in ascending order (oldest first)
         var sortedDocs = snapshot.data!.docs.toList()
           ..sort((a, b) {
             Timestamp timestampA = a['timestamp'] ?? Timestamp.now();
@@ -404,7 +345,6 @@ class _ChattMessageState extends State<ChattMessage> {
       },
     );
   }
-
   Widget _buildErrorWidget(String message) {
     return Center(
       child: Column(
@@ -421,7 +361,6 @@ class _ChattMessageState extends State<ChattMessage> {
       ),
     );
   }
-
   Widget _buildLoadingWidget() {
     return const Center(
       child: Column(
@@ -451,23 +390,25 @@ class _ChattMessageState extends State<ChattMessage> {
       ),
     );
   }
-
-  // Last seen / online status
   Widget _buildLastSeen() {
     return StreamBuilder<DocumentSnapshot>(
       stream: FirebaseFirestore.instance.collection("Usersstore").doc(widget.receiverId).snapshots(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData || !snapshot.data!.exists) {
+        if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) {
           return const Text(
             "Offline",
             style: TextStyle(fontSize: 12, color: Colors.white70),
           );
         }
-
-        var userDoc = snapshot.data!;
-        var isOnline = userDoc["isOnline"] ?? false;
-        var lastSeen = userDoc["lastseen"];
-
+        if (!snapshot.data!.exists) {
+          return const Text(
+            "Offline",
+            style: TextStyle(fontSize: 12, color: Colors.white70),
+          );
+        }
+        final data = snapshot.data!.data() as Map<String, dynamic>;
+        final isOnline = data["isOnline"] ?? false;
+        final lastSeen = data["lastseen"];
         if (isOnline == true) {
           return Row(
             mainAxisSize: MainAxisSize.min,
@@ -501,7 +442,6 @@ class _ChattMessageState extends State<ChattMessage> {
       },
     );
   }
-
   String _formatLastSeen(DateTime lastSeen) {
     final now = DateTime.now();
     final difference = now.difference(lastSeen);
@@ -512,10 +452,8 @@ class _ChattMessageState extends State<ChattMessage> {
     if (difference.inDays == 1) return "1 day ago";
     if (difference.inDays < 7) return "${difference.inDays} days ago";
     if (difference.inDays < 30) return "${(difference.inDays / 7).floor()} weeks ago";
-    
     return "a long time ago";
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -527,37 +465,17 @@ class _ChattMessageState extends State<ChattMessage> {
         ),
         title: Row(
           children: [
-            // Receiver's profile photo
-            StreamBuilder<DocumentSnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection("Usersstore")
-                  .doc(widget.receiverId)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                String? receiverPhotoUrl;
-                if (snapshot.hasData && snapshot.data!.exists) {
-                  final data = snapshot.data!.data() as Map<String, dynamic>?;
-                  receiverPhotoUrl = data?['photoUrl'] as String?;
-                }
-                
-                return CircleAvatar(
-                  backgroundColor: Colors.white,
-                  radius: 16,
-                  backgroundImage: receiverPhotoUrl != null && receiverPhotoUrl.isNotEmpty
-                      ? NetworkImage(receiverPhotoUrl)
-                      : null,
-                  child: receiverPhotoUrl == null || receiverPhotoUrl.isEmpty
-                      ? Text(
-                          widget.receiverEmail[0].toUpperCase(),
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      : null,
-                );
-              },
+            CircleAvatar(
+              backgroundColor: Colors.white,
+              radius: 16,
+              child: Text(
+                widget.receiverEmail[0].toUpperCase(),
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.blue.shade700,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -585,73 +503,10 @@ class _ChattMessageState extends State<ChattMessage> {
         iconTheme: const IconThemeData(color: Colors.white),
         toolbarTextStyle: const TextStyle(color: Colors.white),
         titleTextStyle: const TextStyle(color: Colors.white),
-        actions: [
-          // Current user's profile photo in app bar
-          StreamBuilder<DocumentSnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection("Usersstore")
-                .doc(_firebaseAuth.currentUser!.uid)
-                .snapshots(),
-            builder: (context, snapshot) {
-              String? currentUserPhotoUrl;
-              if (snapshot.hasData && snapshot.data!.exists) {
-                final data = snapshot.data!.data() as Map<String, dynamic>?;
-                currentUserPhotoUrl = data?['photoUrl'] as String?;
-              }
-              
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CircleAvatar(
-                  radius: 16,
-                  backgroundColor: Colors.white,
-                  backgroundImage: currentUserPhotoUrl != null && currentUserPhotoUrl.isNotEmpty
-                      ? NetworkImage(currentUserPhotoUrl)
-                      : null,
-                  child: currentUserPhotoUrl == null || currentUserPhotoUrl.isEmpty
-                      ? Text(
-                          _firebaseAuth.currentUser!.email![0].toUpperCase(),
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      : null,
-                ),
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.cloud, color: Colors.white),
-            onPressed: _testCloudinaryConnection,
-            tooltip: "Test Cloudinary",
-          ),
-        ],
       ),
       body: Column(
         children: [
           Expanded(child: _buildMessageList()),
-
-          // Upload indicator
-          if (_isUploading) ...[
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              color: Colors.blue[50],
-              child: Row(
-                children: [
-                  const SizedBox(width: 8),
-                  const CircularProgressIndicator(strokeWidth: 2),
-                  const SizedBox(width: 12),
-                  Text(
-                    "Uploading to Cloudinary...",
-                    style: TextStyle(color: Colors.blue[700], fontSize: 14),
-                  ),
-                ],
-              ),
-            ),
-          ],
-
-          // Input field
           Container(
             margin: const EdgeInsets.all(16),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -668,14 +523,12 @@ class _ChattMessageState extends State<ChattMessage> {
             ),
             child: Row(
               children: [
-                // Image picker button
+                
                 IconButton(
                   icon: Icon(Icons.image, color: Colors.blue[600]),
                   onPressed: _isUploading ? null : _pickAndUploadImage,
-                  tooltip: "Upload image to Cloudinary",
                 ),
                 
-                // Message text field
                 Expanded(
                   child: TextField(
                     controller: _messageController,
@@ -689,8 +542,6 @@ class _ChattMessageState extends State<ChattMessage> {
                     onSubmitted: (value) => _sendMessage(),
                   ),
                 ),
-                
-                // Send button
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.blue[600],
@@ -703,14 +554,12 @@ class _ChattMessageState extends State<ChattMessage> {
                 ),
               ],
             ),
-          ),
+          )
         ],
       ),
     );
   }
 }
-
-// Upload Confirmation Dialog
 class UploadConfirmationDialog extends StatelessWidget {
   final String imagePath;
 

@@ -11,11 +11,11 @@ class CloudinaryService {
   // Upload single image using HTTP
   Future<String?> uploadImage(File imageFile, {String folder = 'agricultural_items'}) async {
     try {
-      print('🚀 Starting Cloudinary upload for: ${imageFile.path}');
+   //   print('🚀 Starting Cloudinary upload for: ${imageFile.path}');
       
       // Check if file exists
       if (!await imageFile.exists()) {
-        print('❌ File does not exist');
+      //  print('❌ File does not exist');
         return null;
       }
 
@@ -34,7 +34,7 @@ class CloudinaryService {
         imageFile.path,
       ));
 
-      print('📤 Sending request to Cloudinary...');
+     // print('📤 Sending request to Cloudinary...');
       
       // Send the request with timeout
       var response = await request.send().timeout(const Duration(seconds: 30));
@@ -43,20 +43,20 @@ class CloudinaryService {
       var responseBody = await response.stream.bytesToString();
       var jsonResponse = json.decode(responseBody);
       
-      print('📥 Cloudinary Response Status: ${response.statusCode}');
+      //print('📥 Cloudinary Response Status: ${response.statusCode}');
       
       if (response.statusCode == 200) {
         String imageUrl = jsonResponse['secure_url'];
-        print('✅ Image uploaded successfully!');
-        print('🔗 URL: $imageUrl');
+       // print('✅ Image uploaded successfully!');
+        //print('🔗 URL: $imageUrl');
         return imageUrl;
       } else {
-        print('❌ Upload failed with status: ${response.statusCode}');
-        print('Error details: ${jsonResponse['error']}');
+        //print('❌ Upload failed with status: ${response.statusCode}');
+        //print('Error details: ${jsonResponse['error']}');
         return null;
       }
     } catch (e) {
-      print('❌ Cloudinary upload error: $e');
+      //print('❌ Cloudinary upload error: $e');
       return null;
     }
   }

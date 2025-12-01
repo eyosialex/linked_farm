@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+
 class AgriculturalItem {
   String? id;
   String name;
@@ -9,11 +11,9 @@ class AgriculturalItem {
   String unit;
   String condition;
   List<String>? imageUrls;
-
-  // Change location from String to Map
-  Map<String, double>? location; // {'lat': 9.026202, 'lng': 9.026202}
-
+  Map<String, double>? location;
   String sellerName;
+  String sellerId;
   String contactInfo;
   DateTime? availableFrom;
   bool deliveryAvailable;
@@ -34,6 +34,7 @@ class AgriculturalItem {
     this.imageUrls,
     required this.location,
     required this.sellerName,
+    required this.sellerId,
     required this.contactInfo,
     this.availableFrom,
     this.deliveryAvailable = false,
@@ -54,8 +55,9 @@ class AgriculturalItem {
       'unit': unit,
       'condition': condition,
       'imageUrls': imageUrls,
-      'location': location, // store as map directly
+      'location': location,
       'sellerName': sellerName,
+      'sellerId': sellerId,
       'contactInfo': contactInfo,
       'availableFrom': availableFrom?.toIso8601String(),
       'deliveryAvailable': deliveryAvailable,
@@ -84,6 +86,7 @@ class AgriculturalItem {
         'lng': (locData['lng'] ?? 0.0).toDouble(),
       },
       sellerName: data['sellerName'] ?? '',
+      sellerId: data['sellerId'] ?? '',
       contactInfo: data['contactInfo'] ?? '',
       availableFrom: data['availableFrom'] != null
           ? DateTime.parse(data['availableFrom'])
@@ -93,5 +96,65 @@ class AgriculturalItem {
       createdAt: DateTime.parse(data['createdAt']),
       updatedAt: DateTime.parse(data['updatedAt']),
     );
+  }
+
+  AgriculturalItem copyWith({
+    String? name,
+    String? category,
+    String? subcategory,
+    String? description,
+    double? price,
+    int? quantity,
+    String? unit,
+    String? condition,
+    List<String>? imageUrls,
+    Map<String, double>? location,
+    String? sellerName,
+    String? sellerId,
+    String? contactInfo,
+    DateTime? availableFrom,
+    bool? deliveryAvailable,
+    List<String>? tags,
+  }) {
+    return AgriculturalItem(
+      id: id,
+      name: name ?? this.name,
+      category: category ?? this.category,
+      subcategory: subcategory ?? this.subcategory,
+      description: description ?? this.description,
+      price: price ?? this.price,
+      quantity: quantity ?? this.quantity,
+      unit: unit ?? this.unit,
+      condition: condition ?? this.condition,
+      imageUrls: imageUrls ?? this.imageUrls,
+      location: location ?? this.location,
+      sellerName: sellerName ?? this.sellerName,
+      sellerId: sellerId ?? this.sellerId,
+      contactInfo: contactInfo ?? this.contactInfo,
+      availableFrom: availableFrom ?? this.availableFrom,
+      deliveryAvailable: deliveryAvailable ?? this.deliveryAvailable,
+      tags: tags ?? this.tags,
+      createdAt: createdAt,
+      updatedAt: DateTime.now(),
+    );
+  }
+
+  bool get isAvailable {
+    if (availableFrom == null) return true;
+    return DateTime.now().isAfter(availableFrom!);
+  }
+
+  String get formattedPrice {
+    return 'ETB $price per $unit';
+  }
+
+  String get locationString {
+    if (location == null) return 'Location not specified';
+    return 'Lat: ${location!['lat']?.toStringAsFixed(4)}, Lng: ${location!['lng']?.toStringAsFixed(4)}';
+  }
+
+  bool get isCurrentUserSeller {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    return currentUser != null && currentUser.uid == sellerId;
   }
 }

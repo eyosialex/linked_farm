@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f5f5, #e8f5e8);
+        }
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #2e7d32;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        h2 {
+            color: #388e3c;
+            border-left: 5px solid #4caf50;
+            padding-left: 15px;
+            margin-top: 25px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .info-card {
+            background: #f1f8e9;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #4caf50;
+        }
+        .step {
+            background: #e3f2fd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #2196f3;
+        }
+        .warning {
+            background: #ffebee;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #f44336;
+            margin: 15px 0;
+        }
+        .tip {
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ff9800;
+            margin: 15px 0;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .variety-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .variety-card {
+            background: #fff8e1;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌾 Wheat Cultivation Guide</h1>
+        <p style="text-align: center; color: #666; font-style: italic;">Staple food crop for highland areas</p>
+        
+        <div class="info-grid">
+            <div class="info-card">
+                <h3>📅 Planting Season</h3>
+                <p><strong>Main season:</strong> Jun - Jul</p>
+                <p><strong>Late planting:</strong> Aug - Sep</p>
+            </div>
+            <div class="info-card">
+                <h3>🏔️ Altitude</h3>
+                <p><strong>Optimal:</strong> 1800-2800 masl</p>
+                <p><strong>Rainfall:</strong> 500-800 mm</p>
+            </div>
+            <div class="info-card">
+                <h3>⏱️ Growth Period</h3>
+                <p><strong>Duration:</strong> 120-150 days</p>
+                <p><strong>Yield:</strong> 2-4 tons/ha</p>
+            </div>
+        </div>
+
+        <h2>🌱 Planting Specifications</h2>
+        <div class="step">
+            <h3>Seed Requirements</h3>
+            <ul>
+                <li><strong>Seed rate:</strong> 100-150 kg/hectare</li>
+                <li><strong>Seed treatment:</strong> Fungicide recommended</li>
+                <li><strong>Spacing:</strong> 20-25 cm between rows</li>
+                <li><strong>Depth:</strong> 3-5 cm</li>
+                <li><strong>Method:</strong> Drilling or broadcasting</li>
+            </ul>
+        </div>
+
+        <h2>🎯 Recommended Varieties</h2>
+        <div class="variety-grid">
+            <div class="variety-card">
+                <h4>Kubsa</h4>
+                <p>High yield, bread quality</p>
+            </div>
+            <div class="variety-card">
+                <h4>Danda'a</h4>
+                <p>Disease resistant</p>
+            </div>
+            <div class="variety-card">
+                <h4>Digalu</h4>
+                <p>Stem rust resistant</p>
+            </div>
+            <div class="variety-card">
+                <h4>Local Landraces</h4>
+                <p>Adapted to specific areas</p>
+            </div>
+        </div>
+
+        <h2>🌿 Fertilization Program</h2>
+        <div class="info-grid">
+            <div class="info-card">
+                <h3>Basal Application</h3>
+                <p>DAP/NPK: 100-150 kg/ha</p>
+                <p>At planting time</p>
+            </div>
+            <div class="info-card">
+                <h3>Top Dressing</h3>
+                <p>Urea: 100-150 kg/ha</p>
+                <p>At tillering stage</p>
+            </div>
+            <div class="info-card">
+                <h3>Organic Option</h3>
+                <p>Compost: 5-10 tons/ha</p>
+                <p>Farmyard manure</p>
+            </div>
+        </div>
+
+        <h2>💧 Water Management</h2>
+        <ul>
+            <li><strong>Critical stages:</strong> Germination, tillering, flowering</li>
+            <li><strong>Rainfed:</strong> Dependent on seasonal rains</li>
+            <li><strong>Irrigated:</strong> 3-4 irrigations during dry spells</li>
+            <li><strong>Avoid:</strong> Waterlogging at all stages</li>
+        </ul>
+
+        <h2>🐛 Major Pests & Diseases</h2>
+        <div class="warning">
+            <h3>Common Problems</h3>
+            <ul>
+                <li><strong>Stem rust:</strong> Use resistant varieties</li>
+                <li><strong>Yellow rust:</strong> Fungicide application</li>
+                <li><strong>Septoria:</strong> Leaf spot disease</li>
+                <li><strong>Aphids:</strong> Vector for virus diseases</li>
+                <li><strong>Armyworms:</strong> Early detection critical</li>
+            </ul>
+        </div>
+
+        <h2>🌾 Growth Stages & Management</h2>
+        <div class="step">
+            <h3>Germination to Seedling</h3>
+            <ul>
+                <li><strong>Duration:</strong> 7-10 days</li>
+                <li><strong>Care:</strong> Ensure good seed-soil contact</li>
+                <li><strong>Protection:</strong> Birds and soil crusting</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h3>Tillering Stage</h3>
+            <ul>
+                <li><strong>Duration:</strong> 30-45 days after planting</li>
+                <li><strong>Management:</strong> Top dressing application</li>
+                <li><strong>Weed control:</strong> Critical at this stage</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h3>Heading to Flowering</h3>
+            <ul>
+                <li><strong>Duration:</strong> 70-90 days after planting</li>
+                <li><strong>Water needs:</strong> Critical for grain formation</li>
+                <li><strong>Disease watch:</strong> Rust and mildew</li>
+            </ul>
+        </div>
+
+        <h2>📅 Harvesting & Threshing</h2>
+        <div class="tip">
+            <h3>Harvest Indicators</h3>
+            <ul>
+                <li>Grains hard and difficult to dent with nail</li>
+                <li>Straw turns yellow and dries</li>
+                <li>Moisture content: 12-15%</li>
+                <li>Timely harvest prevents shattering</li>
+            </ul>
+        </div>
+
+        <ul>
+            <li><strong>Method:</strong> Cut close to ground or use combine</li>
+            <li><strong>Timing:</strong> Morning hours to reduce shattering</li>
+            <li><strong>Drying:</strong> Stack and dry for 3-7 days before threshing</li>
+            <li><strong>Threshing:</strong> Mechanical or traditional methods</li>
+            <li><strong>Storage:</strong> Clean, dry grains in rodent-proof bins</li>
+        </ul>
+
+        <h2>💰 Economic Considerations</h2>
+        <div class="info-grid">
+            <div class="info-card">
+                <h3>Input Costs</h3>
+                <p>Seeds, fertilizers, pesticides</p>
+                <p>Labor and machinery</p>
+            </div>
+            <div class="info-card">
+                <h3>Market Options</h3>
+                <p>Local markets</p>
+                <p>Food processing companies</p>
+            </div>
+            <div class="info-card">
+                <h3>Value Addition</h3>
+                <p>Flour production</p>
+                <p>Quality grading</p>
+            </div>
+        </div>
+
+        <div class="tip">
+            <h3>💡 Success Tip</h3>
+            <p>Use certified seeds and follow recommended planting dates for your specific altitude zone. Soil testing helps optimize fertilizer use.</p>
+        </div>
+    </div>
+</body>
+</html>

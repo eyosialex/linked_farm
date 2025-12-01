@@ -1,18 +1,27 @@
+import 'dart:math';
+
 import 'package:echat/home/homepages.dart';
 import 'package:echat/sell%20item/firestore.dart';
+import 'package:echat/show%20product%20items/locationcal.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:echat/sell%20item/sell_itemmodel.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:echat/chattpage/chattmessage.dart';
+import 'package:location/location.dart';
+
 // Product List Screen - Shows all products
 class ProductListScreen extends StatefulWidget {
   const ProductListScreen({super.key});
   @override
   State<ProductListScreen> createState() => _ProductListScreenState();
 }
+
 class _ProductListScreenState extends State<ProductListScreen> {
   final FirestoreService _firestoreService = FirestoreService();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late Stream<List<AgriculturalItem>> _productsStream;
   final TextEditingController _searchController = TextEditingController();
   final List<String> _categories = [
@@ -51,6 +60,44 @@ class _ProductListScreenState extends State<ProductListScreen> {
       
       return matchesSearch && matchesCategory;
     }).toList();
+  }
+
+  // Navigate to chat with seller
+  void _navigateToChat(AgriculturalItem product, BuildContext context) {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    
+    // Check if user is logged in
+    if (currentUser == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please log in to chat with seller'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+    
+    // Check if user is trying to chat with themselves
+    if (currentUser.uid == product.sellerId) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('You cannot chat with yourself'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+    
+    // Navigate to chat screen
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChattMessage(
+          receiverEmail: product.sellerName,
+          receiverId: product.sellerId,
+        ),
+      ),
+    );
   }
 
   @override
@@ -103,8 +150,6 @@ class _ProductListScreenState extends State<ProductListScreen> {
               ),
             ),
           ),
-          
-          // 📁 CATEGORY FILTER CHIPS
           SizedBox(
             height: 45,
             child: ListView.builder(
@@ -245,7 +290,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                     crossAxisCount: 2,
                     mainAxisSpacing: 5,
                     crossAxisSpacing: 5,
-                    childAspectRatio: 0.75,
+                    childAspectRatio: 0.65,
                   ),
                   padding: const EdgeInsets.all(8),
                   itemCount: filteredProducts.length,
@@ -263,6 +308,9 @@ class _ProductListScreenState extends State<ProductListScreen> {
   }
 
   Widget _buildProductCard(AgriculturalItem product, BuildContext context) {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final isSeller = currentUser?.uid == product.sellerId;
+
     return Card(
       elevation: 2,
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
@@ -270,7 +318,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
         borderRadius: BorderRadius.circular(16),
       ),
       child: InkWell(
-        onTap: () {
+        onDoubleTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -281,24 +329,24 @@ class _ProductListScreenState extends State<ProductListScreen> {
         borderRadius: BorderRadius.circular(16),
         child: Container(
           width: 200,
-          child: product.imageUrls != null && product.imageUrls!.isNotEmpty
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Image Section
-                    Stack(
-                      children: [
-                        Container(
-                          height: 140,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(16),
-                              topRight: Radius.circular(16),
-                            ),
-                            color: Colors.grey[100],
-                          ),
-                          child: ClipRRect(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Image Section
+              Stack(
+                children: [
+                  Container(
+                    height: 140,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(16),
+                        topRight: Radius.circular(16),
+                      ),
+                      color: Colors.grey[100],
+                    ),
+                    child: product.imageUrls != null && product.imageUrls!.isNotEmpty
+                        ? ClipRRect(
                             borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(16),
                               topRight: Radius.circular(16),
@@ -332,164 +380,226 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                 );
                               },
                             ),
+                          )
+                        : const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.image_not_supported_outlined,
+                                color: Colors.grey,
+                                size: 40,
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                'No Image',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                  ),
+                  // Favorite Button
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.9),
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: IconButton(
+                        onPressed: () {
+                          // Add to favorites logic
+                        },
+                        icon: const Icon(
+                          Icons.favorite_border,
+                          color: Colors.grey,
+                          size: 18,
+                        ),
+                        padding: EdgeInsets.zero,
+                        iconSize: 18,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              // Product Info Section
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Product Name
+                    Text(
+                      product.name,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                        height: 1.2,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 8),
+
+                    // Category and Price Row
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                product.category,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey[600],
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '${product.price} ETB',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
                           ),
                         ),
-                        // Favorite Button
-                        Positioned(
-                          top: 8,
-                          right: 8,
+                        GestureDetector(
+                          onTap: isSeller 
+                              ? null 
+                              : () => _navigateToChat(product, context),
                           child: Container(
-                            width: 32,
-                            height: 32,
+                            width: 36,
+                            height: 36,
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.9),
+                              color: isSeller ? Colors.grey[300] : Colors.blue[50],
                               shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: IconButton(
-                              onPressed: () {
-                                // Add to favorites logic
-                              },
-                              icon: const Icon(
-                                Icons.favorite_border,
-                                color: Colors.grey,
-                                size: 18,
+                              border: Border.all(
+                                color: isSeller ? Colors.grey[400]! : Colors.blue[100]!
                               ),
-                              padding: EdgeInsets.zero,
-                              iconSize: 18,
+                            ),
+                            child: Icon(
+                              Icons.person,
+                              size: 18,
+                              color: isSeller ? Colors.grey[600] : Colors.blue,
                             ),
                           ),
                         ),
                       ],
                     ),
-                    // Product Info Section
-                    Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Product Name
-                          Text(
-                            product.name,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black87,
-                              height: 1.2,
+                    const SizedBox(height: 8),
+
+                    // Rating and Location Row
+                    Row(
+                      children: [
+                        // Stars
+                        Row(
+                          children: List.generate(
+                            4,
+                            (index) => Padding(
+                              padding: const EdgeInsets.only(right: 2),
+                              child: Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                                size: 14,
+                              ),
                             ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
                           ),
-                          const SizedBox(height: 4),
-                          // Product Category/Type
-                          Text(
-                            product.category,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[600],
-                              fontWeight: FontWeight.w400,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            '${product.price} ETB',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Row(
+                        ),
+                        const SizedBox(width: 30),
+                        // Location
+                        Expanded(
+                          child: Row(
                             children: [
-                              Icon(Icons.star, color: Colors.amber, size: 14),
-                              const SizedBox(width: 2),
-                              Icon(Icons.star, color: Colors.amber, size: 14),
-                              const SizedBox(width: 2),
-                              Icon(Icons.star, color: Colors.amber, size: 14),
-                              const SizedBox(width: 2),
-                              Icon(Icons.star, color: Colors.amber, size: 14),
+                              Icon(
+                                Icons.chat_bubble_outline,
+                                size: 14,
+                                color: isSeller ? Colors.grey : Colors.blue[600],
+                              ),
+                              const SizedBox(width: 5),
+                              Expanded(
+                                child: Text(
+                                  isSeller ? 'Your Item' : 'Chat',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: isSeller ? Colors.grey : Colors.black,
+                                    fontWeight: isSeller ? FontWeight.normal : FontWeight.bold
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
                             ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+
+                    // Additional Info Row
+                    Row(
+                      children: [
+                        _buildInfoItem(Icons.inventory_2, '${product.quantity} ${product.unit}'),
+                        const SizedBox(width: 12),
+                        _buildInfoItem(Icons.verified, product.condition),
+                      ],
                     ),
                   ],
-                )
-              : _buildEmptyProductCard(),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildEmptyProductCard() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          height: 140,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(16),
-              topRight: Radius.circular(16),
+  Widget _buildInfoItem(IconData icon, String text) {
+    return Expanded(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: 12,
+            color: Colors.grey[600],
+          ),
+          const SizedBox(width: 4),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: 10,
+                color: Colors.grey[600],
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-            color: Colors.grey[200],
           ),
-          child: const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.image_not_supported_outlined,
-                color: Colors.grey,
-                size: 40,
-              ),
-              SizedBox(height: 8),
-              Text(
-                'No Image',
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 12,
-                ),
-              ),
-            ],
-          ),
-        ),
-        const Padding(
-          padding: EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Product Name',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                ),
-              ),
-              SizedBox(height: 4),
-              Text(
-                '\$0.00',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -505,10 +615,18 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   final FirestoreService _firestoreService = FirestoreService();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  
   AgriculturalItem? _item;
   bool _isLoading = true;
   String _errorMessage = '';
   LatLng? productLocation;
+  
+  // Delivery drivers data
+  List<Map<String, dynamic>> _nearbyDrivers = [];
+  bool _loadingDrivers = false;
+
   @override
   void initState() {
     super.initState();
@@ -529,6 +647,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               item.location!['lat']!,
               item.location!['lng']!,
             );
+            // Load nearby drivers when product location is available
+            _loadNearbyDrivers(item.location!['lat']!, item.location!['lng']!);
           }
           _isLoading = false;
         });
@@ -546,15 +666,82 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     }
   }
 
+  // Load nearby delivery drivers
+  Future<void> _loadNearbyDrivers(double productLat, double productLng) async {
+    setState(() {
+      _loadingDrivers = true;
+    });
+
+    try {
+      final driversSnapshot = await _firestore
+          .collection("delivery_locations")
+          .where("isOnline", isEqualTo: true)
+          .get();
+
+      List<Map<String, dynamic>> nearbyDrivers = [];
+
+      for (var driverDoc in driversSnapshot.docs) {
+        final driverData = driverDoc.data();
+        final driverLat = driverData['latitude']?.toDouble();
+        final driverLng = driverData['longitude']?.toDouble();
+
+        if (driverLat != null && driverLng != null) {
+          // Calculate distance from driver to product
+          final distance = LocationUtils.calculateDistance(
+            productLat, productLng, driverLat, driverLng
+          );
+
+          // Only show drivers within 50km radius
+          if (distance <= 5000000000000) {
+            // Get driver details from users collection
+            final userDoc = await _firestore
+                .collection("Usersstore")
+                .doc(driverDoc.id)
+                .get();
+
+            if (userDoc.exists) {
+              final userData = userDoc.data()!;
+              nearbyDrivers.add({
+                'id': driverDoc.id,
+                'name': userData['fullName'] ?? 'Unknown Driver',
+                'distance': distance,
+                'latitude': driverLat,
+                'longitude': driverLng,
+                'vehicleType': userData['cartype'] ?? 'Unknown Vehicle',
+                'rating': userData['rating']?.toDouble() ?? 0.0,
+                'lastUpdate': driverData['updatedAt'],
+              });
+            }
+          }
+        }
+      }
+
+      // Sort by distance (nearest first)
+      nearbyDrivers.sort((a, b) => a['distance'].compareTo(b['distance']));
+
+      setState(() {
+        _nearbyDrivers = nearbyDrivers;
+        _loadingDrivers = false;
+      });
+
+    } catch (e) {
+      print('Error loading nearby drivers: $e');
+      setState(() {
+        _loadingDrivers = false;
+      });
+    }
+  }
+
   void _showLocationOnMap() {
     if (productLocation != null && _item != null) {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ProductLocationMapScreen(
-            lat: productLocation!.latitude,
-            lng: productLocation!.longitude,
+          builder: (context) => EnhancedProductLocationMapScreen(
+            productLat: productLocation!.latitude,
+            productLng: productLocation!.longitude,
             productName: _item!.name,
+            drivers: _nearbyDrivers,
           ),
         ),
       );
@@ -568,35 +755,42 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     }
   }
 
-  void _contactSeller() {
+  // Navigate to chat with seller
+  void _navigateToChat() {
     if (_item == null) return;
     
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Contact Seller'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Seller: ${_item!.sellerName}'),
-            const SizedBox(height: 8),
-            Text('Contact: ${_item!.contactInfo}'),
-          ],
+    final currentUser = _auth.currentUser;
+    
+    // Check if user is logged in
+    if (currentUser == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please log in to chat with seller'),
+          duration: Duration(seconds: 2),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              // Implement contact functionality (call, message, etc.)
-              Navigator.pop(context);
-            },
-            child: const Text('Contact'),
-          ),
-        ],
+      );
+      return;
+    }
+    
+    // Check if user is trying to chat with themselves
+    if (currentUser.uid == _item!.sellerId) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('You cannot chat with yourself'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+    
+    // Navigate to chat screen
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChattMessage(
+          receiverEmail: _item!.sellerName,
+          receiverId: _item!.sellerId,
+        ),
       ),
     );
   }
@@ -672,6 +866,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
   Widget _buildProductDetailScreen(AgriculturalItem item) {
+    final currentUser = _auth.currentUser;
+    final isSeller = currentUser?.uid == item.sellerId;
     final priceFormatter = NumberFormat.currency(symbol: 'ETB ', decimalDigits: 2);
     final dateFormatter = DateFormat('MMM dd, yyyy');
 
@@ -709,10 +905,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             const SizedBox(height: 20),
 
             // Seller Info
-            _buildSellerInfoSection(item),
+            _buildSellerInfoSection(item, isSeller),
             const SizedBox(height: 20),
 
-            // Location
+            // Location with Delivery Drivers
             _buildLocationSection(item),
             const SizedBox(height: 20),
 
@@ -721,7 +917,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: _buildBottomAppBar(item),
+      bottomNavigationBar: _buildBottomAppBar(item, isSeller),
     );
   }
 
@@ -918,7 +1114,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
-  Widget _buildSellerInfoSection(AgriculturalItem item) {
+  Widget _buildSellerInfoSection(AgriculturalItem item, bool isSeller) {
     return Card(
       elevation: 2,
       shadowColor: Colors.grey.withOpacity(0.3),
@@ -928,17 +1124,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Icon(Icons.person, color: Theme.of(context).colorScheme.primary),
-                const SizedBox(width: 8),
-                Text(
-                  'Seller Information',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-              ],
+            Text(
+              'Seller Information',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 12),
             ListTile(
@@ -963,26 +1153,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   fontSize: 16,
                 ),
               ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 4),
-                  Text(
-                    item.contactInfo,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ],
-              ),
               trailing: IconButton(
-                icon: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.message, color: Colors.white, size: 20),
-                ),
-                onPressed: _contactSeller,
+                onPressed: _navigateToChat,
+                icon: Icon(Icons.message, color: Colors.blue),
               ),
             ),
           ],
@@ -992,97 +1165,337 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
   Widget _buildLocationSection(AgriculturalItem item) {
-    // Create location string for display
-    String locationString = 'Location not available';
-    if (item.location != null && item.location!['lat'] != null && item.location!['lng'] != null) {
-      locationString = 'Lat: ${item.location!['lat']!.toStringAsFixed(4)}, Lng: ${item.location!['lng']!.toStringAsFixed(4)}';
-    }
-
     return Card(
       elevation: 2,
-      shadowColor: Colors.grey.withOpacity(0.3),
+      shadowColor: Colors.grey,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
               children: [
                 Icon(Icons.location_on, color: Colors.red),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
-                  'Location',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  "Location",
+                  style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
                 ),
+                Spacer(),
+                if (_nearbyDrivers.isNotEmpty)
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.green[50],
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.green),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.local_shipping, size: 14, color: Colors.green),
+                        SizedBox(width: 4),
+                        Text(
+                          "${_nearbyDrivers.length} drivers nearby",
+                          style: TextStyle(fontSize: 12, color: Colors.green[700]),
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
-            const SizedBox(height: 12),
-            Text(
-              locationString,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 12),
-            if (productLocation != null)
-              SizedBox(
-                height: 150,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Stack(
-                    children: [
-                      GoogleMap(
-                        initialCameraPosition: CameraPosition(
-                          target: productLocation!,
-                          zoom: 12,
-                        ),
-                        markers: {
-                          Marker(
-                            markerId: const MarkerId('productLocation'),
-                            position: productLocation!,
-                            infoWindow: InfoWindow(title: item.name),
+          ),
+
+          if (productLocation != null)
+            SizedBox(
+              height: 300,
+              child: Column(
+                children: [
+                  // Map Section
+                  Expanded(
+                    flex: 2,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(8),
+                        topRight: Radius.circular(8),
+                      ),
+                      child: Stack(
+                        children: [
+                          GoogleMap(
+                            initialCameraPosition: CameraPosition(
+                              target: productLocation!,
+                              zoom: 12,
+                            ),
+                            markers: _buildMapMarkers(),
+                            myLocationEnabled: false,
+                            zoomControlsEnabled: false,
+                            scrollGesturesEnabled: false,
+                            zoomGesturesEnabled: false,
+                            rotateGesturesEnabled: false,
+                            tiltGesturesEnabled: false,
                           ),
-                        },
-                        myLocationEnabled: false,
-                        zoomControlsEnabled: false,
-                        scrollGesturesEnabled: false,
-                        zoomGesturesEnabled: false,
-                        rotateGesturesEnabled: false,
-                        tiltGesturesEnabled: false,
+                          Positioned(
+                            bottom: 8,
+                            right: 8,
+                            child: FloatingActionButton.small(
+                              onPressed: _showLocationOnMap,
+                              child: const Icon(Icons.fullscreen),
+                            ),
+                          ),
+                        ],
                       ),
-                      Positioned(
-                        bottom: 8,
-                        right: 8,
-                        child: FloatingActionButton.small(
-                          onPressed: _showLocationOnMap,
-                          child: const Icon(Icons.fullscreen),
+                    ),
+                  ),
+
+                  // Delivery Drivers List Section
+                  if (_nearbyDrivers.isNotEmpty)
+                    Container(
+                      height: 120,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[50],
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(8),
+                          bottomRight: Radius.circular(8),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              )
-            else
-              Container(
-                height: 100,
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: const Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.location_off, size: 40, color: Colors.grey),
-                      SizedBox(height: 8),
-                      Text('Location not available'),
-                    ],
-                  ),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Row(
+                              children: [
+                                Icon(Icons.local_shipping, size: 16, color: Colors.green),
+                                SizedBox(width: 4),
+                                Text(
+                                  'Nearby Delivery Drivers',
+                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                                ),
+                                Spacer(),
+                                Text(
+                                  '${_nearbyDrivers.length} available',
+                                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: _buildDriversList(),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            )
+          else
+            Container(
+              height: 100,
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.location_off, size: 40, color: Colors.grey),
+                    SizedBox(height: 8),
+                    Text('Location not available'),
+                  ],
                 ),
               ),
+            ),
+
+          // Show loading or empty state for drivers
+          if (_loadingDrivers)
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: Center(child: CircularProgressIndicator()),
+            )
+          else if (_nearbyDrivers.isEmpty && productLocation != null)
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: Center(
+                child: Column(
+                  children: [
+                    Icon(Icons.shield_sharp, size: 40, color: Colors.grey),
+                    SizedBox(height: 8),
+                    Text(
+                      'No delivery drivers available nearby',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Set<Marker> _buildMapMarkers() {
+    Set<Marker> markers = {};
+
+    // Product marker
+    if (productLocation != null && _item != null) {
+      markers.add(
+        Marker(
+          markerId: MarkerId('productLocation'),
+          position: productLocation!,
+          infoWindow: InfoWindow(
+            title: _item!.name,
+            snippet: 'Product Location',
+          ),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+        ),
+      );
+    }
+
+    // Delivery driver markers
+    for (int i = 0; i < _nearbyDrivers.length; i++) {
+      final driver = _nearbyDrivers[i];
+      markers.add(
+        Marker(
+          markerId: MarkerId('driver_${driver['id']}'),
+          position: LatLng(driver['latitude'], driver['longitude']),
+          infoWindow: InfoWindow(
+            title: driver['name'],
+            snippet: '${driver['distance'].toStringAsFixed(1)} km away - ${driver['vehicleType']}',
+          ),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+        ),
+      );
+    }
+
+    return markers;
+  }
+
+  Widget _buildDriversList() {
+    return ListView.builder(
+      scrollDirection: Axis.horizontal,
+      padding: EdgeInsets.symmetric(horizontal: 8),
+      itemCount: _nearbyDrivers.length,
+      itemBuilder: (context, index) {
+        final driver = _nearbyDrivers[index];
+        return Container(
+          width: 200,
+          margin: EdgeInsets.symmetric(horizontal: 4),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey[300]!),
+          ),
+          child: ListTile(
+            contentPadding: EdgeInsets.all(8),
+            leading: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.green[100],
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.person, color: Colors.green),
+            ),
+            title: Text(
+              driver['name'],
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${driver['distance'].toStringAsFixed(1)} km away',
+                  style: TextStyle(fontSize: 12),
+                ),
+                Text(
+                  driver['vehicleType'],
+                  style: TextStyle(fontSize: 11, color: Colors.grey),
+                ),
+                if (driver['rating'] > 0)
+                  Row(
+                    children: [
+                      Icon(Icons.star, size: 12, color: Colors.amber),
+                      SizedBox(width: 2),
+                      Text(
+                        driver['rating'].toStringAsFixed(1),
+                        style: TextStyle(fontSize: 11),
+                      ),
+                    ],
+                  ),
+              ],
+            ),
+            trailing: Icon(Icons.arrow_forward_ios, size: 16),
+            onTap: () {
+              _showDriverDetails(driver);
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  void _showDriverDetails(Map<String, dynamic> driver) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Delivery Driver'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Colors.green[100],
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.person, color: Colors.green),
+              ),
+              title: Text(
+                driver['name'],
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              subtitle: Text(driver['vehicleType']),
+            ),
+            SizedBox(height: 16),
+            _buildDriverDetailRow(Icons.location_on, 'Distance', '${driver['distance'].toStringAsFixed(1)} km away'),
+            _buildDriverDetailRow(Icons.speed, 'Status', 'Available for delivery'),
+            if (driver['rating'] > 0)
+              _buildDriverDetailRow(Icons.star, 'Rating', driver['rating'].toStringAsFixed(1)),
           ],
         ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Close'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              // Implement contact driver functionality
+            },
+            child: Text('Contact Driver'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDriverDetailRow(IconData icon, String label, String value) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Icon(icon, size: 16, color: Colors.grey),
+          SizedBox(width: 8),
+          Text('$label: ', style: TextStyle(fontWeight: FontWeight.bold)),
+          Text(value),
+        ],
       ),
     );
   }
@@ -1183,7 +1596,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
-  Widget _buildBottomAppBar(AgriculturalItem item) {
+  Widget _buildBottomAppBar(AgriculturalItem item, bool isSeller) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -1222,22 +1635,46 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: ElevatedButton.icon(
-                onPressed: _contactSeller,
-                icon: const Icon(Icons.shopping_cart),
-                label: const Text(
-                  'Purchase',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-              ),
+              child: isSeller
+                  ? ElevatedButton.icon(
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('This is your own product'),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.person),
+                      label: const Text(
+                        'Your Item',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    )
+                  : ElevatedButton.icon(
+                      onPressed: _navigateToChat,
+                      icon: const Icon(Icons.chat),
+                      label: const Text(
+                        'Chat with Seller',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
             ),
           ],
         ),
@@ -1246,40 +1683,449 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 }
 
-// Separate screen for full map view
-class ProductLocationMapScreen extends StatelessWidget {
-  final double lat;
-  final double lng;
+// Enhanced Full Screen Map with Delivery Drivers
+class EnhancedProductLocationMapScreen extends StatefulWidget {
+  final double productLat;
+  final double productLng;
   final String productName;
+  final List<Map<String, dynamic>> drivers;
 
-  const ProductLocationMapScreen({
+  const EnhancedProductLocationMapScreen({
     Key? key,
-    required this.lat,
-    required this.lng,
+    required this.productLat,
+    required this.productLng,
     required this.productName,
+    required this.drivers,
   }) : super(key: key);
+
+  @override
+  State<EnhancedProductLocationMapScreen> createState() => _EnhancedProductLocationMapScreenState();
+}
+
+class _EnhancedProductLocationMapScreenState extends State<EnhancedProductLocationMapScreen> {
+  GoogleMapController? _mapController;
+  LatLng? _productLocation;
+
+  @override
+  void initState() {
+    super.initState();
+    _productLocation = LatLng(widget.productLat, widget.productLng);
+  }
+
+  Set<Marker> _buildMarkers() {
+    Set<Marker> markers = {};
+
+    // Product marker
+    markers.add(
+      Marker(
+        markerId: MarkerId('product'),
+        position: _productLocation!,
+        infoWindow: InfoWindow(
+          title: widget.productName,
+          snippet: 'Product Location',
+        ),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+      ),
+    );
+
+    // Delivery driver markers
+    for (int i = 0; i < widget.drivers.length; i++) {
+      final driver = widget.drivers[i];
+      markers.add(
+        Marker(
+          markerId: MarkerId('driver_${driver['id']}'),
+          position: LatLng(driver['latitude'], driver['longitude']),
+          infoWindow: InfoWindow(
+            title: driver['name'],
+            snippet: '${driver['distance'].toStringAsFixed(1)} km - ${driver['vehicleType']}',
+          ),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+        ),
+      );
+    }
+
+    return markers;
+  }
+
+  void _zoomToProduct() {
+    _mapController?.animateCamera(
+      CameraUpdate.newLatLngZoom(_productLocation!, 14),
+    );
+  }
+
+  void _showAllMarkers() {
+    if (_productLocation != null && widget.drivers.isNotEmpty) {
+      final bounds = _calculateBounds();
+      _mapController?.animateCamera(
+        CameraUpdate.newLatLngBounds(bounds, 100),
+      );
+    }
+  }
+
+  LatLngBounds _calculateBounds() {
+    double minLat = _productLocation!.latitude;
+    double maxLat = _productLocation!.latitude;
+    double minLng = _productLocation!.longitude;
+    double maxLng = _productLocation!.longitude;
+
+    for (final driver in widget.drivers) {
+      minLat = min(minLat, driver['latitude']);
+      maxLat = max(maxLat, driver['latitude']);
+      minLng = min(minLng, driver['longitude']);
+      maxLng = max(maxLng, driver['longitude']);
+    }
+
+    return LatLngBounds(
+      southwest: LatLng(minLat, minLng),
+      northeast: LatLng(maxLat, maxLng),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('$productName Location'),
-      ),
-      body: GoogleMap(
-        initialCameraPosition: CameraPosition(
-          target: LatLng(lat, lng),
-          zoom: 14,
-        ),
-        markers: {
-          Marker(
-            markerId: const MarkerId('productLocation'),
-            position: LatLng(lat, lng),
-            infoWindow: InfoWindow(title: productName),
+        title: Text('${widget.productName} - Delivery Map'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.my_location),
+            onPressed: _zoomToProduct,
+            tooltip: 'Zoom to Product',
           ),
-        },
-        myLocationEnabled: true,
-        zoomControlsEnabled: true,
+          if (widget.drivers.isNotEmpty)
+            IconButton(
+              icon: Icon(Icons.zoom_out_map),
+              onPressed: _showAllMarkers,
+              tooltip: 'Show All Drivers',
+            ),
+        ],
+      ),
+      body: Stack(
+        children: [
+          GoogleMap(
+            onMapCreated: (controller) => _mapController = controller,
+            initialCameraPosition: CameraPosition(
+              target: _productLocation!,
+              zoom: 12,
+            ),
+            markers: _buildMarkers(),
+            myLocationEnabled: true,
+            zoomControlsEnabled: true,
+          ),
+          
+          // Drivers info panel
+          if (widget.drivers.isNotEmpty)
+            Positioned(
+              top: 16,
+              left: 16,
+              right: 16,
+              child: Container(
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 8,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.local_shipping, size: 16, color: Colors.green),
+                        SizedBox(width: 8),
+                        Text(
+                          '${widget.drivers.length} Delivery Drivers Nearby',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Blue marker: Product | Green markers: Delivery drivers',
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        ],
       ),
     );
+  }
+}
+
+// Delivery Location Updater
+class DeliveryLocationUpdater {
+  final Location _location = Location();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  
+  Future<void> startSendingLocation() async {
+    try {
+      bool serviceEnabled;
+      PermissionStatus permissionGranted;  
+      
+      // 1️⃣ Check GPS service
+      serviceEnabled = await _location.serviceEnabled();
+      if (!serviceEnabled) {
+        serviceEnabled = await _location.requestService();
+        if (!serviceEnabled) {
+          print("❌ Location service disabled");
+          return;
+        }
+      }
+      
+      // 2️⃣ Check permission
+      permissionGranted = await _location.hasPermission();
+      if (permissionGranted == PermissionStatus.denied) {
+        permissionGranted = await _location.requestPermission();
+        if (permissionGranted != PermissionStatus.granted) {
+          print("❌ Location permission denied");
+          return;
+        }
+      }  
+      
+      print("✅ Location permissions granted, starting tracking...");
+      
+      // 3️⃣ Start listening to location changes
+      _location.onLocationChanged.listen((loc) async {
+        if (loc.latitude == null || loc.longitude == null) {
+          print("⚠️ Invalid location data received");
+          return;
+        }
+        
+        final uid = FirebaseAuth.instance.currentUser!.uid;
+        try {
+          await _firestore.collection("delivery_locations").doc(uid).set({
+            "latitude": loc.latitude,
+            "longitude": loc.longitude,
+            "updatedAt": DateTime.now(),
+            "isOnline": true,
+          });
+          print("📍 Location updated: ${loc.latitude}, ${loc.longitude}");
+        } catch (e) {
+          print("❌ Error updating location: $e");
+        }
+      }, onError: (error) {
+        print("❌ Location listener error: $error");
+      });
+      
+    } catch (e) {
+      print("❌ Error in startSendingLocation: $e");
+    }
+  }
+}
+
+// Available Drivers Page
+class AvailableDriversPage extends StatefulWidget {
+  @override
+  State<AvailableDriversPage> createState() => _AvailableDriversPageState();
+}
+
+class _AvailableDriversPageState extends State<AvailableDriversPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Available Delivery Drivers")),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection("Usersstore")
+            .where("userType", isEqualTo: "delivery")
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
+
+          final drivers = snapshot.data!.docs;
+
+          if (drivers.isEmpty) {
+            return Center(child: Text("No delivery drivers available"));
+          }
+
+          return ListView.builder(
+            itemCount: drivers.length,
+            itemBuilder: (context, index) {
+              final driver = drivers[index];
+
+              return InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => LiveLocationPage(driverId: driver.id),
+                    ),
+                  );
+                },
+                child: Card(
+                  margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  elevation: 4,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 30,
+                          backgroundColor: Colors.blueAccent,
+                          child: Icon(Icons.person, color: Colors.white, size: 30),
+                        ),
+                        SizedBox(width: 12),         
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                driver["fullName"],
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black87),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                "Car: ${driver["cartype"]}",
+                                style: TextStyle(fontSize: 14, color: Colors.black54),
+                              ),
+                              SizedBox(height: 2),
+                              Text(
+                                "Address: ${driver["adress"]}",
+                                style: TextStyle(fontSize: 14, color: Colors.black54),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              SizedBox(height: 2),
+                              Text(
+                                "Driver License: ${driver["deriving licence"]}",
+                                style: TextStyle(fontSize: 14, color: Colors.black54),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(Icons.location_pin, color: Colors.redAccent, size: 30),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+
+// Live Location Page
+class LiveLocationPage extends StatefulWidget {
+  final String driverId;
+  
+  LiveLocationPage({required this.driverId});
+  
+  @override
+  _LiveLocationPageState createState() => _LiveLocationPageState();
+}
+
+class _LiveLocationPageState extends State<LiveLocationPage> {
+  GoogleMapController? mapController;
+  LatLng? currentPos;
+
+  @override
+  void initState() {
+    super.initState();
+    listenToDriverLocation();
+  }
+
+  // LISTEN TO FIRESTORE LIVE UPDATES
+  void listenToDriverLocation() {
+    FirebaseFirestore.instance
+        .collection("delivery_locations")
+        .doc(widget.driverId)
+        .snapshots()
+        .listen((snapshot) {
+      if (!snapshot.exists) return;
+      final data = snapshot.data() as Map<String, dynamic>;
+      if (data["latitude"] == null || data["longitude"] == null) {
+        print("Invalid location data: $data");
+        return;
+      }
+      setState(() {
+        currentPos = LatLng(data["latitude"], data["longitude"]);
+      });
+      // Move map to new location
+      mapController?.animateCamera(
+        CameraUpdate.newLatLng(currentPos!),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Driver Location")),
+      body: currentPos == null
+          ? Center(child: Text("Waiting for driver location..."))
+          : GoogleMap(
+              onMapCreated: (controller) => mapController = controller,
+              initialCameraPosition: CameraPosition(
+                target: currentPos!,
+                zoom: 16,
+              ),
+              markers: {
+                Marker(
+                  markerId: MarkerId("driver"),
+                  position: currentPos!,
+                  infoWindow: InfoWindow(title: "Driver Location"),
+                ),
+              },
+            ),
+    );
+  }
+}
+
+// Location Service
+class LocationService {
+  final Location _location = Location();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  
+  // get request permission 
+  Future<bool> requestPermission() async {
+    bool serviceEnabled = await _location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await _location.requestService();
+      if (!serviceEnabled) return false;
+    }
+    PermissionStatus permissionGranted = await _location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await _location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) return false;
+    }
+    return true;
+  }
+  
+  // Save location to Firestore
+  Future<void> updateLocationToFirestore(String userId, LocationData loc) async {
+    await _firestore.collection("live_locations").doc(userId).set({
+      "lat": loc.latitude,
+      "lng": loc.longitude,
+      "timestamp": DateTime.now().toIso8601String(),
+    });
+  }
+  
+  // Get current location
+  Future<LocationData?> getLocations() async {
+    bool ok = await requestPermission();
+    if (!ok) return null;
+    return await _location.getLocation();
+  }
+
+  // Listen for real-time location
+  Stream<LocationData> onLocationChanged() {
+    return _location.onLocationChanged;
   }
 }

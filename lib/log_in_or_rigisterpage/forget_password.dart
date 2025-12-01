@@ -2,7 +2,6 @@ import 'package:echat/chattpage/component/mytextfield.dart';
 import 'package:echat/log_in_or_rigisterpage/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 class ForgetPassword extends StatefulWidget {
   const ForgetPassword({super.key});
   @override
@@ -125,7 +124,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     const SizedBox(width: 5),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPage(onTap: () {})));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) =>RegistrationPage(onTap: (){})));
                       },
                       child: const Text('Sign up', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
                     ),

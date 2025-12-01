@@ -1,11 +1,13 @@
 import 'dart:async';
-
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:echat/sell%20item/cloudnary.dart';
 import 'package:echat/sell%20item/firestore.dart';
 import 'package:echat/sell%20item/sell_itemmodel.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
+import 'package:cloudinary_public/cloudinary_public.dart';
 import 'position.dart';
 
 class SellItem extends StatefulWidget {
@@ -21,7 +23,7 @@ class _SellItemState extends State<SellItem> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _quantityController = TextEditingController();
-final TextEditingController locationController=TextEditingController();
+  final TextEditingController locationController = TextEditingController();
   final TextEditingController _sellerNameController = TextEditingController();
   final TextEditingController _contactInfoController = TextEditingController();
   final TextEditingController _tagsController = TextEditingController();
@@ -36,10 +38,12 @@ final TextEditingController locationController=TextEditingController();
   List<String> _tags = [];
   bool _isUploading = false;
   Map<String, double>? _selectedLocation;
+  
   // Services
   final CloudinaryService _cloudinaryService = CloudinaryService();
   final FirestoreService _firestoreService = FirestoreService();
   final ImagePicker _imagePicker = ImagePicker();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // Product categories
   final List<String> _categories = [
@@ -54,6 +58,22 @@ final TextEditingController locationController=TextEditingController();
   void initState() {
     super.initState();
     _availableFrom = DateTime.now();
+    _loadCurrentUserInfo();
+  }
+
+  void _loadCurrentUserInfo() {
+    final user = _auth.currentUser;
+    if (user != null) {
+      // Pre-fill seller name with user's display name if available
+      if (user.displayName != null && user.displayName!.isNotEmpty) {
+        _sellerNameController.text = user.displayName!;
+      }
+      
+      // Pre-fill contact info with user's email
+      if (user.email != null) {
+        _contactInfoController.text = user.email!;
+      }
+    }
   }
 
   // Image Picker Methods
@@ -143,17 +163,16 @@ final TextEditingController locationController=TextEditingController();
     );
   }
 
-void _onLocationSelected(String latitude, String longitude) {
-  setState(() {
-    _selectedLocation = {
-      'lat': double.parse(latitude),
-      'lng': double.parse(longitude),
-    };
-    locationController.text = "Lat: $latitude, Lng: $longitude"; 
-  });
-  _showSnackBar("Location selected successfully");
-}
-
+  void _onLocationSelected(String latitude, String longitude) {
+    setState(() {
+      _selectedLocation = {
+        'lat': double.parse(latitude),
+        'lng': double.parse(longitude),
+      };
+      locationController.text = "Lat: $latitude, Lng: $longitude"; 
+    });
+    _showSnackBar("Location selected successfully");
+  }
 
   void _addTag() {
     if (_tagsController.text.isNotEmpty) {
@@ -206,7 +225,7 @@ void _onLocationSelected(String latitude, String longitude) {
       _showSnackBar("Please enter a valid quantity");
       return false;
     }
-    if (_selectedLocation==null) {
+    if (_selectedLocation == null) {
       _showSnackBar("Please select a location");
       return false;
     }
@@ -246,7 +265,7 @@ void _onLocationSelected(String latitude, String longitude) {
           children: [
             const CircularProgressIndicator(),
             const SizedBox(height: 16),
-            const Text("Uploading to Cloudinary..."),
+            const Text("Uploading..."),
             const SizedBox(height: 8),
             Text(
               "Uploading ${_selectedImages.length} image(s)",
@@ -287,6 +306,12 @@ void _onLocationSelected(String latitude, String longitude) {
 
       print('✅ Images uploaded! Creating Firestore document...');
       
+      // Get current user ID for sellerId
+      final currentUser = _auth.currentUser;
+      if (currentUser == null) {
+        throw Exception("User not authenticated");
+      }
+      
       // Create agricultural item with Cloudinary URLs
       AgriculturalItem item = AgriculturalItem(
         name: _nameController.text,
@@ -298,8 +323,9 @@ void _onLocationSelected(String latitude, String longitude) {
         unit: _selectedUnit,
         condition: _selectedCondition,
         imageUrls: imageUrls,
-      location: _selectedLocation,
+        location: _selectedLocation,
         sellerName: _sellerNameController.text,
+        sellerId: currentUser.uid, // Add seller ID
         contactInfo: _contactInfoController.text,
         availableFrom: _availableFrom,
         deliveryAvailable: _deliveryAvailable,
@@ -416,7 +442,8 @@ void _onLocationSelected(String latitude, String longitude) {
       _descriptionController.clear();
       _priceController.clear();
       _quantityController.clear();
-      _selectedLocation=null;
+      _selectedLocation = null;
+      locationController.clear();
       _sellerNameController.clear();
       _contactInfoController.clear();
       _tagsController.clear();
@@ -428,6 +455,7 @@ void _onLocationSelected(String latitude, String longitude) {
       _selectedImages.clear();
       _tags.clear();
     });
+    _loadCurrentUserInfo(); // Reload user info after clearing
     _showSnackBar("Form cleared");
   }
 
@@ -445,10 +473,10 @@ void _onLocationSelected(String latitude, String longitude) {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('  Enter Sell Item '),centerTitle: true,
+        title: const Text('Enter Sell Item'),
+        centerTitle: true,
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
-       
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -456,7 +484,7 @@ void _onLocationSelected(String latitude, String longitude) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Product Images Section
-            _buildSectionHeader("Product Images "),
+            _buildSectionHeader("Product Images"),
             const SizedBox(height: 8),
             
             if (_selectedImages.isNotEmpty)
@@ -568,7 +596,7 @@ void _onLocationSelected(String latitude, String longitude) {
             DropdownButtonFormField<String>(
               value: _selectedCategory.isNotEmpty ? _selectedCategory : null,
               decoration: const InputDecoration(
-                labelText: "Category ",
+                labelText: "Category *",
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.category),
               ),
@@ -593,7 +621,7 @@ void _onLocationSelected(String latitude, String longitude) {
               controller: _descriptionController,
               maxLines: 4,
               decoration: const InputDecoration(
-                labelText: "Description ",
+                labelText: "Description *",
                 border: OutlineInputBorder(),
                 hintText: "Describe your product in detail...",
                 alignLabelWithHint: true,
@@ -608,7 +636,7 @@ void _onLocationSelected(String latitude, String longitude) {
                     controller: _priceController,
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
-                      labelText: "Price (ETB) ",
+                      labelText: "Price (ETB) *",
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.attach_money),
                       hintText: "0.00",
@@ -621,7 +649,7 @@ void _onLocationSelected(String latitude, String longitude) {
                     controller: _quantityController,
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
-                      labelText: "Quantity ",
+                      labelText: "Quantity *",
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.scale),
                       hintText: "0",
@@ -685,7 +713,7 @@ void _onLocationSelected(String latitude, String longitude) {
               controller: locationController,
               readOnly: true,
               decoration: InputDecoration(
-                labelText: "Location Coordinates ",
+                labelText: "Location Coordinates *",
                 border: const OutlineInputBorder(),
                 prefixIcon: const Icon(Icons.location_on, color: Colors.red),
                 suffixIcon: IconButton(
@@ -709,9 +737,9 @@ void _onLocationSelected(String latitude, String longitude) {
 
             // Seller Information Section
             _buildSectionHeader("Seller Information"),
-            _buildTextField(_sellerNameController, "Seller Name ", Icons.person),
+            _buildTextField(_sellerNameController, "Seller Name *", Icons.person),
             const SizedBox(height: 12),
-            _buildTextField(_contactInfoController, "Contact Information ", Icons.phone),
+            _buildTextField(_contactInfoController, "Contact Information *", Icons.phone),
             const SizedBox(height: 12),
 
             // Availability Section
@@ -867,7 +895,7 @@ void _onLocationSelected(String latitude, String longitude) {
     _descriptionController.dispose();
     _priceController.dispose();
     _quantityController.dispose();
-  _selectedLocation=null;
+    locationController.dispose();
     _sellerNameController.dispose();
     _contactInfoController.dispose();
     _tagsController.dispose();

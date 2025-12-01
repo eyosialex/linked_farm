@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:echat/chattpage/component/mytextfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 class Chattservices {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -18,6 +17,7 @@ class Chattservices {
           'photoUrl': data['photoUrl'] ?? '',
           'isOnline': data['isOnline'] ?? false,
           'lastseen': data['lastseen'],
+          "fullName": data['fullName']
         };
       }).toList();
     });
@@ -192,4 +192,22 @@ class Chattservices {
       }, SetOptions(merge: true));
     }
   }
+  Future<bool> doesChatExist(String user1Id, String user2Id) async {
+    try {
+      List<String> ids = [user1Id, user2Id];
+      ids.sort();
+      String chatroomid = ids.join('_');
+      
+      final chatDoc = await _firestore
+          .collection("ChattRoom")
+          .doc(chatroomid)
+          .get();
+      
+      return chatDoc.exists;
+    } catch (e) {
+      print('Error checking chat existence: $e');
+      return false;
+    }
+  }
+
 }

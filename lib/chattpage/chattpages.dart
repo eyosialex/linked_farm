@@ -46,7 +46,7 @@ class _ChattPagesState extends State<ChattPages> {
     });
   }
 
-  // Pick and upload profile photo to Cloudinary
+  // Pick and upload profile photo
   Future<void> _pickAndUploadProfilePhoto() async {
     try {
       final picker = ImagePicker();
@@ -57,7 +57,7 @@ class _ChattPagesState extends State<ChattPages> {
       );
 
       if (pickedFile == null) return;
-      
+
       final bool confirmUpload = await showDialog(
         context: context,
         builder: (context) => UploadConfirmationDialog(imagePath: pickedFile.path),
@@ -67,13 +67,15 @@ class _ChattPagesState extends State<ChattPages> {
 
       setState(() => _isUploading = true);
 
-      CloudinaryResponse response = await cloudinary.uploadFile(
-        CloudinaryFile.fromFile(
-          pickedFile.path,
-          resourceType: CloudinaryResourceType.Image,
-          folder: "profile_images",
-        ),
-      ).timeout(const Duration(seconds: 30));
+      CloudinaryResponse response = await cloudinary
+          .uploadFile(
+            CloudinaryFile.fromFile(
+              pickedFile.path,
+              resourceType: CloudinaryResourceType.Image,
+              folder: "profile_images",
+            ),
+          )
+          .timeout(const Duration(seconds: 30));
 
       if (response.secureUrl.isEmpty) {
         throw Exception("Cloudinary returned empty URL");
@@ -87,8 +89,7 @@ class _ChattPagesState extends State<ChattPages> {
       if (!mounted) return;
       _showCustomSnackBar("Profile photo updated successfully!", Icons.check, Colors.green);
     } on CloudinaryException catch (e) {
-      String errorMessage = "Upload failed: ${e.message}";
-      _showCustomSnackBar(errorMessage, Icons.error, Colors.red);
+      _showCustomSnackBar("Upload failed: ${e.message}", Icons.error, Colors.red);
     } on TimeoutException {
       _showCustomSnackBar("Upload timeout - check internet connection", Icons.error, Colors.red);
     } catch (e) {
@@ -155,72 +156,64 @@ class _ChattPagesState extends State<ChattPages> {
     return Drawer(
       child: Column(
         children: [
-          // FIXED: Real-time name display from Firestore
           StreamBuilder<DocumentSnapshot>(
             stream: FirebaseFirestore.instance
                 .collection("Usersstore")
                 .doc(currentUserId)
                 .snapshots(),
             builder: (context, snapshot) {
-              // Default values
               String displayName = "Loading...";
-              String userEmail = FirebaseAuth.instance.currentUser?.email ?? 'No email';
               String avatarText = "U";
               String? photoUrl;
+              String phoneNumber = "";
+              String userType = "";
 
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return _buildDrawerHeader(
                   displayName: "Loading...",
-                  userEmail: userEmail,
                   avatarText: "...",
                   photoUrl: null,
+                  phoneNumber: "",
+                  userType: "",
                 );
               }
-
               if (snapshot.hasError) {
                 return _buildDrawerHeader(
                   displayName: "Error loading",
-                  userEmail: userEmail,
                   avatarText: "!",
                   photoUrl: null,
+                  phoneNumber: "",
+                  userType: "",
                 );
               }
-
               if (snapshot.hasData && snapshot.data!.exists) {
                 final data = snapshot.data!.data() as Map<String, dynamic>?;
-                final name = data?['name'] as String?;
+                final name = data?['fullName'] as String?;
                 photoUrl = data?['photoUrl'] as String?;
-                
-                // ✅ CRITICAL FIX: Use name if exists, otherwise use email
+                phoneNumber = data?['phoneNumber'] as String? ?? '';
+                userType = data?['userType'] as String? ?? '';
                 if (name != null && name.isNotEmpty) {
                   displayName = name;
                   avatarText = name[0].toUpperCase();
-                } else {
-                  displayName = userEmail;
-                  avatarText = userEmail.isNotEmpty ? userEmail[0].toUpperCase() : 'U';
                 }
-              } else {
-                // No data in Firestore yet
-                displayName = userEmail;
-                avatarText = userEmail.isNotEmpty ? userEmail[0].toUpperCase() : 'U';
               }
 
               return _buildDrawerHeader(
                 displayName: displayName,
-                userEmail: userEmail,
                 avatarText: avatarText,
                 photoUrl: photoUrl,
+                phoneNumber: phoneNumber,
+                userType: userType,
               );
             },
           ),
-          
           ListTile(
             leading: const Icon(Icons.edit),
             title: const Text("Change profile name"),
             onTap: () {
               Navigator.push(
-                context, 
-                MaterialPageRoute(builder: (context) => const Profilename())
+                context,
+                MaterialPageRoute(builder: (context) => const Profilename()),
               );
             },
           ),
@@ -248,25 +241,32 @@ class _ChattPagesState extends State<ChattPages> {
 
   Widget _buildDrawerHeader({
     required String displayName,
-    required String userEmail,
     required String avatarText,
     required String? photoUrl,
+    required String phoneNumber,
+    required String userType,
   }) {
     return UserAccountsDrawerHeader(
       decoration: BoxDecoration(
         color: Colors.blue.shade700,
       ),
+      
       accountName: Text(
         displayName,
         style: const TextStyle(
-          fontSize: 18, 
+          fontSize: 12,
           fontWeight: FontWeight.bold,
           color: Colors.white,
         ),
       ),
-      accountEmail: Text(
-        userEmail,
-        style: const TextStyle(color: Colors.white70),
+      accountEmail: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (phoneNumber.isNotEmpty)
+            Text('Phone: $phoneNumber', style: const TextStyle(color: Colors.white70)),
+          if (userType.isNotEmpty)
+            Text('Type: $userType', style: const TextStyle(color: Colors.white70)),
+        ],
       ),
       currentAccountPicture: GestureDetector(
         onTap: _isUploading ? null : _pickAndUploadProfilePhoto,
@@ -278,14 +278,13 @@ class _ChattPagesState extends State<ChattPages> {
               child: CircleAvatar(
                 backgroundColor: Colors.grey.shade200,
                 radius: 38,
-                backgroundImage: (photoUrl != null && photoUrl.isNotEmpty) 
-                    ? NetworkImage(photoUrl) 
-                    : null,
+                backgroundImage:
+                    (photoUrl != null && photoUrl.isNotEmpty) ? NetworkImage(photoUrl) : null,
                 child: (photoUrl == null || photoUrl.isEmpty)
                     ? Text(
                         avatarText,
                         style: const TextStyle(
-                          fontSize: 24, 
+                          fontSize: 24,
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
                         ),
@@ -317,35 +316,31 @@ class _ChattPagesState extends State<ChattPages> {
         if (groupSnapshot.hasError) {
           return Center(child: Text('Error: ${groupSnapshot.error}'));
         }
-
         return StreamBuilder<List<Map<String, dynamic>>>(
           stream: _chattservices.getUserStream(),
           builder: (context, userSnapshot) {
             if (userSnapshot.hasError) {
               return Center(child: Text('Error: ${userSnapshot.error}'));
             }
-
             if (!groupSnapshot.hasData || !userSnapshot.hasData) {
               return const Center(child: CircularProgressIndicator());
             }
 
             final groups = groupSnapshot.data!
                 .where((g) => searchQuery.isEmpty ||
-                    (g['name']?.toString().toLowerCase() ?? '')
-                        .contains(searchQuery))
+                    (g['name']?.toString().toLowerCase() ?? '').contains(searchQuery))
                 .toList();
 
             final users = userSnapshot.data!
                 .where((u) => u['userid'] != currentUserId)
                 .where((u) => searchQuery.isEmpty ||
-                    (u['email']?.toString().toLowerCase() ?? '')
-                        .contains(searchQuery))
+                    (u['fullName']?.toString().toLowerCase() ?? '').contains(searchQuery))
                 .toList();
 
             return ListView(
               padding: const EdgeInsets.all(12),
               children: [
-                if (groups.isNotEmpty) 
+                if (groups.isNotEmpty)
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 8.0),
                     child: Text(
@@ -354,10 +349,7 @@ class _ChattPagesState extends State<ChattPages> {
                     ),
                   ),
                 ...groups.map(_buildGroupTile),
-                
-                if (groups.isNotEmpty && users.isNotEmpty)
-                  const Divider(),
-                
+                if (groups.isNotEmpty && users.isNotEmpty) const Divider(),
                 if (users.isNotEmpty)
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 8.0),
@@ -380,19 +372,13 @@ class _ChattPagesState extends State<ChattPages> {
     final groupName = group['name'] as String? ?? 'Unnamed Group';
     return ListTile(
       leading: const Icon(Icons.group, color: Colors.orange, size: 30),
-      title: Text(
-        groupName,
-        style: const TextStyle(fontWeight: FontWeight.w500),
-      ),
+      title: Text(groupName, style: const TextStyle(fontWeight: FontWeight.w500)),
       onTap: () {
         if (groupId != null && groupId.isNotEmpty) {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => GroupChatPage(
-                groupId: groupId,
-                groupName: groupName,
-              ),
+              builder: (_) => GroupChatPage(groupId: groupId, groupName: groupName),
             ),
           );
         }
@@ -402,13 +388,9 @@ class _ChattPagesState extends State<ChattPages> {
 
   Widget _buildUserTile(Map<String, dynamic> user) {
     final receiverId = user['userid'] as String? ?? '';
-    final email = user['email'] as String? ?? '';
+    final fullName = user['fullName'] as String? ?? 'Unknown User';
     final photoUrl = user['photoUrl'] as String?;
-    final nickname = user['name'] as String?;
-
-    // ✅ FIXED: Use name if available, otherwise use email
-    final displayName = nickname ?? email;
-    final initial = (displayName.isNotEmpty ? displayName[0] : '?').toUpperCase();
+    final initial = fullName[0].toUpperCase();
 
     return ListTile(
       leading: CircleAvatar(
@@ -428,17 +410,16 @@ class _ChattPagesState extends State<ChattPages> {
             : null,
       ),
       title: Text(
-        displayName,
+        fullName,
         style: const TextStyle(fontWeight: FontWeight.w500),
       ),
-      subtitle: nickname != null ? Text(email) : null,
       onTap: () {
         if (receiverId.isNotEmpty) {
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (_) => ChattMessage(
-                receiverEmail: email,
+                receiverEmail: fullName,
                 receiverId: receiverId,
               ),
             ),
@@ -482,29 +463,22 @@ class _ChattPagesState extends State<ChattPages> {
                       if (!snapshot.hasData) {
                         return const Center(child: CircularProgressIndicator());
                       }
-
                       final users = snapshot.data!
                           .where((u) => u['userid'] != currentUserId)
                           .toList();
 
                       return ListView.builder(
-                        shrinkWrap: true,
                         itemCount: users.length,
                         itemBuilder: (context, index) {
                           final user = users[index];
                           final userId = user['userid'] as String? ?? '';
-                          final email = user['email'] as String? ?? 'Unknown';
-                          final name = user['name'] as String?;
-                          final displayName = name ?? email;
+                          final name = user['fullName'] as String? ?? 'Unknown User';
                           final isSelected = selectedUserIds.contains(userId);
 
                           return ListTile(
-                            title: Text(displayName),
-                            subtitle: name != null ? Text(email) : null,
+                            title: Text(name),
                             trailing: Icon(
-                              isSelected
-                                  ? Icons.check_box
-                                  : Icons.check_box_outline_blank,
+                              isSelected ? Icons.check_box : Icons.check_box_outline_blank,
                               color: isSelected ? Colors.blue : Colors.grey,
                             ),
                             onTap: () => setState(() {
@@ -533,18 +507,13 @@ class _ChattPagesState extends State<ChattPages> {
                 final groupName = groupNameController.text.trim();
                 if (groupName.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Please enter a group name"),
-                    ),
+                    const SnackBar(content: Text("Please enter a group name")),
                   );
                   return;
                 }
-
                 if (selectedUserIds.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Please select at least one member"),
-                    ),
+                    const SnackBar(content: Text("Please select at least one member")),
                   );
                   return;
                 }
@@ -557,14 +526,10 @@ class _ChattPagesState extends State<ChattPages> {
 
                 if (!mounted) return;
                 Navigator.pop(context);
-
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => GroupChatPage(
-                      groupId: groupId,
-                      groupName: groupName,
-                    ),
+                    builder: (_) => GroupChatPage(groupId: groupId, groupName: groupName),
                   ),
                 );
               },
