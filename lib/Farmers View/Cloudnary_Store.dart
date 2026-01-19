@@ -11,11 +11,7 @@ class CloudinaryService {
   // Upload single image using HTTP
   Future<String?> uploadImage(File imageFile, {String folder = 'agricultural_items'}) async {
     try {
-   //   print('🚀 Starting Cloudinary upload for: ${imageFile.path}');
-      
-      // Check if file exists
       if (!await imageFile.exists()) {
-      //  print('❌ File does not exist');
         return null;
       }
 
