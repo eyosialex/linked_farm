@@ -9,7 +9,6 @@ import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:echat/sell%20item/sell_itemmodel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:echat/chattpage/chattmessage.dart';
 import 'package:location/location.dart';
 
 // Product List Screen - Shows all products
@@ -89,15 +88,15 @@ class _ProductListScreenState extends State<ProductListScreen> {
     }
     
     // Navigate to chat screen
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ChattMessage(
-          receiverEmail: product.sellerName,
-          receiverId: product.sellerId,
-        ),
-      ),
-    );
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => ChattMessage(
+    //       receiverEmail: product.sellerName,
+    //       receiverId: product.sellerId,
+    //     ),
+    //   ),
+    // );
   }
 
   @override
@@ -784,15 +783,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     }
     
     // Navigate to chat screen
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ChattMessage(
-          receiverEmail: _item!.sellerName,
-          receiverId: _item!.sellerId,
-        ),
-      ),
-    );
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => ChattMessage(
+    //       receiverEmail: _item!.sellerName,
+    //       receiverId: _item!.sellerId,
+    //     ),
+    //   ),
+    // );
   }
 
   void _shareProduct() {

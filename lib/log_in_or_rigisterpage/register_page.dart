@@ -5,7 +5,7 @@ import 'package:echat/log_in_or_rigisterpage/usermodel.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../chattpage/component/mytextfield.dart';
+import '../home/component/component/mytextfield.dart';
 import 'firebaseauthservice.dart';
 import 'userfirestore.dart';    
 class RegistrationPage extends StatefulWidget {
