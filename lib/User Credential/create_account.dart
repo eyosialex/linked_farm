@@ -3,7 +3,7 @@ import 'package:echat/User%20Credential/userfirestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../log_in_page.dart';
+import 'log_in_page.dart';
 class CreateAccount extends StatefulWidget {
   const CreateAccount({super.key});
   @override
@@ -12,7 +12,6 @@ class CreateAccount extends StatefulWidget {
 class _CreateAccountState extends State<CreateAccount> {
   final UserRepository _userRepository = UserRepository();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  
   bool _isLoading = false;
   Map<String, dynamic>? _userData;
   int _currentStep = 0;
@@ -28,14 +27,7 @@ class _CreateAccountState extends State<CreateAccount> {
   final TextEditingController _contactPersonController = TextEditingController();
   final TextEditingController _businessAddressController = TextEditingController();
   final TextEditingController _productsController = TextEditingController();
-  // Advisor specific controllers
-  final TextEditingController _universityController = TextEditingController();
-  final TextEditingController _degreeLevelController = TextEditingController();
-  final TextEditingController _experienceController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _focusAreaController = TextEditingController();
-  final TextEditingController _currentWorkController = TextEditingController();
-// for the dlivery service 
+  
 final TextEditingController _addreess=TextEditingController();
 final TextEditingController _drivinglisence=TextEditingController();
 final TextEditingController _cartype=TextEditingController();
@@ -117,20 +109,6 @@ final TextEditingController _cartype=TextEditingController();
           'profileCompleted': true,
         };}
       
-      
-       else if (_userData!['userType'] == 'advisor') {
-        profileData = {
-          'universityGraduated': _universityController.text.trim(),
-          'degreeLevel': _degreeLevelController.text.trim(),
-          'experience': _experienceController.text.trim(),
-          'address': _addressController.text.trim(),
-          'focusArea': _focusAreaController.text.trim(),
-          'currentlyWork': _currentWorkController.text.trim(),
-          'profileCompleted': true,
-        };
-      }
-
-      // Complete the user profile
       await _userRepository.completeUserProfile(user.uid, profileData);
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -170,9 +148,8 @@ final TextEditingController _cartype=TextEditingController();
       return _buildFarmerSteps();
     } else if (userType == 'vendor') {
       return _buildVendorSteps();
-    } else if (userType == 'advisor') {
-      return _buildAdvisorSteps();
     }
+   
     else if (userType == 'delivery') {
       return _builddliverySteps();
     }
@@ -388,98 +365,6 @@ final TextEditingController _cartype=TextEditingController();
       ),
     ];
   }
-
-  List<Step> _buildAdvisorSteps() {
-    return [
-      Step(
-        title: const Text('Professional Information'),
-        content: Column(
-          children: [
-            TextField(
-              controller: _universityController,
-              decoration: const InputDecoration(
-                labelText: 'University Graduated',
-                border: OutlineInputBorder(),
-                hintText: 'e.g., Addis Ababa University, Haramaya University',
-              ),
-            ),
-            const SizedBox(height: 15),
-            TextField(
-              controller: _degreeLevelController,
-              decoration: const InputDecoration(
-                labelText: 'Degree Level',
-                border: OutlineInputBorder(),
-                hintText: 'e.g., BSc, MSc, PhD',
-              ),
-            ),
-            const SizedBox(height: 15),
-            TextField(
-              controller: _experienceController,
-              decoration: const InputDecoration(
-                labelText: 'Years of Experience',
-                border: OutlineInputBorder(),
-                hintText: 'e.g., 5 years',
-              ),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 15),
-            TextField(
-              controller: _addressController,
-              decoration: const InputDecoration(
-                labelText: 'Address',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 15),
-            TextField(
-              controller: _focusAreaController,
-              decoration: const InputDecoration(
-                labelText: 'Focus Area',
-                border: OutlineInputBorder(),
-                hintText: 'e.g., Crop Science, Soil Management, Pest Control',
-              ),
-            ),
-            const SizedBox(height: 15),
-            TextField(
-              controller: _currentWorkController,
-              decoration: const InputDecoration(
-                labelText: 'Currently Working At',
-                border: OutlineInputBorder(),
-                hintText: 'e.g., Ministry of Agriculture, Research Institute',
-              ),
-            ),
-          ],
-        ),
-        isActive: _currentStep >= 0,
-      ),
-      Step(
-        title: const Text('Review & Complete'),
-        content: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Review your information:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 15),
-            Text('University: ${_universityController.text}'),
-            Text('Degree Level: ${_degreeLevelController.text}'),
-            Text('Experience: ${_experienceController.text}'),
-            Text('Address: ${_addressController.text}'),
-            Text('Focus Area: ${_focusAreaController.text}'),
-            Text('Current Work: ${_currentWorkController.text}'),
-            const SizedBox(height: 20),
-            const Text(
-              'Click Complete to finish your profile setup.',
-              style: TextStyle(color: Colors.grey),
-            ),
-          ],
-        ),
-        isActive: _currentStep >= 1,
-      ),
-    ];
-  }
-
   String _getUserTypeDisplay() {
     if (_userData == null) return '';
     

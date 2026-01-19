@@ -1,4 +1,4 @@
-import 'package:echat/Home/component/mytextfield.dart';
+import 'package:echat/User%20Credential/TextField.dart';
 import 'package:echat/User%20Credential/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';

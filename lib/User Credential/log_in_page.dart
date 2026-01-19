@@ -1,10 +1,10 @@
 import 'package:echat/Home/homepages.dart';
-import 'package:echat/User%20Credential/create_account/create_account.dart';
+import 'package:echat/User%20Credential/create_account.dart';
 import 'package:echat/User%20Credential/forget_password.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../Home/component/mytextfield.dart';
+import 'TextField.dart';
 import 'firebaseauthservice.dart';
 
 class LogInPage extends StatefulWidget {
