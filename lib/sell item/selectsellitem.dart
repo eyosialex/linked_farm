@@ -9,12 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'position.dart';
-
 class SellItem extends StatefulWidget {
   @override
   State<SellItem> createState() => _SellItemState();
 }
-
 class _SellItemState extends State<SellItem> {
   // Form controllers
   final TextEditingController _nameController = TextEditingController();
