@@ -1,6 +1,4 @@
-import 'package:echat/chattpage/chattpages.dart';
-import 'package:echat/expert%20advice/expertadvice.dart';
-// ADD THIS IMPORT
+
 import 'package:echat/location%20tracker/list_deliveryavailable.dart';
 import 'package:echat/sell%20item/selectsellitem.dart';
 import 'package:echat/show%20product%20items/product.dart';
@@ -41,7 +39,7 @@ class _HomepagesState extends State<Homepages> {
       'title': 'Chat',
       'icon': Icons.chat_bubble_outline,
       'image': 'assets/chat.png',
-      'page': ChattPages(),
+      'page': null,
       'gradient': LinearGradient(
         colors: [Color(0xFFFF9800), Color(0xFFEF6C00)],
         begin: Alignment.topLeft,
@@ -74,7 +72,7 @@ class _HomepagesState extends State<Homepages> {
       'title': 'Expert Advice',
       'icon': Icons.agriculture,
       'image': 'assets/advice.png',
-      'page': ExpertAdvice(),
+      'page': null,
       'gradient': LinearGradient(
         colors: [Color(0xFF795548), Color(0xFF4E342E)],
         begin: Alignment.topLeft,
