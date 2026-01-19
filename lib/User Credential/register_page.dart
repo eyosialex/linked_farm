@@ -1,11 +1,11 @@
-import 'package:echat/home/homepages.dart';
-import 'package:echat/log_in_or_rigisterpage/create_account/create_account.dart';
-import 'package:echat/log_in_or_rigisterpage/forget_password.dart';
-import 'package:echat/log_in_or_rigisterpage/usermodel.dart';
+import 'package:echat/Home/homepages.dart';
+import 'package:echat/User%20Credential/create_account/create_account.dart';
+import 'package:echat/User%20Credential/forget_password.dart';
+import 'package:echat/User%20Credential/usermodel.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../home/component/component/mytextfield.dart';
+import '../Home/component/mytextfield.dart';
 import 'firebaseauthservice.dart';
 import 'userfirestore.dart';    
 class RegistrationPage extends StatefulWidget {

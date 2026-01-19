@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:echat/sell%20item/sell_itemmodel.dart';
+import 'package:echat/Farmers%20View/Sell_Item_Model.dart';
 class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String _collectionName = 'agricultural_items';

@@ -1,13 +1,13 @@
 import 'dart:math';
 
-import 'package:echat/home/homepages.dart';
-import 'package:echat/sell%20item/firestore.dart';
-import 'package:echat/show%20product%20items/locationcal.dart';
+import 'package:echat/Home/homepages.dart';
+import 'package:echat/Farmers%20View/FireStore_Config.dart';
+import 'package:echat/Vendors%20View/locationcal.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:echat/sell%20item/sell_itemmodel.dart';
+import 'package:echat/Farmers%20View/Sell_Item_Model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:location/location.dart';
 

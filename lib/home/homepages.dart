@@ -1,7 +1,7 @@
 
-import 'package:echat/location%20tracker/list_deliveryavailable.dart';
-import 'package:echat/sell%20item/selectsellitem.dart';
-import 'package:echat/show%20product%20items/product.dart';
+import 'package:echat/Dlivery%20View/list_deliveryavailable.dart';
+import 'package:echat/Farmers%20View/Enter_Sell_Item.dart';
+import 'package:echat/Vendors%20View/product.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

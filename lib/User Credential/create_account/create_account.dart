@@ -1,5 +1,5 @@
-import 'package:echat/home/homepages.dart';
-import 'package:echat/log_in_or_rigisterpage/userfirestore.dart';
+import 'package:echat/Home/homepages.dart';
+import 'package:echat/User%20Credential/userfirestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

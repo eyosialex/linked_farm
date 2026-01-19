@@ -1,5 +1,5 @@
-import 'package:echat/home/component/component/mytextfield.dart';
-import 'package:echat/log_in_or_rigisterpage/register_page.dart';
+import 'package:echat/Home/component/mytextfield.dart';
+import 'package:echat/User%20Credential/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 class ForgetPassword extends StatefulWidget {

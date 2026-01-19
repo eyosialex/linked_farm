@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:echat/location%20tracker/dlivery_location_tracker.dart';
-import 'package:echat/location%20tracker/livelocationtrack.dart';
+import 'package:echat/Dlivery%20View/dlivery_location_tracker.dart';
+import 'package:echat/Dlivery%20View/livelocationtrack.dart';
 import 'package:flutter/material.dart';
 
 class availabledriverylist extends StatefulWidget {

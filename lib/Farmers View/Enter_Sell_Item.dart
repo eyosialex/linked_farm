@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:echat/sell%20item/cloudnary.dart';
-import 'package:echat/sell%20item/firestore.dart';
-import 'package:echat/sell%20item/sell_itemmodel.dart';
+import 'package:echat/Farmers%20View/Cloudnary_Store.dart';
+import 'package:echat/Farmers%20View/FireStore_Config.dart';
+import 'package:echat/Farmers%20View/Sell_Item_Model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
-import 'position.dart';
+import 'Position_Sell_Item.dart';
 class SellItem extends StatefulWidget {
   @override
   State<SellItem> createState() => _SellItemState();

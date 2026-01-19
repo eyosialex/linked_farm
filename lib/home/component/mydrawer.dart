@@ -1,6 +1,6 @@
 
-import 'package:echat/log_in_or_rigisterpage/firebaseauthservice.dart';
-import 'package:echat/log_in_or_rigisterpage/log_in_or_register.dart';
+import 'package:echat/User%20Credential/firebaseauthservice.dart';
+import 'package:echat/User%20Credential/log_in_or_register.dart';
 import 'package:flutter/material.dart';
 
 class Mydrawer extends StatefulWidget {
