@@ -7,7 +7,6 @@ class CloudinaryService {
   static const String cloudName = 'dgp9dusw5';
   static const String apiKey = '773151611459787';
   static const String uploadPreset = 'chattphoto'; // Your upload preset
-
   // Upload single image using HTTP
   Future<String?> uploadImage(File imageFile, {String folder = 'agricultural_items'}) async {
     try {

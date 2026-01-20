@@ -2,15 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:echat/Dlivery%20View/dlivery_location_tracker.dart';
 import 'package:echat/Dlivery%20View/livelocationtrack.dart';
 import 'package:flutter/material.dart';
-
 class availabledriverylist extends StatefulWidget {
   @override
   State<availabledriverylist> createState() => _availabledriverylistState();
 }
-
 class _availabledriverylistState extends State<availabledriverylist> {
-  
-  // Method to check if driver is online and get location
+ 
   Future<Map<String, dynamic>?> _getDriverLocationStatus(String driverId) async {
     try {
       final locationDoc = await FirebaseFirestore.instance
@@ -201,7 +198,7 @@ class _availabledriverylistState extends State<availabledriverylist> {
         },
       ),
       
-      // Add button to become a delivery driver
+     
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           _showBecomeDriverDialog(context);
