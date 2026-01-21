@@ -8,6 +8,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:echat/User%20Credential/log_in_page.dart';
 import 'package:echat/Farmers%20View/Market_Prices.dart';
 import 'package:echat/Farmers%20View/My_Products.dart';
+import 'package:echat/Farmers%20View/advice_feed.dart';
+import 'package:echat/Chat/chat_list.dart';
 
 class FarmersHomePage extends StatefulWidget {
   const FarmersHomePage({super.key});
@@ -65,12 +67,34 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
       ),
     },
     {
+      'title': 'Messages',
+      'icon': Icons.chat,
+      'image': 'assets/chat.png',
+      'page': const ChatListScreen(),
+      'gradient': const LinearGradient(
+        colors: [Color(0xFF607D8B), Color(0xFF455A64)],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+    },
+    {
       'title': 'Delivery Services',
       'icon': Icons.local_shipping,
       'image': 'assets/delivery.png',
       'page': availabledriverylist(),
       'gradient': const LinearGradient(
         colors: [Color(0xFF00BCD4), Color(0xFF00838F)],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+    },
+    {
+      'title': 'Expert Advice',
+      'icon': Icons.school,
+      'image': 'assets/advice.png',
+      'page': const AdviceFeedScreen(),
+      'gradient': const LinearGradient(
+        colors: [Color(0xFFE91E63), Color(0xFFC2185B)],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       ),

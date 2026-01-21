@@ -41,6 +41,7 @@ class _SellItemState extends State<SellItem> {
   List<String> _tags = [];
   bool _isUploading = false;
   Map<String, double>? _selectedLocation;
+  String? _selectedAddress;
   
   // Services
   final CloudinaryService _cloudinaryService = CloudinaryService();
@@ -82,7 +83,8 @@ class _SellItemState extends State<SellItem> {
     
     if (product.location != null) {
       _selectedLocation = product.location;
-      locationController.text = "Lat: ${product.location!['lat']}, Lng: ${product.location!['lng']}";
+      _selectedAddress = product.address;
+      locationController.text = product.address ?? "Location Selected";
     }
     
     _sellerNameController.text = product.sellerName;
@@ -204,13 +206,14 @@ class _SellItemState extends State<SellItem> {
     );
   }
 
-  void _onLocationSelected(String latitude, String longitude) {
+  void _onLocationSelected(String latitude, String longitude, String address) {
     setState(() {
       _selectedLocation = {
         'lat': double.parse(latitude),
         'lng': double.parse(longitude),
       };
-      locationController.text = "Lat: $latitude, Lng: $longitude"; 
+      _selectedAddress = address;
+      locationController.text = address; 
     });
     _showSnackBar("Location selected successfully");
   }
@@ -372,6 +375,7 @@ class _SellItemState extends State<SellItem> {
         condition: _selectedCondition,
         imageUrls: finalImageUrls,
         location: _selectedLocation,
+        address: _selectedAddress,
         sellerName: _sellerNameController.text,
         sellerId: widget.productToEdit?.sellerId ?? currentUser.uid,
         contactInfo: _contactInfoController.text,
@@ -795,28 +799,30 @@ class _SellItemState extends State<SellItem> {
 
             // Location Section
             _buildSectionHeader("Location"),
-            TextField(
-              controller: locationController,
-              readOnly: true,
-              decoration: InputDecoration(
-                labelText: "Location Coordinates *",
-                border: const OutlineInputBorder(),
-                prefixIcon: const Icon(Icons.location_on, color: Colors.red),
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.map, color: Colors.green),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MapTestScreen(
-                          onLocationSelected: _onLocationSelected,
-                        ),
-                      ),
-                    );
-                  },
-                  tooltip: "Select Location on Map",
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MapTestScreen(
+                      onLocationSelected: _onLocationSelected,
+                    ),
+                  ),
+                );
+              },
+              child: AbsorbPointer(
+                child: TextField(
+                  controller: locationController,
+                  decoration: InputDecoration(
+                    labelText: "Location on Map *",
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.location_on),
+                    hintText: "Tap to select location",
+                    suffixIcon: _selectedAddress != null 
+                        ? const Icon(Icons.check_circle, color: Colors.green)
+                        : null,
+                  ),
                 ),
-                hintText: "Tap map icon to select location",
               ),
             ),
             const SizedBox(height: 20),

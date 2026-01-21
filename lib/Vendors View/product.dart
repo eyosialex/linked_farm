@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:echat/Farmers%20View/Sell_Item_Model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:echat/Chat/chat_screen.dart';
 import 'package:location/location.dart';
 
 // Product List Screen - Shows all products
@@ -295,6 +296,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
   Widget _buildProductCard(AgriculturalItem product, BuildContext context) {
     final currentUser = FirebaseAuth.instance.currentUser;
     final isSeller = currentUser?.uid == product.sellerId;
+    final isLiked = currentUser != null && product.likedBy.contains(currentUser.uid);
 
     return Card(
       elevation: 2,
@@ -413,9 +415,9 @@ class _ProductListScreenState extends State<ProductListScreen> {
                              );
                            }
                         },
-                        icon: const Icon(
-                          Icons.favorite_border,
-                          color: Colors.red, // Changed to red to be more visible
+                        icon: Icon(
+                          isLiked ? Icons.favorite : Icons.favorite_border,
+                          color: isLiked ? Colors.red : Colors.grey, 
                           size: 18,
                         ),
                         padding: EdgeInsets.zero,
@@ -629,6 +631,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       final item = await _firestoreService.getAgriculturalItem(widget.productId);
       if (item != null) {
         // Increment view count since we successfully loaded it
+        // Firestore service now safely checks for duplicates using arrayUnion
         await _firestoreService.incrementProductView(widget.productId);
         
         setState(() {
@@ -778,15 +781,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     }
     
     // Navigate to chat screen
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => ChattMessage(
-    //       receiverEmail: _item!.sellerName,
-    //       receiverId: _item!.sellerId,
-    //     ),
-    //   ),
-    // );
+    // Navigate to chat screen
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChatPage(
+          receiverUserEmail: _item!.sellerName, // We use name as email label for now
+          receiverUserID: _item!.sellerId,
+        ),
+      ),
+    );
   }
 
   void _shareProduct() {
@@ -1199,6 +1203,27 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ],
             ),
           ),
+
+          if (item.address != null && item.address!.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: Row(
+                children: [
+                   const Icon(Icons.place, size: 16, color: Colors.grey),
+                   const SizedBox(width: 8),
+                   Expanded(
+                     child: Text(
+                       item.address!,
+                       style: const TextStyle(
+                         fontSize: 15,
+                         color: Colors.black87,
+                         fontWeight: FontWeight.w500,
+                       ),
+                     ),
+                   ),
+                ],
+              ),
+            ),
 
           if (productLocation != null)
             SizedBox(

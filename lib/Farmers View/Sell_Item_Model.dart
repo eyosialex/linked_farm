@@ -12,6 +12,7 @@ class AgriculturalItem {
   String condition;
   List<String>? imageUrls;
   Map<String, double>? location;
+  String? address;
   String sellerName;
   String sellerId;
   String contactInfo;
@@ -23,6 +24,8 @@ class AgriculturalItem {
 
   int likes;
   int views;
+  List<String> likedBy;
+  List<String> viewedBy;
 
   AgriculturalItem({
     this.id,
@@ -36,6 +39,7 @@ class AgriculturalItem {
     required this.condition,
     this.imageUrls,
     required this.location,
+    this.address,
     required this.sellerName,
     required this.sellerId,
     required this.contactInfo,
@@ -44,6 +48,8 @@ class AgriculturalItem {
     this.tags,
     this.likes = 0,
     this.views = 0,
+    this.likedBy = const [],
+    this.viewedBy = const [],
     DateTime? createdAt,
     DateTime? updatedAt,
   })  : createdAt = createdAt ?? DateTime.now(),
@@ -61,6 +67,7 @@ class AgriculturalItem {
       'condition': condition,
       'imageUrls': imageUrls,
       'location': location,
+      'address': address,
       'sellerName': sellerName,
       'sellerId': sellerId,
       'contactInfo': contactInfo,
@@ -69,6 +76,8 @@ class AgriculturalItem {
       'tags': tags,
       'likes': likes,
       'views': views,
+      'likedBy': likedBy,
+      'viewedBy': viewedBy,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
     };
@@ -92,6 +101,7 @@ class AgriculturalItem {
         'lat': (locData['lat'] ?? 0.0).toDouble(),
         'lng': (locData['lng'] ?? 0.0).toDouble(),
       },
+      address: data['address'],
       sellerName: data['sellerName'] ?? '',
       sellerId: data['sellerId'] ?? '',
       contactInfo: data['contactInfo'] ?? '',
@@ -102,6 +112,8 @@ class AgriculturalItem {
       tags: data['tags'] != null ? List<String>.from(data['tags']) : null,
       likes: (data['likes'] ?? 0).toInt(),
       views: (data['views'] ?? 0).toInt(),
+      likedBy: List<String>.from(data['likedBy'] ?? []),
+      viewedBy: List<String>.from(data['viewedBy'] ?? []),
       createdAt: DateTime.parse(data['createdAt']),
       updatedAt: DateTime.parse(data['updatedAt']),
     );
@@ -118,6 +130,7 @@ class AgriculturalItem {
     String? condition,
     List<String>? imageUrls,
     Map<String, double>? location,
+    String? address,
     String? sellerName,
     String? sellerId,
     String? contactInfo,
@@ -126,6 +139,8 @@ class AgriculturalItem {
     List<String>? tags,
     int? likes,
     int? views,
+    List<String>? likedBy,
+    List<String>? viewedBy,
   }) {
     return AgriculturalItem(
       id: id,
@@ -139,6 +154,7 @@ class AgriculturalItem {
       condition: condition ?? this.condition,
       imageUrls: imageUrls ?? this.imageUrls,
       location: location ?? this.location,
+      address: address ?? this.address,
       sellerName: sellerName ?? this.sellerName,
       sellerId: sellerId ?? this.sellerId,
       contactInfo: contactInfo ?? this.contactInfo,
@@ -147,6 +163,8 @@ class AgriculturalItem {
       tags: tags ?? this.tags,
       likes: likes ?? this.likes,
       views: views ?? this.views,
+      likedBy: likedBy ?? this.likedBy,
+      viewedBy: viewedBy ?? this.viewedBy,
       createdAt: createdAt,
       updatedAt: DateTime.now(),
     );

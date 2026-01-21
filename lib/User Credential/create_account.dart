@@ -1,4 +1,5 @@
 import 'package:echat/Dlivery%20View/Delivery_Home_Page.dart';
+import 'package:echat/Advisor%20View/Advisor_Home.dart';
 import 'package:echat/Farmers%20View/Farmers_Home.dart';
 import 'package:echat/Vendors%20View/Product_Home.dart';
 import 'package:echat/User%20Credential/userfirestore.dart';
@@ -32,7 +33,13 @@ class _CreateAccountState extends State<CreateAccount> {
   
 final TextEditingController _addreess=TextEditingController();
 final TextEditingController _drivinglisence=TextEditingController();
+
 final TextEditingController _cartype=TextEditingController();
+
+// Advisor Controllers
+final TextEditingController _specializationController = TextEditingController();
+final TextEditingController _experienceController = TextEditingController();
+final TextEditingController _qualificationController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -109,7 +116,16 @@ final TextEditingController _cartype=TextEditingController();
           'adress': _addreess.text.trim(),
           'deriving licence': _drivinglisence.text.trim(),
           'profileCompleted': true,
-        };}
+        };
+      } else if (_userData!['userType'] == 'advisor') {
+        profileData = {
+          'specialization': _specializationController.text.trim(),
+          'experience': _experienceController.text.trim(),
+          'qualification': _qualificationController.text.trim(),
+          'profileCompleted': true,
+        };
+
+      }
       
       await _userRepository.completeUserProfile(user.uid, profileData);
 
@@ -127,6 +143,8 @@ final TextEditingController _cartype=TextEditingController();
         targetPage = const vendors_page();
       } else if (_userData!['userType'] == 'delivery') {
         targetPage = const Delivery_Home_Page();
+      } else if (_userData!['userType'] == 'advisor') {
+        targetPage = const AdvisorHomePage();
       } else {
         targetPage = const FarmersHomePage();
       }
@@ -163,8 +181,10 @@ final TextEditingController _cartype=TextEditingController();
       return _buildVendorSteps();
     }
    
-    else if (userType == 'delivery') {
+    } else if (userType == 'delivery') {
       return _builddliverySteps();
+    } else if (userType == 'advisor') {
+      return _buildAdvisorSteps();
     }
     return [];
   }
@@ -367,6 +387,66 @@ final TextEditingController _cartype=TextEditingController();
             Text('Contact Person: ${_contactPersonController.text}'),
             Text('Address: ${_businessAddressController.text}'),
             Text('Products: ${_productsController.text}'),
+            const SizedBox(height: 20),
+            const Text(
+              'Click Complete to finish your profile setup.',
+              style: TextStyle(color: Colors.grey),
+            ),
+          ],
+        ),
+        isActive: _currentStep >= 1,
+      ),
+    ];
+  }
+
+  List<Step> _buildAdvisorSteps() {
+    return [
+      Step(
+        title: const Text('Professional Profile'),
+        content: Column(
+          children: [
+            TextField(
+              controller: _specializationController,
+              decoration: const InputDecoration(
+                labelText: 'Specialization',
+                hintText: 'e.g., Crop Science, Animal Health',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 15),
+            TextField(
+              controller: _experienceController,
+              decoration: const InputDecoration(
+                labelText: 'Experience (Years)',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: 15),
+            TextField(
+              controller: _qualificationController,
+              decoration: const InputDecoration(
+                labelText: 'Qualification / Degree',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ),
+        isActive: _currentStep >= 0,
+      ),
+      Step(
+        title: const Text('Review & Complete'),
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Review your information:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 15),
+            Text('Specialization: ${_specializationController.text}'),
+            Text('Experience: ${_experienceController.text} years'),
+            Text('Qualification: ${_qualificationController.text}'),
             const SizedBox(height: 20),
             const Text(
               'Click Complete to finish your profile setup.',

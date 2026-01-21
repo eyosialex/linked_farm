@@ -1,6 +1,8 @@
 
 import 'package:echat/Farmers%20View/Enter_Sell_Item.dart';
 import 'package:echat/Vendors%20View/product.dart';
+import 'package:echat/Chat/chat_list.dart';
+import 'package:echat/Farmers%20View/advice_feed.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:echat/User%20Credential/log_in_page.dart';
@@ -56,6 +58,28 @@ class _vendors_pageState extends State<vendors_page> {
       'page': null, // TODO: View orders
       'gradient': const LinearGradient(
         colors: [Color(0xFF9C27B0), Color(0xFF7B1FA2)],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+    },
+    {
+      'title': 'Messages',
+      'icon': Icons.chat_bubble,
+      'image': 'assets/chat.png',
+      'page': const ChatListScreen(),
+      'gradient': const LinearGradient(
+        colors: [Color(0xFF00BCD4), Color(0xFF0097A7)],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+    },
+    {
+      'title': 'Expert Advice',
+      'icon': Icons.school,
+      'image': 'assets/advice.png',
+      'page': const AdviceFeedScreen(),
+      'gradient': const LinearGradient(
+        colors: [Color(0xFFE91E63), Color(0xFFC2185B)],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       ),

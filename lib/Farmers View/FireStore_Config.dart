@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:echat/Farmers%20View/Sell_Item_Model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String _collectionName = 'agricultural_items';
@@ -89,9 +90,27 @@ class FirestoreService {
   }
 
   Future<void> incrementProductView(String productId) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+    String userId = user.uid;
+
     try {
-      await _firestore.collection(_collectionName).doc(productId).update({
-        'views': FieldValue.increment(1),
+      DocumentReference docRef = _firestore.collection(_collectionName).doc(productId);
+      
+      // Use a transaction to check if user already viewed
+      await _firestore.runTransaction((transaction) async {
+        DocumentSnapshot snapshot = await transaction.get(docRef);
+        
+        if (!snapshot.exists) return;
+        
+        List<dynamic> viewedBy = snapshot.get('viewedBy') ?? [];
+        
+        if (!viewedBy.contains(userId)) {
+          transaction.update(docRef, {
+            'viewedBy': FieldValue.arrayUnion([userId]),
+            'views': FieldValue.increment(1),
+          });
+        }
       });
     } catch (e) {
       print('Error incrementing view: $e');
@@ -99,15 +118,29 @@ class FirestoreService {
   }
 
   Future<void> toggleProductLike(String productId, String userId) async {
-    // Note: For a robust like system, you should store likes in a separate collection 
-    // or an array of user IDs on the product document to prevent double-liking.
-    // For this simple implementation, we'll just increment/decrement a counter, 
-    // but in a real app, you'd check if the user already liked it.
-    
-    // Here we will just increment for now as per the "number of like" request
     try {
-      await _firestore.collection(_collectionName).doc(productId).update({
-        'likes': FieldValue.increment(1),
+      DocumentReference docRef = _firestore.collection(_collectionName).doc(productId);
+      
+      await _firestore.runTransaction((transaction) async {
+        DocumentSnapshot snapshot = await transaction.get(docRef);
+        
+        if (!snapshot.exists) return;
+        
+        List<dynamic> likedBy = snapshot.get('likedBy') ?? [];
+        
+        if (likedBy.contains(userId)) {
+          // Unlike
+           transaction.update(docRef, {
+            'likedBy': FieldValue.arrayRemove([userId]),
+            'likes': FieldValue.increment(-1),
+          });
+        } else {
+          // Like
+          transaction.update(docRef, {
+            'likedBy': FieldValue.arrayUnion([userId]),
+            'likes': FieldValue.increment(1),
+          });
+        }
       });
     } catch (e) {
       print('Error updating like: $e');

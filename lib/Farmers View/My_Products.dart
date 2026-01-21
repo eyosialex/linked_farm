@@ -210,6 +210,22 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                     product.category,
                     style: TextStyle(color: Colors.grey[600], fontSize: 13),
                   ),
+                  const SizedBox(height: 4),
+                  if (product.address != null && product.address!.isNotEmpty)
+                    Row(
+                      children: [
+                        const Icon(Icons.location_on, size: 12, color: Colors.grey),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            product.address!,
+                            style: const TextStyle(fontSize: 12, color: Colors.grey),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
                   const SizedBox(height: 8),
                   Text(
                     '${product.price} ETB',
