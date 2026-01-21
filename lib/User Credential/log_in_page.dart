@@ -1,4 +1,6 @@
-import 'package:echat/Home/homepages.dart';
+import 'package:echat/Dlivery%20View/Delivery_Home_Page.dart';
+import 'package:echat/Farmers%20View/Farmers_Home.dart';
+import 'package:echat/Vendors%20View/Product_Home.dart';
 import 'package:echat/User%20Credential/create_account.dart';
 import 'package:echat/User%20Credential/forget_password.dart';
 import 'package:flutter/material.dart';
@@ -86,9 +88,23 @@ class _LogInPageState extends State<LogInPage> {
         );
       } else {
       
+      final userType = userData['userType'];
+        
+        Widget targetPage;
+        if (userType == 'farmer') {
+          targetPage = const FarmersHomePage();
+        } else if (userType == 'vendor') {
+          targetPage = const vendors_page();
+        } else if (userType == 'delivery') {
+          targetPage = const Delivery_Home_Page();
+        } else {
+          // Default or for other roles like advisor
+          targetPage = const FarmersHomePage(); 
+        }
+
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => Homepages()),
+          MaterialPageRoute(builder: (context) => targetPage),
         );
       }
 

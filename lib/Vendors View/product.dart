@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:echat/Home/homepages.dart';
+
 import 'package:echat/Farmers%20View/FireStore_Config.dart';
 import 'package:echat/Vendors%20View/Map_Location_Calculatore.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +33,9 @@ class _ProductListScreenState extends State<ProductListScreen> {
     'Oil Seeds',
     'Tubers',
     'Livestock',
+    'Fertilizers',
+    'Pesticides',
+    'Machinery',
     'Others'
   ];
   
@@ -107,24 +110,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
       ),
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            const DrawerHeader(
-              child: Center(child: Text("Welcome")),
-              curve: Curves.bounceIn,
-            ),
-            const SizedBox(height: 10),
-            ListTile(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Homepages()));
-              },
-              leading: const Icon(Icons.home, color: Colors.blue),
-              title: const Text(" Home", style: TextStyle(color: Colors.black)),
-            ),
-          ],
-        ),
-      ),
+
       body: Column(
         children: [
           // 🔍 SEARCH BAR

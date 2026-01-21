@@ -1,4 +1,6 @@
-import 'package:echat/Home/homepages.dart';
+import 'package:echat/Dlivery%20View/Delivery_Home_Page.dart';
+import 'package:echat/Farmers%20View/Farmers_Home.dart';
+import 'package:echat/Vendors%20View/Product_Home.dart';
 import 'package:echat/User%20Credential/userfirestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -118,10 +120,21 @@ final TextEditingController _cartype=TextEditingController();
         ),
       );
 
+      Widget targetPage;
+      if (_userData!['userType'] == 'farmer') {
+        targetPage = const FarmersHomePage();
+      } else if (_userData!['userType'] == 'vendor') {
+        targetPage = const vendors_page();
+      } else if (_userData!['userType'] == 'delivery') {
+        targetPage = const Delivery_Home_Page();
+      } else {
+        targetPage = const FarmersHomePage();
+      }
+
       // Navigate to home page
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Homepages()),
+        MaterialPageRoute(builder: (context) => targetPage),
       );
 
     } catch (e) {
