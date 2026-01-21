@@ -275,7 +275,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                     crossAxisCount: 2,
                     mainAxisSpacing: 5,
                     crossAxisSpacing: 5,
-                    childAspectRatio: 0.65,
+                    childAspectRatio: 0.6,
                   ),
                   padding: const EdgeInsets.all(8),
                   itemCount: filteredProducts.length,

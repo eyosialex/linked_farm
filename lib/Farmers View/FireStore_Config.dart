@@ -74,11 +74,18 @@ class FirestoreService {
     return _firestore
         .collection(_collectionName)
         .where('sellerId', isEqualTo: sellerId)
-        .orderBy('createdAt', descending: true)
+        // Removed server-side orderBy to avoid creating a composite index
+        // .orderBy('createdAt', descending: true) 
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => AgriculturalItem.fromFirestore(doc.data(), doc.id))
-            .toList());
+        .map((snapshot) {
+      final items = snapshot.docs
+          .map((doc) => AgriculturalItem.fromFirestore(doc.data(), doc.id))
+          .toList();
+      
+      // Sort client-side instead
+      items.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      return items;
+    });
   }
 
   Future<void> incrementProductView(String productId) async {

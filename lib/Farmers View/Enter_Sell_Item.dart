@@ -71,13 +71,13 @@ class _SellItemState extends State<SellItem> {
   void _loadProductData() {
     final product = widget.productToEdit!;
     _nameController.text = product.name;
-    _selectedCategory = product.category;
+    _selectedCategory = _categories.contains(product.category) ? product.category : '';
     _subcategoryController.text = product.subcategory ?? '';
     _descriptionController.text = product.description;
     _priceController.text = product.price.toString();
     _quantityController.text = product.quantity.toString();
-    _selectedUnit = product.unit;
-    _selectedCondition = product.condition;
+    _selectedUnit = _units.contains(product.unit) ? product.unit : _units.first;
+    _selectedCondition = _conditions.contains(product.condition) ? product.condition : _conditions.first;
     _existingImageUrls = List.from(product.imageUrls ?? []);
     
     if (product.location != null) {
@@ -325,24 +325,27 @@ class _SellItemState extends State<SellItem> {
     try {
       print('=== STARTING UPLOAD PROCESS ===');
       
-      // Upload images to Cloudinary
-      print('📸 Starting image upload...');
-      List<String> imageUrls = await _cloudinaryService.uploadMultipleImages(_selectedImages);
-      
-      print('📊 Upload results: ${imageUrls.length} successful, ${_selectedImages.length - imageUrls.length} failed');
-      
-      if (imageUrls.isEmpty) {
-        Navigator.pop(context);
-        _showDetailedErrorDialog(
-          "All image uploads failed",
-          "This could be due to:\n• No internet connection\n• Large file sizes\n• Cloudinary service issue\n• Incorrect upload preset\n\nPlease check your connection and try again with smaller images.",
-        );
-        return;
-      }
+      List<String> imageUrls = [];
+      if (_selectedImages.isNotEmpty) {
+        // Upload images to Cloudinary
+        print('📸 Starting image upload...');
+        imageUrls = await _cloudinaryService.uploadMultipleImages(_selectedImages);
+        
+        print('📊 Upload results: ${imageUrls.length} successful, ${_selectedImages.length - imageUrls.length} failed');
+        
+        if (imageUrls.isEmpty) {
+          Navigator.pop(context);
+          _showDetailedErrorDialog(
+            "All image uploads failed",
+            "This could be due to:\n• No internet connection\n• Large file sizes\n• Cloudinary service issue\n• Incorrect upload preset\n\nPlease check your connection and try again with smaller images.",
+          );
+          return;
+        }
 
-      if (imageUrls.length < _selectedImages.length) {
-        // Some images failed, but some succeeded
-        _showSnackBar("⚠️ ${imageUrls.length}/${_selectedImages.length} images uploaded successfully. Continuing with available images.");
+        if (imageUrls.length < _selectedImages.length) {
+          // Some images failed, but some succeeded
+          _showSnackBar("⚠️ ${imageUrls.length}/${_selectedImages.length} images uploaded successfully. Continuing with available images.");
+        }
       }
 
       print('✅ Images uploaded! Saving to Firestore...');
