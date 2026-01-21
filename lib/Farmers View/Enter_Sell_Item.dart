@@ -10,6 +10,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'Position_Sell_Item.dart';
 class SellItem extends StatefulWidget {
+  final AgriculturalItem? productToEdit;
+
+  const SellItem({super.key, this.productToEdit});
+
   @override
   State<SellItem> createState() => _SellItemState();
 }
@@ -33,6 +37,7 @@ class _SellItemState extends State<SellItem> {
   DateTime? _availableFrom;
   bool _deliveryAvailable = false;
   List<File> _selectedImages = [];
+  List<String> _existingImageUrls = [];
   List<String> _tags = [];
   bool _isUploading = false;
   Map<String, double>? _selectedLocation;
@@ -56,7 +61,38 @@ class _SellItemState extends State<SellItem> {
   void initState() {
     super.initState();
     _availableFrom = DateTime.now();
-    _loadCurrentUserInfo();
+    if (widget.productToEdit != null) {
+      _loadProductData();
+    } else {
+      _loadCurrentUserInfo();
+    }
+  }
+
+  void _loadProductData() {
+    final product = widget.productToEdit!;
+    _nameController.text = product.name;
+    _selectedCategory = product.category;
+    _subcategoryController.text = product.subcategory ?? '';
+    _descriptionController.text = product.description;
+    _priceController.text = product.price.toString();
+    _quantityController.text = product.quantity.toString();
+    _selectedUnit = product.unit;
+    _selectedCondition = product.condition;
+    _existingImageUrls = List.from(product.imageUrls ?? []);
+    
+    if (product.location != null) {
+      _selectedLocation = product.location;
+      locationController.text = "Lat: ${product.location!['lat']}, Lng: ${product.location!['lng']}";
+    }
+    
+    _sellerNameController.text = product.sellerName;
+    _contactInfoController.text = product.contactInfo;
+    _availableFrom = product.availableFrom;
+    _deliveryAvailable = product.deliveryAvailable;
+    _tags = List.from(product.tags ?? []);
+    if (product.tags != null) {
+      _tagsController.text = ""; 
+    }
   }
 
   void _loadCurrentUserInfo() {
@@ -117,6 +153,13 @@ class _SellItemState extends State<SellItem> {
   void _removeImage(int index) {
     setState(() {
       _selectedImages.removeAt(index);
+    });
+    _showSnackBar("Photo removed");
+  }
+
+  void _removeExistingImage(int index) {
+    setState(() {
+      _existingImageUrls.removeAt(index);
     });
     _showSnackBar("Photo removed");
   }
@@ -235,7 +278,7 @@ class _SellItemState extends State<SellItem> {
       _showSnackBar("Please enter contact information");
       return false;
     }
-    if (_selectedImages.isEmpty) {
+    if (_selectedImages.isEmpty && _existingImageUrls.isEmpty) {
       _showSnackBar("Please add at least one product photo");
       return false;
     }
@@ -266,7 +309,7 @@ class _SellItemState extends State<SellItem> {
             const Text("Uploading..."),
             const SizedBox(height: 8),
             Text(
-              "Uploading ${_selectedImages.length} image(s)",
+              "Uploading ${_selectedImages.length} new image(s)",
               style: const TextStyle(fontSize: 12, color: Colors.grey),
             ),
             const SizedBox(height: 8),
@@ -302,16 +345,20 @@ class _SellItemState extends State<SellItem> {
         _showSnackBar("⚠️ ${imageUrls.length}/${_selectedImages.length} images uploaded successfully. Continuing with available images.");
       }
 
-      print('✅ Images uploaded! Creating Firestore document...');
+      print('✅ Images uploaded! Saving to Firestore...');
       
       // Get current user ID for sellerId
       final currentUser = _auth.currentUser;
       if (currentUser == null) {
         throw Exception("User not authenticated");
       }
+
+      // Combine existing and new image URLs
+      List<String> finalImageUrls = [..._existingImageUrls, ...imageUrls];
       
-      // Create agricultural item with Cloudinary URLs
+      // Create agricultural item with combined URLs
       AgriculturalItem item = AgriculturalItem(
+        id: widget.productToEdit?.id, // Keep existing ID if editing
         name: _nameController.text,
         category: _selectedCategory,
         subcategory: _subcategoryController.text.isNotEmpty ? _subcategoryController.text : null,
@@ -320,26 +367,44 @@ class _SellItemState extends State<SellItem> {
         quantity: int.tryParse(_quantityController.text) ?? 0,
         unit: _selectedUnit,
         condition: _selectedCondition,
-        imageUrls: imageUrls,
+        imageUrls: finalImageUrls,
         location: _selectedLocation,
         sellerName: _sellerNameController.text,
-        sellerId: currentUser.uid, // Add seller ID
+        sellerId: widget.productToEdit?.sellerId ?? currentUser.uid,
         contactInfo: _contactInfoController.text,
         availableFrom: _availableFrom,
         deliveryAvailable: _deliveryAvailable,
         tags: _tags.isNotEmpty ? _tags : null,
+        likes: widget.productToEdit?.likes ?? 0,
+        views: widget.productToEdit?.views ?? 0,
+        createdAt: widget.productToEdit?.createdAt,
       );
 
-      // Save to Firestore
-      String? itemId = await _firestoreService.addAgriculturalItem(item);
-      
-      Navigator.pop(context); // Close loading dialog
-
-      if (itemId != null) {
-        print('🎉 SUCCESS! Item saved with ID: $itemId');
-        _showSuccessMessage(item, imageUrls.length);
+      if (widget.productToEdit != null) {
+        // Update existing item
+        bool success = await _firestoreService.updateAgriculturalItem(widget.productToEdit!.id!, item);
+        Navigator.pop(context); // Close loading dialog
+        
+        if (success) {
+           ScaffoldMessenger.of(context).showSnackBar(
+             const SnackBar(content: Text("Product updated successfully!")),
+           );
+           Navigator.pop(context); // Go back to previous screen
+        } else {
+           _showSnackBar("❌ Failed to update item.");
+        }
       } else {
-        _showSnackBar("❌ Failed to save item to database. Images were uploaded but item data was not saved.");
+        // Save new item to Firestore
+        String? itemId = await _firestoreService.addAgriculturalItem(item);
+        
+        Navigator.pop(context); // Close loading dialog
+
+        if (itemId != null) {
+          print('🎉 SUCCESS! Item saved with ID: $itemId');
+          _showSuccessMessage(item, imageUrls.length);
+        } else {
+          _showSnackBar("❌ Failed to save item to database.");
+        }
       }
     } on SocketException catch (e) {
       Navigator.pop(context);
@@ -450,6 +515,7 @@ class _SellItemState extends State<SellItem> {
       _selectedUnit = 'kg';
       _availableFrom = DateTime.now();
       _deliveryAvailable = false;
+      _existingImageUrls.clear();
       _selectedImages.clear();
       _tags.clear();
     });
@@ -471,7 +537,7 @@ class _SellItemState extends State<SellItem> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Enter Sell Item'),
+        title: Text(widget.productToEdit != null ? 'Edit Product' : 'Sell Produce'),
         centerTitle: true,
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
@@ -485,7 +551,7 @@ class _SellItemState extends State<SellItem> {
             _buildSectionHeader("Product Images"),
             const SizedBox(height: 8),
             
-            if (_selectedImages.isNotEmpty)
+            if (_selectedImages.isNotEmpty || _existingImageUrls.isNotEmpty)
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -495,15 +561,53 @@ class _SellItemState extends State<SellItem> {
                   mainAxisSpacing: 8,
                   childAspectRatio: 1,
                 ),
-                itemCount: _selectedImages.length,
+                itemCount: _existingImageUrls.length + _selectedImages.length,
                 itemBuilder: (context, index) {
+                  if (index < _existingImageUrls.length) {
+                    // Existing image
+                    return Stack(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            image: DecorationImage(
+                              image: NetworkImage(_existingImageUrls[index]),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: 4,
+                          right: 4,
+                          child: GestureDetector(
+                            onTap: () => _removeExistingImage(index),
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                color: Colors.orange,
+                                shape: BoxShape.circle,
+                              ),
+                              padding: const EdgeInsets.all(4),
+                              child: const Icon(
+                                Icons.close,
+                                color: Colors.white,
+                                size: 16,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                  
+                  // New selected image
+                  final newImageIndex = index - _existingImageUrls.length;
                   return Stack(
                     children: [
                       Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                           image: DecorationImage(
-                            image: FileImage(_selectedImages[index]),
+                            image: FileImage(_selectedImages[newImageIndex]),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -512,7 +616,7 @@ class _SellItemState extends State<SellItem> {
                         top: 4,
                         right: 4,
                         child: GestureDetector(
-                          onTap: () => _removeImage(index),
+                          onTap: () => _removeImage(newImageIndex),
                           child: Container(
                             decoration: const BoxDecoration(
                               color: Colors.red,
@@ -523,25 +627,6 @@ class _SellItemState extends State<SellItem> {
                               Icons.close,
                               color: Colors.white,
                               size: 16,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 4,
-                        left: 4,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: Colors.black54,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Text(
-                            '${index + 1}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),

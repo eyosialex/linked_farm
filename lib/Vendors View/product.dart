@@ -386,7 +386,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                           ),
                   ),
                   // Favorite Button
-                  Positioned(
+                    Positioned(
                     top: 8,
                     right: 8,
                     child: Container(
@@ -405,11 +405,17 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       ),
                       child: IconButton(
                         onPressed: () {
-                          // Add to favorites logic
+                           if (currentUser != null) {
+                             _firestoreService.toggleProductLike(product.id!, currentUser.uid);
+                           } else {
+                             ScaffoldMessenger.of(context).showSnackBar(
+                               const SnackBar(content: Text("Please login to like items")),
+                             );
+                           }
                         },
                         icon: const Icon(
                           Icons.favorite_border,
-                          color: Colors.grey,
+                          color: Colors.red, // Changed to red to be more visible
                           size: 18,
                         ),
                         padding: EdgeInsets.zero,
@@ -519,14 +525,14 @@ class _ProductListScreenState extends State<ProductListScreen> {
                           child: Row(
                             children: [
                               Icon(
-                                Icons.chat_bubble_outline,
+                                Icons.remove_red_eye,
                                 size: 14,
                                 color: isSeller ? Colors.grey : Colors.blue[600],
                               ),
                               const SizedBox(width: 5),
                               Expanded(
                                 child: Text(
-                                  isSeller ? 'Your Item' : 'Chat',
+                                  '${product.views} views',
                                   style: TextStyle(
                                     fontSize: 11,
                                     color: isSeller ? Colors.grey : Colors.black,
@@ -622,6 +628,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     try {
       final item = await _firestoreService.getAgriculturalItem(widget.productId);
       if (item != null) {
+        // Increment view count since we successfully loaded it
+        await _firestoreService.incrementProductView(widget.productId);
+        
         setState(() {
           _item = item;
           // Parse location from the map

@@ -21,6 +21,9 @@ class AgriculturalItem {
   DateTime createdAt;
   DateTime updatedAt;
 
+  int likes;
+  int views;
+
   AgriculturalItem({
     this.id,
     required this.name,
@@ -39,6 +42,8 @@ class AgriculturalItem {
     this.availableFrom,
     this.deliveryAvailable = false,
     this.tags,
+    this.likes = 0,
+    this.views = 0,
     DateTime? createdAt,
     DateTime? updatedAt,
   })  : createdAt = createdAt ?? DateTime.now(),
@@ -62,6 +67,8 @@ class AgriculturalItem {
       'availableFrom': availableFrom?.toIso8601String(),
       'deliveryAvailable': deliveryAvailable,
       'tags': tags,
+      'likes': likes,
+      'views': views,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
     };
@@ -93,6 +100,8 @@ class AgriculturalItem {
           : null,
       deliveryAvailable: data['deliveryAvailable'] ?? false,
       tags: data['tags'] != null ? List<String>.from(data['tags']) : null,
+      likes: (data['likes'] ?? 0).toInt(),
+      views: (data['views'] ?? 0).toInt(),
       createdAt: DateTime.parse(data['createdAt']),
       updatedAt: DateTime.parse(data['updatedAt']),
     );
@@ -115,6 +124,8 @@ class AgriculturalItem {
     DateTime? availableFrom,
     bool? deliveryAvailable,
     List<String>? tags,
+    int? likes,
+    int? views,
   }) {
     return AgriculturalItem(
       id: id,
@@ -134,6 +145,8 @@ class AgriculturalItem {
       availableFrom: availableFrom ?? this.availableFrom,
       deliveryAvailable: deliveryAvailable ?? this.deliveryAvailable,
       tags: tags ?? this.tags,
+      likes: likes ?? this.likes,
+      views: views ?? this.views,
       createdAt: createdAt,
       updatedAt: DateTime.now(),
     );

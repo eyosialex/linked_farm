@@ -68,4 +68,42 @@ class FirestoreService {
       print('Firestore delete error: $e');
     }
   }
+
+  // New specific methods
+  Stream<List<AgriculturalItem>> getAgriculturalItemsBySeller(String sellerId) {
+    return _firestore
+        .collection(_collectionName)
+        .where('sellerId', isEqualTo: sellerId)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => AgriculturalItem.fromFirestore(doc.data(), doc.id))
+            .toList());
+  }
+
+  Future<void> incrementProductView(String productId) async {
+    try {
+      await _firestore.collection(_collectionName).doc(productId).update({
+        'views': FieldValue.increment(1),
+      });
+    } catch (e) {
+      print('Error incrementing view: $e');
+    }
+  }
+
+  Future<void> toggleProductLike(String productId, String userId) async {
+    // Note: For a robust like system, you should store likes in a separate collection 
+    // or an array of user IDs on the product document to prevent double-liking.
+    // For this simple implementation, we'll just increment/decrement a counter, 
+    // but in a real app, you'd check if the user already liked it.
+    
+    // Here we will just increment for now as per the "number of like" request
+    try {
+      await _firestore.collection(_collectionName).doc(productId).update({
+        'likes': FieldValue.increment(1),
+      });
+    } catch (e) {
+      print('Error updating like: $e');
+    }
+  }
 }

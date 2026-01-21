@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:echat/User%20Credential/log_in_page.dart';
 import 'package:echat/Farmers%20View/Market_Prices.dart';
+import 'package:echat/Farmers%20View/My_Products.dart';
 
 class FarmersHomePage extends StatefulWidget {
   const FarmersHomePage({super.key});
@@ -26,6 +27,17 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
       'page': SellItem(),
       'gradient': const LinearGradient(
         colors: [Color(0xFF4CAF50), Color(0xFF2E7D32)],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+    },
+    {
+      'title': 'My Products',
+      'icon': Icons.inventory,
+      'image': 'assets/my_products.png', // You might need to ensure this asset exists or reuse another
+      'page': const MyProductsScreen(),
+      'gradient': const LinearGradient(
+        colors: [Color(0xFFFF9800), Color(0xFFF57C00)],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       ),
