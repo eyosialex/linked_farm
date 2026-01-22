@@ -12,48 +12,31 @@ import 'package:echat/Chat/widgets/message_bubble.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class ChatPage extends StatefulWidget {
-  final String receiverUserEmail;
-  final String receiverUserID;
+class GroupChatPage extends StatefulWidget {
+  final String groupId;
+  final String groupName;
 
-  const ChatPage({
+  const GroupChatPage({
     super.key,
-    required this.receiverUserEmail,
-    required this.receiverUserID,
+    required this.groupId,
+    required this.groupName,
   });
 
   @override
-  State<ChatPage> createState() => _ChatPageState();
+  State<GroupChatPage> createState() => _GroupChatPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _GroupChatPageState extends State<GroupChatPage> {
   final TextEditingController _messageController = TextEditingController();
   final ChatService _chatService = ChatService();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  StreamSubscription? _webSocketSubscription;
   bool _showEmoji = false;
   bool _isUploading = false;
 
-  @override
-  void initState() {
-    super.initState();
-    // Listen to WebSocket for instant notifications or UI updates (No SnackBar)
-    _webSocketSubscription = _chatService.webSocketStream.listen((event) {
-      // Logic for background message handling can go here
-    });
-  }
-
-  @override
-  void dispose() {
-    _webSocketSubscription?.cancel();
-    _messageController.dispose();
-    super.dispose();
-  }
-
   void sendMessage() async {
     if (_messageController.text.isNotEmpty) {
-      await _chatService.sendMessage(
-        widget.receiverUserID,
+      await _chatService.sendGroupMessage(
+        widget.groupId,
         _messageController.text,
         type: MessageType.text,
       );
@@ -81,10 +64,10 @@ class _ChatPageState extends State<ChatPage> {
         else if (ext == 'mp3') type = MessageType.audio;
         else if (ext == 'pdf') type = MessageType.pdf;
 
-        String url = await _chatService.uploadMedia(file, 'chat_media');
+        String url = await _chatService.uploadMedia(file, 'group_media');
         
-        await _chatService.sendMessage(
-          widget.receiverUserID,
+        await _chatService.sendGroupMessage(
+          widget.groupId,
           "[Media: $fileName]",
           type: type,
           mediaUrl: url,
@@ -102,24 +85,13 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(widget.receiverUserEmail, style: const TextStyle(fontSize: 16)),
-            // const Text("Online", style: TextStyle(fontSize: 12, color: Colors.greenAccent)), // Presence placeholder
-          ],
-        ),
+        title: Text(widget.groupName),
         backgroundColor: Colors.teal[700],
         foregroundColor: Colors.white,
       ),
       body: Column(
         children: [
-          // messages
-          Expanded(
-            child: _buildMessageList(),
-          ),
-
-          // user input
+          Expanded(child: _buildMessageList()),
           _buildMessageInput(),
         ],
       ),
@@ -128,18 +100,10 @@ class _ChatPageState extends State<ChatPage> {
 
   Widget _buildMessageList() {
     return StreamBuilder<QuerySnapshot>(
-      stream: _chatService.getMessages(
-        widget.receiverUserID,
-        _auth.currentUser!.uid,
-      ),
+      stream: _chatService.getGroupMessages(widget.groupId),
       builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        }
-
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
+        if (snapshot.hasError) return Center(child: Text('Error: ${snapshot.error}'));
+        if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
 
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return const Center(child: Text('No messages yet.'));
@@ -175,13 +139,9 @@ class _ChatPageState extends State<ChatPage> {
       child: MessageBubble(
         data: data,
         isMe: isMe,
+        senderName: data['senderEmail'],
       ),
     );
-  }
-
-  String _formatTimestamp(Timestamp timestamp) {
-    DateTime date = timestamp.toDate();
-    return "${date.hour}:${date.minute.toString().padLeft(2, '0')}";
   }
 
   Widget _buildMessageInput() {

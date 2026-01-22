@@ -13,19 +13,25 @@ class WebSocketService {
   WebSocketService._internal();
 
   WebSocketChannel? _channel;
+  Stream? _broadcastStream;
   
   // Replace with your actual WebSocket server URL
   // Example: 'ws://your-backend-server.com:8080'
   final String _url = 'wss://echo.websocket.org'; // Echo server for demo
 
-  Stream get stream => _channel!.stream;
-  
+  Stream get stream {
+    if (_channel == null) {
+      connect();
+    }
+    _broadcastStream ??= _channel!.stream.asBroadcastStream();
+    return _broadcastStream!;
+  }
   bool _isConnected = false;
-
   void connect() {
-    if (_isConnected) return; // Don't reconnect if already connected
+    if (_isConnected) return;
     try {
       _channel = IOWebSocketChannel.connect(Uri.parse(_url));
+      _broadcastStream = _channel!.stream.asBroadcastStream();
       _isConnected = true;
       print("✅ Connected to WebSocket: $_url");
     } catch (e) {
@@ -34,6 +40,10 @@ class WebSocketService {
   }
 
   void sendMessage(String senderId, String receiverId, String message) {
+    if (_channel == null || !_isConnected) {
+      connect();
+    }
+    
     if (_channel != null) {
       final payload = jsonEncode({
         'senderId': senderId,
@@ -48,6 +58,9 @@ class WebSocketService {
 
   void disconnect() {
     _channel?.sink.close();
-    print("🔌 WebSocket Disconnected");
+    _channel = null;
+    _broadcastStream = null;
+    _isConnected = false;
+    print("🔌 WebSocket Disconnected and Reset");
   }
 }

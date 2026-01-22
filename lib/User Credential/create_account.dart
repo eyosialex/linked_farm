@@ -108,13 +108,11 @@ final TextEditingController _qualificationController = TextEditingController();
           'products': _productsController.text.trim(),
           'profileCompleted': true,
         };
-      }
-       else if (_userData!['userType'] == 'delivery') {
+      } else if (_userData!['userType'] == 'delivery') {
         profileData = {
-        
           'cartype': _cartype.text.trim(),
-          'adress': _addreess.text.trim(),
-          'deriving licence': _drivinglisence.text.trim(),
+          'address': _addreess.text.trim(),
+          'driving_license': _drivinglisence.text.trim(),
           'profileCompleted': true,
         };
       } else if (_userData!['userType'] == 'advisor') {
@@ -179,8 +177,6 @@ final TextEditingController _qualificationController = TextEditingController();
       return _buildFarmerSteps();
     } else if (userType == 'vendor') {
       return _buildVendorSteps();
-    }
-   
     } else if (userType == 'delivery') {
       return _builddliverySteps();
     } else if (userType == 'advisor') {
@@ -237,7 +233,7 @@ final TextEditingController _qualificationController = TextEditingController();
             ),
             const SizedBox(height: 15),
             Text('Location: ${_addreess.text}'),
-            Text('Driven licence id : ${_drivinglisence.text} '),
+            Text('License ID: ${_drivinglisence.text}'),
             Text('Car Type: ${_cartype.text}'),
             const SizedBox(height: 20),
             const Text(

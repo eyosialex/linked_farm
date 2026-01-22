@@ -1,11 +1,17 @@
+import 'dart:io';
+import 'package:path/path.dart' as path;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:echat/Services/websocket_service.dart';
+import 'package:echat/Chat/chat_model.dart';
+import 'package:echat/Chat/group_model.dart';
 
 class ChatService extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
   final WebSocketService _webSocketService = WebSocketService();
 
   ChatService() {
@@ -21,65 +27,155 @@ class ChatService extends ChangeNotifier {
   // EXPOSE WEBSOCKET STREAM
   Stream get webSocketStream => _webSocketService.stream;
 
-  // SEND MESSAGE
-  Future<void> sendMessage(String receiverID, String message) async {
-    // get current user info
+  // SEND MESSAGE (Updated for Media)
+  Future<void> sendMessage(String receiverID, String message, {MessageType type = MessageType.text, String? mediaUrl, String? fileName}) async {
     final String currentUserId = _auth.currentUser!.uid;
     final String currentUserEmail = _auth.currentUser!.email!;
     final Timestamp timestamp = Timestamp.now();
 
-    // Send via WebSocket for "Instant" real-time (demo purposes)
+    // Broadcast via WebSocket
     _webSocketService.sendMessage(currentUserId, receiverID, message);
 
-    // create a new message for Firestore persistence
     Message newMessage = Message(
       senderId: currentUserId,
       senderEmail: currentUserEmail,
       receiverId: receiverID,
       message: message,
       timestamp: timestamp,
+      messageType: type,
+      mediaUrl: mediaUrl,
+      fileName: fileName,
     );
 
-    // construct chat room ID for the two users (sorted to ensure uniqueness)
     List<String> ids = [currentUserId, receiverID];
-    ids.sort(); // sort the ids (this ensures the chatRoomId is always the same for any 2 people)
+    ids.sort();
     String chatRoomId = ids.join('_');
 
-    // add new message to database
     await _firestore
         .collection('chat_rooms')
         .doc(chatRoomId)
         .collection('messages')
         .add(newMessage.toMap());
 
-    // Update 'latest_message' for both users to build the "Inbox" list
-    // 1. For Current User
-    await _firestore
-        .collection('user_chats')
-        .doc(currentUserId)
-        .collection('chats')
-        .doc(receiverID)
-        .set({
+    // Update 'latest_message' for Inbox
+    var updateData = {
       'chatRoomId': chatRoomId,
       'otherUserId': receiverID,
-      'lastMessage': message,
+      'lastMessage': type == MessageType.text ? message : '[Media]',
       'timestamp': timestamp,
-      // We might need to fetch the receiver's name separately or pass it in method, 
-      // but for now we rely on fetching user details in the list.
-    }, SetOptions(merge: true));
+    };
 
-    // 2. For Receiver
+    await _firestore
+        .collection('user_chats')
+        .doc(currentUserId)
+        .collection('chats')
+        .doc(receiverID)
+        .set(updateData, SetOptions(merge: true));
+
+    var receiverUpdateData = {
+      'chatRoomId': chatRoomId,
+      'otherUserId': currentUserId,
+      'lastMessage': type == MessageType.text ? message : '[Media]',
+      'timestamp': timestamp,
+    };
+
     await _firestore
         .collection('user_chats')
         .doc(receiverID)
         .collection('chats')
         .doc(currentUserId)
-        .set({
-      'chatRoomId': chatRoomId,
-      'otherUserId': currentUserId,
-      'lastMessage': message,
+        .set(receiverUpdateData, SetOptions(merge: true));
+  }
+
+  // MEDIA UPLOAD
+  Future<String> uploadMedia(File file, String folder) async {
+    String fileName = DateTime.now().millisecondsSinceEpoch.toString() + path.extension(file.path);
+    Reference ref = _storage.ref().child(folder).child(fileName);
+    UploadTask uploadTask = ref.putFile(file);
+    TaskSnapshot snapshot = await uploadTask;
+    return await snapshot.ref.getDownloadURL();
+  }
+
+  // SEARCH USERS
+  Stream<QuerySnapshot> searchUsers(String query) {
+    return _firestore
+        .collection('Usersstore')
+        .where('fullName', isGreaterThanOrEqualTo: query)
+        .where('fullName', isLessThanOrEqualTo: query + '\uf8ff')
+        .snapshots();
+  }
+
+  // GROUP LOGIC
+  Future<void> createGroup(String groupName, List<String> memberIds) async {
+    final String currentUserId = _auth.currentUser!.uid;
+    if (!memberIds.contains(currentUserId)) {
+      memberIds.add(currentUserId);
+    }
+
+    DocumentReference groupRef = _firestore.collection('groups').doc();
+    
+    GroupModel newGroup = GroupModel(
+      groupId: groupRef.id,
+      name: groupName,
+      members: memberIds,
+      lastMessage: "Group created",
+      lastSenderId: currentUserId,
+      timestamp: Timestamp.now(),
+    );
+
+    await groupRef.set(newGroup.toMap());
+
+    // Also notify via WebSocket (optional broadcast)
+  }
+
+  Future<void> sendGroupMessage(String groupId, String message, {MessageType type = MessageType.text, String? mediaUrl, String? fileName}) async {
+    final String currentUserId = _auth.currentUser!.uid;
+    final String currentUserEmail = _auth.currentUser!.email!;
+    final Timestamp timestamp = Timestamp.now();
+
+    Message newMessage = Message(
+      senderId: currentUserId,
+      senderEmail: currentUserEmail,
+      groupId: groupId,
+      message: message,
+      timestamp: timestamp,
+      messageType: type,
+      mediaUrl: mediaUrl,
+      fileName: fileName,
+    );
+
+    // Broadcast via WebSocket
+    _webSocketService.sendMessage(currentUserId, groupId, message);
+
+    await _firestore
+        .collection('groups')
+        .doc(groupId)
+        .collection('messages')
+        .add(newMessage.toMap());
+
+    await _firestore.collection('groups').doc(groupId).update({
+      'lastMessage': type == MessageType.text ? message : '[Media]',
+      'lastSenderId': currentUserId,
       'timestamp': timestamp,
-    }, SetOptions(merge: true));
+    });
+  }
+
+  Stream<QuerySnapshot> getGroupMessages(String groupId) {
+    return _firestore
+        .collection('groups')
+        .doc(groupId)
+        .collection('messages')
+        .orderBy('timestamp', descending: false)
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> getUserGroups() {
+    final String currentUserId = _auth.currentUser!.uid;
+    return _firestore
+        .collection('groups')
+        .where('members', arrayContains: currentUserId)
+        .orderBy('timestamp', descending: true)
+        .snapshots();
   }
   
   // GET USER CHATS (INBOX)
@@ -106,32 +202,5 @@ class ChatService extends ChangeNotifier {
         .collection('messages')
         .orderBy('timestamp', descending: false)
         .snapshots();
-  }
-}
-
-class Message {
-  final String senderId;
-  final String senderEmail;
-  final String receiverId;
-  final String message;
-  final Timestamp timestamp;
-
-  Message({
-    required this.senderId,
-    required this.senderEmail,
-    required this.receiverId,
-    required this.message,
-    required this.timestamp,
-  });
-
-  // convert to map
-  Map<String, dynamic> toMap() {
-    return {
-      'senderId': senderId,
-      'senderEmail': senderEmail,
-      'receiverId': receiverId,
-      'message': message,
-      'timestamp': timestamp,
-    };
   }
 }

@@ -3,6 +3,8 @@ import 'package:echat/Chat/chat_screen.dart';
 import 'package:echat/Services/chat_service.dart';
 import 'package:echat/User%20Credential/userfirestore.dart';
 import 'package:flutter/material.dart';
+import 'package:echat/Chat/create_group_screen.dart';
+import 'package:echat/Chat/group_chat_page.dart';
 import 'package:intl/intl.dart';
 
 class ChatListScreen extends StatefulWidget {
@@ -12,50 +14,184 @@ class ChatListScreen extends StatefulWidget {
   State<ChatListScreen> createState() => _ChatListScreenState();
 }
 
-class _ChatListScreenState extends State<ChatListScreen> {
+class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProviderStateMixin {
   final ChatService _chatService = ChatService();
   final UserRepository _userRepo = UserRepository();
+  late TabController _tabController;
+  final TextEditingController _searchController = TextEditingController();
+  bool _isSearching = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Messages"),
+        title: _isSearching
+            ? TextField(
+                controller: _searchController,
+                autofocus: true,
+                decoration: const InputDecoration(
+                  hintText: "Search members...",
+                  border: InputBorder.none,
+                  hintStyle: TextStyle(color: Colors.white70),
+                ),
+                style: const TextStyle(color: Colors.white),
+                onChanged: (val) => setState(() {}),
+              )
+            : const Text("Chat"),
         backgroundColor: Colors.teal[700],
         foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: Icon(_isSearching ? Icons.close : Icons.search),
+            onPressed: () {
+              setState(() {
+                _isSearching = !_isSearching;
+                if (!_isSearching) _searchController.clear();
+              });
+            },
+          ),
+          if (!_isSearching)
+            IconButton(
+              icon: const Icon(Icons.group_add),
+              onPressed: () => _showCreateGroupDialog(),
+            ),
+        ],
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const [
+            Tab(text: "MESSAGES"),
+            Tab(text: "GROUPS"),
+          ],
+          indicatorColor: Colors.white,
+        ),
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: _chatService.getUserChats(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(child: Text("Error: ${snapshot.error}"));
-          }
+      body: _isSearching ? _buildSearchResults() : TabBarView(
+        controller: _tabController,
+        children: [
+          _buildChatList(),
+          _buildGroupList(),
+        ],
+      ),
+    );
+  }
 
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+  Widget _buildSearchResults() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _chatService.searchUsers(_searchController.text),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
+        var users = snapshot.data!.docs;
+        return ListView.builder(
+          itemCount: users.length,
+          itemBuilder: (context, index) {
+            var user = users[index];
+            return ListTile(
+              leading: const CircleAvatar(child: Icon(Icons.person)),
+              title: Text(user['fullName']),
+              subtitle: Text(user['userType']),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChatPage(
+                      receiverUserEmail: user['email'],
+                      receiverUserID: user.id,
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
 
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.chat_bubble_outline, size: 60, color: Colors.grey),
-                  SizedBox(height: 10),
-                  Text("No messages yet", style: TextStyle(color: Colors.grey)),
-                ],
+  Widget _buildChatList() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _chatService.getUserChats(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) return Center(child: Text("Error: ${snapshot.error}"));
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return _buildEmptyState("No messages yet");
+        }
+        return ListView.builder(
+          itemCount: snapshot.data!.docs.length,
+          itemBuilder: (context, index) {
+            final doc = snapshot.data!.docs[index];
+            return _buildChatListItem(doc);
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildGroupList() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _chatService.getUserGroups(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) return Center(child: Text("Error: ${snapshot.error}"));
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return _buildEmptyState("No groups yet");
+        }
+        return ListView.builder(
+          itemCount: snapshot.data!.docs.length,
+          itemBuilder: (context, index) {
+            final doc = snapshot.data!.docs[index];
+            return Card(
+              margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              child: ListTile(
+                leading: const CircleAvatar(child: Icon(Icons.group)),
+                title: Text(doc['name']),
+                subtitle: Text(doc['lastMessage']),
+                trailing: Text(_formatDate(doc['timestamp'])),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => GroupChatPage(
+                        groupId: doc.id,
+                        groupName: doc['name'],
+                      ),
+                    ),
+                  );
+                },
               ),
             );
-          }
+          },
+        );
+      },
+    );
+  }
 
-          return ListView.builder(
-            itemCount: snapshot.data!.docs.length,
-            itemBuilder: (context, index) {
-              final doc = snapshot.data!.docs[index];
-              return _buildChatListItem(doc);
-            },
-          );
-        },
+  Widget _buildEmptyState(String msg) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.chat_bubble_outline, size: 60, color: Colors.grey),
+          const SizedBox(height: 10),
+          Text(msg, style: const TextStyle(color: Colors.grey)),
+        ],
       ),
     );
   }
@@ -125,5 +261,11 @@ class _ChatListScreenState extends State<ChatListScreen> {
     } else {
       return DateFormat('MMM dd').format(date);
     }
+  }
+  void _showCreateGroupDialog() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const CreateGroupScreen()),
+    );
   }
 }
