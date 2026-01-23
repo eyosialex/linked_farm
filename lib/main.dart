@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+import 'package:echat/Game/models/game_state.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -93,14 +95,17 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
+    return ChangeNotifierProvider(
+      create: (_) => GameState(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
       title: 'Agrilead',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ), 
       home: LogInOrRegister(),
+      ),
     );
   }
 }

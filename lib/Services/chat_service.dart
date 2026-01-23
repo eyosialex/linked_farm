@@ -32,7 +32,6 @@ class ChatService extends ChangeNotifier {
     final String currentUserId = _auth.currentUser!.uid;
     final String currentUserEmail = _auth.currentUser!.email!;
     final Timestamp timestamp = Timestamp.now();
-
     // Broadcast via WebSocket
     _webSocketService.sendMessage(currentUserId, receiverID, message);
 
@@ -56,7 +55,6 @@ class ChatService extends ChangeNotifier {
         .doc(chatRoomId)
         .collection('messages')
         .add(newMessage.toMap());
-
     // Update 'latest_message' for Inbox
     var updateData = {
       'chatRoomId': chatRoomId,

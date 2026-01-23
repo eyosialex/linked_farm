@@ -10,6 +10,7 @@ import 'package:echat/Farmers%20View/Market_Prices.dart';
 import 'package:echat/Farmers%20View/My_Products.dart';
 import 'package:echat/Farmers%20View/advice_feed.dart';
 import 'package:echat/Chat/chat_list.dart';
+import 'package:echat/Game/ui/game_dashboard.dart';
 
 class FarmersHomePage extends StatefulWidget {
   const FarmersHomePage({super.key});
@@ -95,6 +96,17 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
       'page': const AdviceFeedScreen(),
       'gradient': const LinearGradient(
         colors: [Color(0xFFE91E63), Color(0xFFC2185B)],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+    },
+    {
+      'title': 'Virtual Farming Game',
+      'icon': Icons.videogame_asset,
+      'image': 'assets/game.png',
+      'page': const GameDashboard(),
+      'gradient': const LinearGradient(
+        colors: [Color(0xFF3F51B5), Color(0xFF303F9F)],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       ),
