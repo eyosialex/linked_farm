@@ -136,13 +136,13 @@ class _PreparationScreenState extends State<PreparationScreen> with SingleTicker
               _actionCard(
                 "Plow", 
                 Icons.line_weight, 
-                "Cost: 20 Energy", 
+                "Cost: 10 Energy", 
                 () => _runTractor(gameState.plow)
               ),
               _actionCard(
                 "Level", 
                 Icons.horizontal_rule, 
-                "Cost: 15 Energy", 
+                "Cost: 10 Energy", 
                 () => _runTractor(gameState.levelSoil)
               ),
             ],

@@ -54,7 +54,7 @@ class GameDashboard extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const LandSelectionScreen()),
+                      MaterialPageRoute(builder: (context) => const MyLandsScreen()),
                     );
                   },
                   icon: const Icon(Icons.play_arrow),
@@ -88,7 +88,7 @@ class GameDashboard extends StatelessWidget {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const LandSelectionScreen()),
+                          MaterialPageRoute(builder: (context) => const MyLandsScreen()),
                         );
                       },
                       child: const Text("Reset and Start New"),

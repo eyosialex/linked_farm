@@ -1,121 +1,187 @@
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../Services/farm_persistence_service.dart';
+import '../models/game_state.dart';
 import 'setup_screens.dart';
+import 'farm_main_screen.dart';
 
-class LandSelectionScreen extends StatefulWidget {
-  const LandSelectionScreen({super.key});
-
-  @override
-  State<LandSelectionScreen> createState() => _LandSelectionScreenState();
-}
-
-class _LandSelectionScreenState extends State<LandSelectionScreen> {
-  int? selectedPlot;
-
-  final List<Map<String, dynamic>> plots = [
-    {'id': 1, 'size': '1.2 ha', 'region': 'North Valley', 'soilHint': 'Deep Loam'},
-    {'id': 2, 'size': '0.8 ha', 'region': 'River Basin', 'soilHint': 'Silt/Clay'},
-    {'id': 3, 'size': '2.0 ha', 'region': 'High Plateaus', 'soilHint': 'Sandy/Rocky'},
-    {'id': 4, 'size': '1.5 ha', 'region': 'East Plains', 'soilHint': 'Balanced'},
-  ];
+class MyLandsScreen extends StatelessWidget {
+  const MyLandsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final persistence = FarmPersistenceService();
+
     return Scaffold(
+      backgroundColor: const Color(0xFFF1F5F9),
       appBar: AppBar(
-        title: const Text("Select Your Land"),
+        title: const Text("MY LANDS PROFILE", style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+        centerTitle: true,
         backgroundColor: Colors.green[800],
         foregroundColor: Colors.white,
+        elevation: 0,
       ),
-      body: Stack(
+      body: StreamBuilder<List<UserLand>>(
+        stream: persistence.streamUserLands(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          final lands = snapshot.data ?? [];
+
+          if (lands.isEmpty) {
+            return _buildEmptyState(context);
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.all(20),
+            itemCount: lands.length,
+            itemBuilder: (context, index) {
+              final land = lands[index];
+              return _buildLandCard(context, land);
+            },
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => _showAddLandDialog(context),
+        label: const Text("REGISTER NEW LAND", style: TextStyle(fontWeight: FontWeight.bold)),
+        icon: const Icon(Icons.add_location_alt),
+        backgroundColor: Colors.green[800],
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Background "Map" visual
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Colors.green[200]!, Colors.blue[100]!],
+          Icon(Icons.landscape_outlined, size: 100, color: Colors.grey[400]),
+          const SizedBox(height: 20),
+          Text("No lands registered yet.", style: TextStyle(color: Colors.grey[600], fontSize: 18, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 10),
+          const Text("Start by adding your first plot of land.", style: TextStyle(color: Colors.grey)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLandCard(BuildContext context, UserLand land) {
+    final isRunning = land.activeCrop != null && land.currentDay < 5 && land.growthProgress < 100;
+
+    return GestureDetector(
+      onTap: () async {
+        final gameState = Provider.of<GameState>(context, listen: false);
+        await gameState.loadFromLand(land);
+        
+        if (land.activeCrop == null) {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const SetupScreen()));
+        } else {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const FarmMainScreen()));
+        }
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 20),
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10, spreadRadius: 2)],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(color: Colors.green[50], borderRadius: BorderRadius.circular(15)),
+              child: Icon(Icons.location_on, color: Colors.green[800], size: 30),
+            ),
+            const SizedBox(width: 20),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(land.name.toUpperCase(), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                  Text("${land.size} Hectares | ${land.soilType}", style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                  const SizedBox(height: 10),
+                  if (isRunning)
+                    Row(
+                      children: [
+                        const Icon(Icons.trending_up, color: Colors.blue, size: 14),
+                        const SizedBox(width: 5),
+                        Text("${land.activeCrop} - DAY ${land.currentDay}", style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 11)),
+                      ],
+                    )
+                  else
+                    Text(land.activeCrop == null ? "READY FOR PLANTING" : "CYCLE COMPLETED", 
+                      style: TextStyle(color: land.activeCrop == null ? Colors.orange : Colors.grey, fontWeight: FontWeight.bold, fontSize: 11)),
+                ],
               ),
             ),
-          ),
-          
-          GridView.builder(
-            padding: const EdgeInsets.all(20),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 20,
-              mainAxisSpacing: 20,
-              childAspectRatio: 0.8,
-            ),
-            itemCount: plots.length,
-            itemBuilder: (context, index) {
-              final plot = plots[index];
-              final isSelected = selectedPlot == plot['id'];
-              
-              return GestureDetector(
-                onTap: () => setState(() => selectedPlot = plot['id']),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  decoration: BoxDecoration(
-                    color: isSelected ? Colors.white : Colors.white.withOpacity(0.6),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: isSelected ? Colors.green[700]! : Colors.transparent,
-                      width: 3,
-                    ),
-                    boxShadow: isSelected 
-                      ? [BoxShadow(color: Colors.green.withOpacity(0.3), blurRadius: 15, spreadRadius: 5)]
-                      : [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 5)],
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.landscape, 
-                        size: 50, 
-                        color: isSelected ? Colors.green[800] : Colors.grey[600]
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        "Plot #${plot['id']}",
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                      ),
-                      Text(plot['region'], style: TextStyle(color: Colors.grey[600])),
-                      const SizedBox(height: 5),
-                      Chip(
-                        label: Text(plot['size']),
-                        backgroundColor: Colors.green[50],
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-          
-          if (selectedPlot != null)
-            Positioned(
-              bottom: 40,
-              left: 20,
-              right: 20,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const SetupScreen()),
+            const Icon(Icons.chevron_right, color: Colors.grey),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showAddLandDialog(BuildContext context) {
+    final nameController = TextEditingController();
+    final sizeController = TextEditingController();
+    String selectedSoil = "Loamy";
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
+      builder: (context) => StatefulBuilder(
+        builder: (context, setModalState) => Padding(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom, left: 25, right: 25, top: 25),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text("REGISTER NEW LAND", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 20),
+              TextField(controller: nameController, decoration: const InputDecoration(labelText: "Land Name (e.g. Home Garden)")),
+              const SizedBox(height: 15),
+              TextField(controller: sizeController, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: "Size (Hectares)")),
+              const SizedBox(height: 20),
+              const Text("Soil Type", style: TextStyle(color: Colors.grey, fontSize: 12)),
+              DropdownButton<String>(
+                isExpanded: true,
+                value: selectedSoil,
+                items: ["Loamy", "Silt", "Clay", "Sandy"].map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
+                onChanged: (val) => setModalState(() => selectedSoil = val!),
+              ),
+              const SizedBox(height: 30),
+              ElevatedButton(
+                onPressed: () async {
+                  if (nameController.text.isEmpty || sizeController.text.isEmpty) return;
+                  
+                  final newLand = UserLand(
+                    id: "", // Auto-generated by Firestore
+                    name: nameController.text,
+                    size: double.tryParse(sizeController.text) ?? 1.0,
+                    soilType: selectedSoil,
+                    updatedAt: DateTime.now(),
                   );
+
+                  await FarmPersistenceService().saveLand(newLand);
+                  Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green[800],
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  minimumSize: const Size(double.infinity, 55),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                 ),
-                child: const Text("CLAIM THIS LAND", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                child: const Text("SAVE LAND", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
               ),
-            ),
-        ],
+              const SizedBox(height: 30),
+            ],
+          ),
+        ),
       ),
     );
   }

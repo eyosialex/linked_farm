@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../models/soil_model.dart';
 import '../models/crop_model.dart';
 import '../models/game_state.dart';
-import 'preparation_minigame.dart';
+import 'farm_main_screen.dart';
 
 class SetupScreen extends StatefulWidget {
   const SetupScreen({super.key});
@@ -16,97 +16,252 @@ class SetupScreen extends StatefulWidget {
 class _SetupScreenState extends State<SetupScreen> {
   Soil? selectedSoil;
   Crop? selectedCrop;
+  double landSize = 1.0;
+  DateTime plantingDate = DateTime.now();
   int step = 1;
 
   @override
   Widget build(BuildContext context) {
+    String title = "Setup Your Farm";
+    if (step == 2) title = "Analyze Soil Profile";
+    if (step == 3) title = "Select Predictive Crop";
+
     return Scaffold(
-      appBar: AppBar(title: Text(step == 1 ? "Choose Your Soil" : "Select Your Crop")),
-      body: step == 1 ? _buildSoilSelection() : _buildCropSelection(),
+      backgroundColor: Colors.grey[50],
+      appBar: AppBar(
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        backgroundColor: Colors.green[800],
+        foregroundColor: Colors.white,
+        elevation: 0,
+      ),
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        child: step == 1 
+            ? _buildLandDetails() 
+            : step == 2 
+                ? _buildSoilSelection() 
+                : _buildCropSelection(),
+      ),
+    );
+  }
+
+  Widget _buildLandDetails() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text("1. ENTER LAND DIMENSIONS", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+          const SizedBox(height: 20),
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15), boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)]),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.square_foot, color: Colors.green),
+                    const SizedBox(width: 15),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("Total Area (Hectares)", style: TextStyle(color: Colors.grey, fontSize: 12)),
+                          Slider(
+                            value: landSize,
+                            min: 0.5,
+                            max: 10.0,
+                            divisions: 19,
+                            label: "${landSize.toStringAsFixed(1)} ha",
+                            onChanged: (val) => setState(() => landSize = val),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text("${landSize.toStringAsFixed(1)} ha", style: const TextStyle(fontWeight: FontWeight.bold)),
+                  ],
+                ),
+                const Divider(height: 30),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Icon(Icons.calendar_today, color: Colors.green),
+                  title: const Text("Planned Planting Date", style: TextStyle(fontSize: 14)),
+                  subtitle: Text("${plantingDate.day}/${plantingDate.month}/${plantingDate.year}", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  trailing: TextButton(
+                    onPressed: () async {
+                      final picked = await showDatePicker(context: context, initialDate: plantingDate, firstDate: DateTime.now(), lastDate: DateTime.now().add(const Duration(days: 90)));
+                      if (picked != null) setState(() => plantingDate = picked);
+                    },
+                    child: const Text("CHANGE"),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 40),
+          ElevatedButton(
+            onPressed: () => setState(() => step = 2),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green[800],
+              foregroundColor: Colors.white,
+              minimumSize: const Size(double.infinity, 60),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            ),
+            child: const Text("NEXT: SOIL PROFILE", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildSoilSelection() {
     final soils = Soil.allSoils;
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: soils.length,
-      itemBuilder: (context, index) {
-        final soil = soils[index];
-        return Card(
-          elevation: selectedSoil == soil ? 8 : 2,
-          color: selectedSoil == soil ? Colors.green[50] : null,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-            side: BorderSide(
-              color: selectedSoil == soil ? Colors.green : Colors.transparent,
-              width: 2,
-            ),
-          ),
-          child: ListTile(
-            title: Text(soil.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-            subtitle: Text(soil.description),
-            trailing: selectedSoil == soil ? const Icon(Icons.check_circle, color: Colors.green) : null,
-            onTap: () {
-              setState(() {
-                selectedSoil = soil;
-                step = 2;
-              });
+    return Column(
+      children: [
+        const Padding(
+          padding: EdgeInsets.all(20),
+          child: Text("2. SELECT OR DETECT SOIL TYPE", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+        ),
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: soils.length,
+            itemBuilder: (context, index) {
+              final soil = soils[index];
+              final isSelected = selectedSoil == soil;
+              return GestureDetector(
+                onTap: () => setState(() => selectedSoil = soil),
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(color: isSelected ? Colors.green : Colors.transparent, width: 2),
+                    boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 5)],
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(color: Colors.brown[50], shape: BoxShape.circle),
+                        child: Icon(Icons.layers, color: Colors.brown[700]),
+                      ),
+                      const SizedBox(width: 15),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(soil.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                            Text(soil.description, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                            const SizedBox(height: 4),
+                            Text("pH: ${soil.phLevel} | OM: ${soil.organicMatter}%", style: const TextStyle(fontSize: 10, color: Colors.blueGrey, fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ),
+                      if (isSelected) const Icon(Icons.check_circle, color: Colors.green),
+                    ],
+                  ),
+                ),
+              );
             },
           ),
-        );
-      },
+        ),
+        Padding(
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            children: [
+              TextButton(onPressed: () => setState(() => step = 1), child: const Text("BACK")),
+              const Spacer(),
+              ElevatedButton(
+                onPressed: selectedSoil == null ? null : () => setState(() => step = 3),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.green[800], foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15)),
+                child: const Text("NEXT"),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
   Widget _buildCropSelection() {
     if (selectedSoil == null) return const Center(child: Text("Please select soil first"));
 
-    final compatibleCrops = Crop.allCrops.where((c) => c.preferredSoils.contains(selectedSoil!.type)).toList();
+    final compatibleCrops = Crop.allCrops.toList(); // Show all, highlight compatible
 
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(
-            "Based on your ${selectedSoil!.name} soil, these crops are recommended:",
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-          ),
+        const Padding(
+          padding: EdgeInsets.all(20),
+          child: Text("3. SELECT CROP ALLOCATION", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
         ),
         Expanded(
           child: ListView.builder(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             itemCount: compatibleCrops.length,
             itemBuilder: (context, index) {
               final crop = compatibleCrops[index];
-              return Card(
-                elevation: selectedCrop == crop ? 8 : 2,
-                color: selectedCrop == crop ? Colors.blue[50] : null,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  side: BorderSide(
-                    color: selectedCrop == crop ? Colors.blue : Colors.transparent,
-                    width: 2,
+              final isCompatible = crop.preferredSoils.contains(selectedSoil!.type);
+              final isSelected = selectedCrop == crop;
+
+              return GestureDetector(
+                onTap: () => setState(() => selectedCrop = crop),
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(color: isSelected ? Colors.blue : Colors.transparent, width: 2),
+                    boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 5)],
                   ),
-                ),
-                child: ListTile(
-                  title: Text(crop.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                  subtitle: Text("${crop.description}\nTakes ~${crop.totalGrowthDays} days to harvest."),
-                  isThreeLine: true,
-                  onTap: () {
-                    setState(() {
-                      selectedCrop = crop;
-                    });
-                    _startGame();
-                  },
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(color: isCompatible ? Colors.green[50] : Colors.red[50], shape: BoxShape.circle),
+                        child: Icon(Icons.agriculture, color: isCompatible ? Colors.green : Colors.red),
+                      ),
+                      const SizedBox(width: 15),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(crop.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                                const SizedBox(width: 8),
+                                if (isCompatible) const Icon(Icons.star, color: Colors.amber, size: 14),
+                              ],
+                            ),
+                            Text(crop.description, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                            const SizedBox(height: 4),
+                            Text("Demand: W:${crop.waterDemand} N:${crop.nutrientDemand} | Ph Range: ${crop.minPh}-${crop.maxPh}", style: const TextStyle(fontSize: 10, color: Colors.blueGrey)),
+                          ],
+                        ),
+                      ),
+                      if (isSelected) const Icon(Icons.check_circle, color: Colors.blue),
+                    ],
+                  ),
                 ),
               );
             },
           ),
         ),
-        TextButton(
-          onPressed: () => setState(() => step = 1),
-          child: const Text("Go Back to Soil Selection"),
+        Padding(
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            children: [
+              TextButton(onPressed: () => setState(() => step = 2), child: const Text("BACK")),
+              const Spacer(),
+              ElevatedButton(
+                onPressed: selectedCrop == null ? null : _startGame,
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue[800], foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15)),
+                child: const Text("START MISSION"),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -114,10 +269,21 @@ class _SetupScreenState extends State<SetupScreen> {
 
   void _startGame() {
     if (selectedSoil != null && selectedCrop != null) {
-      Provider.of<GameState>(context, listen: false).startNewGame(selectedSoil!, selectedCrop!);
+      final gameState = Provider.of<GameState>(context, listen: false);
+      
+      // Use the land already loaded into GameState from the Dashboard
+      gameState.startNewGame(
+        gameState.currentLandId ?? "temp_${DateTime.now().millisecondsSinceEpoch}", 
+        gameState.currentLandName ?? "New Plot",
+        selectedSoil!, 
+        selectedCrop!, 
+        landSize, 
+        plantingDate
+      );
+
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const PreparationScreen()),
+        MaterialPageRoute(builder: (context) => const FarmMainScreen()),
       );
     }
   }

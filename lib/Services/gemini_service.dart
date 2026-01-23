@@ -4,7 +4,7 @@ import 'package:google_generative_ai/google_generative_ai.dart';
 class GeminiService {
   // IMPORTANT: The user should provide their own API key. 
   // For training/demo purposes, you might use an environment variable or a secure vault.
-  static const String _apiKey = "AIzaSyAgIsh42UGXjd2J4PmJ-lxYSOIYcKrYUJY"; 
+  static const String _apiKey = "PASTE_YOUR_NEW_KEY_HERE"; 
 
   static Future<String> getFarmingAdvice({
     required String soilType,

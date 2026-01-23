@@ -1,5 +1,6 @@
 
 import 'package:echat/Farmers%20View/Enter_Sell_Item.dart';
+import 'package:echat/Vendors%20View/WantedProductsScreen.dart';
 import 'package:echat/Vendors%20View/product.dart';
 import 'package:echat/Chat/chat_list.dart';
 import 'package:echat/Farmers%20View/advice_feed.dart';
@@ -44,7 +45,7 @@ class _vendors_pageState extends State<vendors_page> {
       'title': 'My Shop',
       'icon': Icons.dashboard,
       'image': 'assets/agrilead.png', 
-      'page': null, // TODO: Manage listed items
+      'page': const WantedProductsScreen(), // Manage listed requirements
       'gradient': const LinearGradient(
         colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
         begin: Alignment.topLeft,
@@ -55,7 +56,7 @@ class _vendors_pageState extends State<vendors_page> {
       'title': 'Orders',
       'icon': Icons.shopping_cart,
       'image': 'assets/delivery.png',
-      'page': null, // TODO: View orders
+      'page': const WantedProductsScreen(), // View market demand
       'gradient': const LinearGradient(
         colors: [Color(0xFF9C27B0), Color(0xFF7B1FA2)],
         begin: Alignment.topLeft,

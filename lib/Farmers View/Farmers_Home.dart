@@ -11,6 +11,7 @@ import 'package:echat/Farmers%20View/My_Products.dart';
 import 'package:echat/Farmers%20View/advice_feed.dart';
 import 'package:echat/Chat/chat_list.dart';
 import 'package:echat/Game/ui/game_dashboard.dart';
+import 'package:echat/Game/ui/land_selection_screen.dart';
 
 class FarmersHomePage extends StatefulWidget {
   const FarmersHomePage({super.key});
@@ -101,10 +102,10 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
       ),
     },
     {
-      'title': 'Virtual Farming Game',
-      'icon': Icons.videogame_asset,
+      'title': 'My Land Planner',
+      'icon': Icons.landscape,
       'image': 'assets/game.png',
-      'page': const GameDashboard(),
+      'page': const MyLandsScreen(),
       'gradient': const LinearGradient(
         colors: [Color(0xFF3F51B5), Color(0xFF303F9F)],
         begin: Alignment.topLeft,
