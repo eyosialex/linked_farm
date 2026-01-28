@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
+import 'package:echat/Services/farm_persistence_service.dart';
 import 'Position_Sell_Item.dart';
 class SellItem extends StatefulWidget {
   final AgriculturalItem? productToEdit;
@@ -46,6 +47,7 @@ class _SellItemState extends State<SellItem> {
   // Services
   final CloudinaryService _cloudinaryService = CloudinaryService();
   final FirestoreService _firestoreService = FirestoreService();
+  final FarmPersistenceService _persistence = FarmPersistenceService();
   final ImagePicker _imagePicker = ImagePicker();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -393,6 +395,7 @@ class _SellItemState extends State<SellItem> {
         Navigator.pop(context); // Close loading dialog
         
         if (success) {
+           await _persistence.checkAndNotifyMatches(item);
            ScaffoldMessenger.of(context).showSnackBar(
              const SnackBar(content: Text("Product updated successfully!")),
            );
@@ -408,6 +411,7 @@ class _SellItemState extends State<SellItem> {
 
         if (itemId != null) {
           print('🎉 SUCCESS! Item saved with ID: $itemId');
+          await _persistence.checkAndNotifyMatches(item);
           _showSuccessMessage(item, imageUrls.length);
         } else {
           _showSnackBar("❌ Failed to save item to database.");

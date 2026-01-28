@@ -2,16 +2,19 @@ import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:echat/Services/websocket_service.dart';
 import 'package:echat/Chat/chat_model.dart';
 import 'package:echat/Chat/group_model.dart';
+import 'package:echat/Farmers View/Cloudnary_Store.dart';
+import 'dart:convert'; // Added for json.decode
+import 'package:http/http.dart' as http; // Added for http requests
 
 class ChatService extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseStorage _storage = FirebaseStorage.instance;
+  // Cloudinary Service instead of Firebase Storage
+  final CloudinaryService _cloudinaryService = CloudinaryService();
   final WebSocketService _webSocketService = WebSocketService();
 
   ChatService() {
@@ -85,13 +88,14 @@ class ChatService extends ChangeNotifier {
         .set(receiverUpdateData, SetOptions(merge: true));
   }
 
-  // MEDIA UPLOAD
+  // MEDIA UPLOAD (Updated to use Cloudinary)
   Future<String> uploadMedia(File file, String folder) async {
-    String fileName = DateTime.now().millisecondsSinceEpoch.toString() + path.extension(file.path);
-    Reference ref = _storage.ref().child(folder).child(fileName);
-    UploadTask uploadTask = ref.putFile(file);
-    TaskSnapshot snapshot = await uploadTask;
-    return await snapshot.ref.getDownloadURL();
+    String? mediaUrl = await _cloudinaryService.uploadFile(file, folder: folder);
+    if (mediaUrl != null) {
+      return mediaUrl;
+    } else {
+      throw Exception("Failed to upload media to Cloudinary");
+    }
   }
 
   // SEARCH USERS

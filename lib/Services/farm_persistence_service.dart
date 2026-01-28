@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../Vendors View/WantedProductModel.dart';
 import '../Models/notification_model.dart';
+import '../Farmers View/Sell_Item_Model.dart';
 
 class UserLand {
   final String id;
@@ -103,11 +104,24 @@ class FarmPersistenceService {
     _firestore.collection('wanted_products');
 
   Future<void> saveWantedProduct(WantedProduct request) async {
-    await _wantedProductsCollection.doc(request.id.isEmpty ? null : request.id).set(request.toJson());
+    final docId = request.id.isEmpty ? _firestore.collection('wanted_products').doc().id : request.id;
+    final finalRequest = WantedProduct(
+      id: docId,
+      productName: request.productName,
+      category: request.category,
+      quantityNeeded: request.quantityNeeded,
+      vendorId: request.vendorId,
+      vendorName: request.vendorName,
+      location: request.location,
+      createdAt: request.createdAt,
+      isMet: request.isMet,
+    );
+    await _firestore.collection('wanted_products').doc(docId).set(finalRequest.toJson());
+    await checkAndNotifyFarmers(finalRequest);
   }
 
   Stream<List<WantedProduct>> streamWantedProducts() {
-    return _wantedProductsCollection
+    return _firestore.collection('wanted_products')
       .orderBy('createdAt', descending: true)
       .snapshots()
       .map((snapshot) => 
@@ -116,7 +130,7 @@ class FarmPersistenceService {
   }
 
   Future<void> deleteWantedProduct(String id) async {
-    await _wantedProductsCollection.doc(id).delete();
+    await _firestore.collection('wanted_products').doc(id).delete();
   }
 
   // --- Notifications ---
@@ -147,5 +161,73 @@ class FarmPersistenceService {
   Future<void> deleteNotification(String id) async {
     if (_userId == null) return;
     await _notificationsCollection.doc(id).delete();
+  }
+
+  // --- Matching Logic ---
+
+  Future<void> checkAndNotifyMatches(AgriculturalItem listedItem) async {
+    try {
+      final snapshot = await _firestore.collection('wanted_products').get();
+      final wantedProducts = snapshot.docs.map((doc) => WantedProduct.fromFirestore(doc)).toList();
+
+      for (var wanted in wantedProducts) {
+        bool nameMatch = listedItem.name.toLowerCase().contains(wanted.productName.toLowerCase()) || 
+                         wanted.productName.toLowerCase().contains(listedItem.name.toLowerCase());
+        
+        bool categoryMatch = listedItem.category.toLowerCase() == wanted.category.toLowerCase();
+
+        if (nameMatch || categoryMatch) {
+          final notification = AppNotification(
+            id: "",
+            title: "Product Match Found! 🌾",
+            message: "A farmer just listed ${listedItem.name}, which matches your request!",
+            timestamp: DateTime.now(),
+            type: 'match',
+            isRead: false,
+          );
+
+          await _firestore
+              .collection('users')
+              .doc(wanted.vendorId)
+              .collection('notifications')
+              .add(notification.toJson());
+        }
+      }
+    } catch (e) {
+      print("❌ Error in checkAndNotifyMatches: $e");
+    }
+  }
+
+  Future<void> checkAndNotifyFarmers(WantedProduct wanted) async {
+    try {
+      final snapshot = await _firestore.collection('agricultural_items').get();
+      final items = snapshot.docs.map((doc) => AgriculturalItem.fromFirestore(doc.data() as Map<String, dynamic>, doc.id)).toList();
+
+      for (var item in items) {
+        bool nameMatch = item.name.toLowerCase().contains(wanted.productName.toLowerCase()) || 
+                         wanted.productName.toLowerCase().contains(item.name.toLowerCase());
+        
+        bool categoryMatch = item.category.toLowerCase() == wanted.category.toLowerCase();
+
+        if (nameMatch || categoryMatch) {
+          final notification = AppNotification(
+            id: "",
+            title: "High Demand Alert! 💰",
+            message: "A vendor is looking for ${wanted.productName}. This is a great chance for profit!",
+            timestamp: DateTime.now(),
+            type: 'match',
+            isRead: false,
+          );
+
+          await _firestore
+              .collection('users')
+              .doc(item.sellerId)
+              .collection('notifications')
+              .add(notification.toJson());
+        }
+      }
+    } catch (e) {
+      print("❌ Error in checkAndNotifyFarmers: $e");
+    }
   }
 }

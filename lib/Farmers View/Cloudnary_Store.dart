@@ -7,6 +7,53 @@ class CloudinaryService {
   static const String cloudName = 'dgp9dusw5';
   static const String apiKey = '773151611459787';
   static const String uploadPreset = 'chattphoto'; // Your upload preset
+
+  // Upload any file (image, video, raw) using Cloudinary's 'auto' resource type
+  Future<String?> uploadFile(File file, {String folder = 'chat_media'}) async {
+    try {
+      if (!await file.exists()) {
+        return null;
+      }
+
+      // Use 'auto' to let Cloudinary detect the resource type (image, video, raw)
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('https://api.cloudinary.com/v1_1/$cloudName/auto/upload'),
+      );
+      
+      // Add upload parameters
+      request.fields['upload_preset'] = uploadPreset;
+      request.fields['folder'] = folder;
+      
+      // Add the file
+      request.files.add(await http.MultipartFile.fromPath(
+        'file',
+        file.path,
+      ));
+
+      // Send the request with timeout
+      var response = await request.send().timeout(const Duration(seconds: 60));
+      
+      // Get response body
+      var responseBody = await response.stream.bytesToString();
+      var jsonResponse = json.decode(responseBody);
+      
+      if (response.statusCode == 200) {
+        String url = jsonResponse['secure_url'];
+        return url;
+      } else {
+        print('❌ Cloudinary Upload failed with status: ${response.statusCode}');
+        if (jsonResponse != null && jsonResponse['error'] != null) {
+          print('Error details: ${jsonResponse['error']}');
+        }
+        return null;
+      }
+    } catch (e) {
+      print('❌ Cloudinary upload error: $e');
+      return null;
+    }
+  }
+
   // Upload single image using HTTP
   Future<String?> uploadImage(File imageFile, {String folder = 'agricultural_items'}) async {
     try {

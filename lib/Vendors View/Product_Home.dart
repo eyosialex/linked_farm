@@ -8,6 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:echat/User%20Credential/log_in_page.dart';
 
+import 'package:echat/Vendors%20View/NotificationCenterScreen.dart';
+import 'package:echat/Services/farm_persistence_service.dart';
+import 'package:echat/Models/notification_model.dart';
+
+import 'package:echat/Services/notification_service.dart';
+import 'dart:async';
+
 class vendors_page extends StatefulWidget {
   const vendors_page({super.key});
 
@@ -17,6 +24,11 @@ class vendors_page extends StatefulWidget {
 
 class _vendors_pageState extends State<vendors_page> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FarmPersistenceService _persistence = FarmPersistenceService();
+  StreamSubscription? _notificationSubscription;
+  int _lastUnreadCount = 0;
+  bool _isFirstLoad = true;
+  DateTime _lastNotificationTime = DateTime.now();
 
   final List<Map<String, dynamic>> _menuItems = [
     {
@@ -87,6 +99,40 @@ class _vendors_pageState extends State<vendors_page> {
     },
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    _startNotificationListener();
+  }
+
+  @override
+  void dispose() {
+    _notificationSubscription?.cancel();
+    super.dispose();
+  }
+
+  void _startNotificationListener() {
+    _notificationSubscription = _persistence.streamNotifications().listen((notifications) {
+      final unreadCount = notifications.where((n) => !n.isRead).length;
+
+      if (_isFirstLoad) {
+        _lastUnreadCount = unreadCount;
+        _isFirstLoad = false;
+        return;
+      }
+
+      if (unreadCount > _lastUnreadCount) {
+        final now = DateTime.now();
+        // Prevent sounds from firing too rapidly (at least 2 seconds apart)
+        if (now.difference(_lastNotificationTime) > const Duration(seconds: 2)) {
+          NotificationService.playNotificationSound();
+          _lastNotificationTime = now;
+        }
+      }
+      _lastUnreadCount = unreadCount;
+    });
+  }
+
   void _logout() async {
     await _auth.signOut();
     if (mounted) {
@@ -144,6 +190,43 @@ class _vendors_pageState extends State<vendors_page> {
               centerTitle: true,
             ),
             actions: [
+              StreamBuilder<List<AppNotification>>(
+                stream: _persistence.streamNotifications(),
+                builder: (context, snapshot) {
+                  final notifications = snapshot.data ?? [];
+                  final unreadCount = notifications.where((n) => !n.isRead).length;
+
+                  return Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.notifications_none, color: Colors.white),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const NotificationCenterScreen()),
+                          );
+                        },
+                      ),
+                      if (unreadCount > 0)
+                        Positioned(
+                          right: 8,
+                          top: 8,
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                            constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                            child: Text(
+                              unreadCount > 9 ? '9+' : '$unreadCount',
+                              style: const TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                    ],
+                  );
+                },
+              ),
               IconButton(
                 icon: const Icon(Icons.logout, color: Colors.white),
                 onPressed: _logout,

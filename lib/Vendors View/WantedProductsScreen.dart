@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../Services/farm_persistence_service.dart';
 import '../../Services/notification_service.dart';
+import '../../Models/notification_model.dart';
 import 'WantedProductModel.dart';
 
 class WantedProductsScreen extends StatefulWidget {
@@ -173,6 +174,18 @@ class _WantedProductsScreenState extends State<WantedProductsScreen> {
                   );
 
                   await _persistence.saveWantedProduct(newRequest);
+                  
+                  // Create a notification for the user
+                  final notification = AppNotification(
+                    id: "",
+                    title: "Request Posted",
+                    message: "You have successfully requested ${productController.text}.",
+                    timestamp: DateTime.now(),
+                    type: 'system',
+                    isRead: false,
+                  );
+                  await _persistence.saveNotification(notification);
+
                   NotificationService.playNotificationSound();
                   Navigator.pop(context);
                 },

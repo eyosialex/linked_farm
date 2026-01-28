@@ -8,14 +8,11 @@ import 'growth_journal_screen.dart';
 import 'farming_report_screen.dart';
 import 'dart:math';
 import 'dart:ui';
-
 class FarmMainScreen extends StatelessWidget {
   const FarmMainScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     final gameState = Provider.of<GameState>(context);
-
     if (gameState.isGameOver) {
       Future.microtask(() {
         Navigator.pushReplacement(
