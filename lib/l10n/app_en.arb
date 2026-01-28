@@ -1,0 +1,284 @@
+{
+  "@@locale": "en",
+  "appTitle": "Agrilead",
+  "home": "Home",
+  "sellProduce": "Sell Produce",
+  "myProducts": "My Products",
+  "buyInputs": "Buy Inputs",
+  "marketPrices": "Market Prices",
+  "messages": "Messages",
+  "deliveryServices": "Delivery Services",
+  "expertAdvice": "Expert Advice",
+  "landPlanner": "My Land Planner",
+  "welcomeBack": "Welcome back!",
+  "manageFarm": "Manage your farm and crops efficiently.",
+  "selectLanguage": "Select Language",
+  "farmerDashboard": "Farmer Dashboard",
+  "loginSubTitle": "Login to your account",
+  "emailHint": "Enter your email",
+  "passwordHint": "Enter your password",
+  "loginButton": "Login",
+  "noAccount": "Don't have an account? ",
+  "registerAction": "Register",
+  "forgotPassword": "Forgot password?",
+  "fillAllFields": "Please fill all fields",
+  "userNotFound": "User not found",
+  "wrongPassword": "Wrong password",
+  "invalidEmail": "Invalid email",
+  "userDisabled": "User disabled",
+  "somethingWentWrong": "Something went wrong",
+  "completeProfileSetup": "Please complete your profile setup.",
+  "completeProfile": "Please complete your profile.",
+  "registerSubTitle": "Create your account",
+  "fullNameHint": "Enter your full name",
+  "phoneHint": "Enter your phone number",
+  "selectRole": "Select your role",
+  "roleFarmer": "Farmer",
+  "roleVendor": "Vendor",
+  "roleAdvisor": "Expert Advisor",
+  "roleDelivery": "Delivery",
+  "roleShopper": "Shopper (Input Supplier)",
+  "confirmPasswordHint": "Confirm your password",
+  "registerButton": "Register",
+  "alreadyHaveAccount": "Already have an account? ",
+  "passwordsNotMatch": "Passwords do not match",
+  "passwordTooShort": "Password must be at least 6 characters",
+  "registrationSuccess": "Registration successful!",
+  "emailInUse": "Email already in use",
+  "weakPassword": "Password is too weak",
+  "invalidEmailAddress": "Invalid email address",
+  "completeProfileTitle": "Complete Your Profile",
+  "userNotLoggedIn": "User not logged in",
+  "userDataNotFound": "User data not found",
+  "profileCompletedSuccess": "Profile completed successfully!",
+  "profileCompletedFailed": "Failed to complete profile",
+  "deliveryInfoTitle": "Delivery Information",
+  "yourLocationLabel": "Your location",
+  "carTypeLabel": "Car Type",
+  "licenseIdLabel": "Driven license id",
+  "reviewCompleteTitle": "Review & Complete",
+  "reviewInfoLabel": "Review your information:",
+  "locationLabel": "Location:",
+  "licenseIdPrefix": "License ID:",
+  "carTypePrefix": "Car Type:",
+  "clickCompleteLabel": "Click Complete to finish your profile setup.",
+  "farmInfoTitle": "Farm Information",
+  "farmNameLabel": "Farm Name",
+  "farmLocationLabel": "Farm Location",
+  "farmSizeLabel": "Farm Size (acres)",
+  "cropsGrownLabel": "Crops Grown",
+  "cropsHint": "e.g., Coffee, Maize, Vegetables",
+  "businessInfoTitle": "Business Information",
+  "businessNameLabel": "Business Name",
+  "businessTypeLabel": "Business Type",
+  "businessTypeHint": "e.g., Supplier, Retailer, Wholesaler",
+  "contactPersonLabel": "Contact Person",
+  "businessAddressLabel": "Business Address",
+  "productsServicesLabel": "Products/Services",
+  "productsServicesHint": "e.g., Fertilizers, Seeds, Equipment",
+  "professionalProfileTitle": "Professional Profile",
+  "specializationLabel": "Specialization",
+  "specializationHint": "e.g., Crop Science, Animal Health",
+  "experienceLabel": "Experience (Years)",
+  "qualificationLabel": "Qualification / Degree",
+  "farmerProfileSetup": "Farmer Profile Setup",
+  "vendorProfileSetup": "Vendor Profile Setup",
+  "advisorProfileSetup": "Expert Advisor Profile Setup",
+  "shopperProfileSetup": "Shopper Profile Setup",
+  "defaultProfileSetup": "Profile Setup",
+  "welcomeName": "Welcome, {name}!",
+  "@welcomeName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "resetLinkSent": "Reset link sent! Check your inbox.",
+  "noAccountFound": "No account found with this email.",
+  "invalidEmailFormat": "Invalid email format.",
+  "networkError": "Network error. Please try again.",
+  "passwordRecoveryTitle": "Password Recovery",
+  "enterRegisteredEmail": "Enter your registered email",
+  "emailAddressLabel": "Email address",
+  "sendResetLinkButton": "Send Reset Link",
+  "signUpAction": "Sign up",
+  "comingSoon": "{feature} coming soon!",
+  "@comingSoon": {
+    "placeholders": {
+      "feature": {
+        "type": "String"
+      }
+    }
+  },
+  "productImagesTitle": "Product Images",
+  "addPhotosTitle": "Add Photos",
+  "chooseImageSource": "Choose image source",
+  "cameraAction": "Camera",
+  "galleryAction": "Gallery",
+  "photoAddedSuccess": "Photo added successfully",
+  "errorTakingPhoto": "Error taking photo",
+  "errorSelectingImages": "Error selecting images",
+  "photoRemoved": "Photo removed",
+  "locationSelectedSuccess": "Location selected successfully",
+  "enterProductName": "Please enter product name",
+  "selectCategory": "Please select a category",
+  "enterProductDescription": "Please enter product description",
+  "enterValidPrice": "Please enter a valid price",
+  "enterValidQuantity": "Please enter a valid quantity",
+  "selectLocation": "Please select a location",
+  "enterSellerName": "Please enter seller name",
+  "enterContactInfo": "Please enter contact information",
+  "addAtLeastOnePhoto": "Please add at least one product photo",
+  "uploading": "Uploading...",
+  "uploadingImagesCount": "Uploading {count} new image(s)",
+  "@uploadingImagesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "takeAMoment": "This may take a few moments",
+  "savedLocallySyncLater": "Saved locally! Will sync when internet is back.",
+  "errorTitle": "Error",
+  "okAction": "OK",
+  "retryAction": "Retry",
+  "successTitle": "Success!",
+  "itemListedSuccess": "{name} has been listed successfully!",
+  "@itemListedSuccess": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "imagesUploadedCloudinary": "{count} image(s) uploaded to Cloudinary",
+  "@imagesUploadedCloudinary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "itemLiveMarketplace": "Your item is now live on the marketplace.",
+  "addAnotherAction": "Add Another",
+  "doneAction": "Done",
+  "formCleared": "Form cleared",
+  "productInformation": "Product Information",
+  "productNameLabel": "Product Name *",
+  "categoryLabel": "Category *",
+  "subcategoryOptional": "Subcategory (Optional)",
+  "descriptionLabel": "Description *",
+  "describeProductDetail": "Describe your product in detail...",
+  "priceEtbLabel": "Price (ETB) *",
+  "quantityLabel": "Quantity *",
+  "unitLabel": "Unit",
+  "conditionLabel": "Condition",
+  "locationTitle": "Location",
+  "locationOnMap": "Location on Map *",
+  "tapToSelectLocation": "Tap to select location",
+  "editProduct": "Edit Product",
+  "sellProduceAction": "Sell Produce",
+  "addMorePhotos": "Add More Photos ({count}/10)",
+  "@addMorePhotos": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteProductTitle": "Delete Product",
+  "deleteProductConfirm": "Are you sure you want to delete \"{name}\"?",
+  "@deleteProductConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cancelAction": "Cancel",
+  "deleteAction": "Delete",
+  "productDeletedSuccess": "Product deleted successfully",
+  "loginToViewProducts": "Please login to view your products",
+  "myProductsTitle": "My Products",
+  "noProductsListed": "You haven't listed any products yet",
+  "listFirstProductButton": "List Your First Product",
+  "editAction": "Edit",
+  "shareNearbyAction": "Share with Nearby",
+  "viewsLabel": "{count} Views",
+  "@viewsLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "likesLabel": "{count} Likes",
+  "@likesLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shareWifiTitle": "Share via Wi-Fi",
+  "enterFarmerIpLabel": "Enter the nearby farmer's IP address:",
+  "propagatingToIp": "Propagating to {ip}...",
+  "@propagatingToIp": {
+    "placeholders": {
+      "ip": {
+        "type": "String"
+      }
+    }
+  },
+  "propagatedSuccess": "Propagated successfully!",
+  "failedToConnectIp": "Failed to connect to {ip}",
+  "@failedToConnectIp": {
+    "placeholders": {
+      "ip": {
+        "type": "String"
+      }
+    }
+  },
+  "sendAction": "Send",
+  "catCereals": "Cereals",
+  "catPulses": "Pulses",
+  "catVegetables": "Vegetables",
+  "catFruits": "Fruits",
+  "catSpices": "Spices",
+  "catCoffee": "Coffee",
+  "catOilSeeds": "Oil Seeds",
+  "catTubers": "Tubers",
+  "catLivestock": "Livestock",
+  "catOthers": "Others",
+  "condFresh": "Fresh",
+  "condDry": "Dry",
+  "condOrganic": "Organic",
+  "condProcessed": "Processed",
+  "condFrozen": "Frozen",
+  "unitKg": "kg",
+  "unitQuintal": "quintal",
+  "unitTon": "ton",
+  "unitSack": "sack",
+  "unitPiece": "piece",
+  "unitLiter": "liter",
+  "addClearPhotosHint": "Add clear photos of your product from different angles",
+  "locationNotFound": "Location not found",
+  "networkError": "Network error. Please check your internet connection.",
+  "unableToFindLocation": "Unable to find location. Please try again.",
+  "searchLocationHint": "Search location...",
+  "selectLocationTitle": "Select Location",
+  "draggingStatus": "Dragging...",
+  "fetchingStatus": "Fetching...",
+  "confirmLocationButton": "Confirm Location",
+  "unknownLocation": "Unknown Location",
+  "catPesticide": "Pesticide",
+  "catHerbicide": "Herbicide",
+  "catFungicide": "Fungicide",
+  "catFertilizer": "Fertilizer",
+  "buyInputs": "Buy Agricultural Inputs",
+  "sellInputs": "Sell Agricultural Inputs",
+  "offline": "Offline",
+  "synced": "Synced"
+}

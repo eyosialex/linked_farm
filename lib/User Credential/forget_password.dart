@@ -2,6 +2,7 @@ import 'package:echat/User%20Credential/TextField.dart';
 import 'package:echat/User%20Credential/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class ForgetPassword extends StatefulWidget {
   const ForgetPassword({super.key});
   @override
@@ -28,23 +29,24 @@ class _ForgetPasswordState extends State<ForgetPassword> {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
 
       setState(() {
-        _message = '✅ Reset link sent! Check your inbox.';
+        _message = "✅ ${AppLocalizations.of(context)!.resetLinkSent}";
         _isSuccess = true;
       });
     } on FirebaseAuthException catch (e) {
+      final l10n = AppLocalizations.of(context)!;
       String errorMessage;
       switch (e.code) {
         case 'user-not-found':
-          errorMessage = 'No account found with this email.';
+          errorMessage = l10n.noAccountFound;
           break;
         case 'invalid-email':
-          errorMessage = 'Invalid email format.';
+          errorMessage = l10n.invalidEmailFormat;
           break;
         case 'network-request-failed':
-          errorMessage = 'Network error. Please try again.';
+          errorMessage = l10n.networkError;
           break;
         default:
-          errorMessage = e.message ?? 'Something went wrong.';
+          errorMessage = e.message ?? l10n.somethingWentWrong;
       }
       setState(() {
         _message = errorMessage;
@@ -68,9 +70,9 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 80),
-              const Text(
-                'Password Recovery',
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 30),
+              Text(
+                AppLocalizations.of(context)!.passwordRecoveryTitle,
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 30),
               ),
               const SizedBox(height: 10),
               const Text(
@@ -82,9 +84,8 @@ class _ForgetPasswordState extends State<ForgetPassword> {
               // ✅ Connect Mytextfield with validation
               Mytextfield(
                 con: emailController,
-                HintText: "Email address",
+                HintText: AppLocalizations.of(context)!.emailAddressLabel,
                 valid: true,
-               
               ),
 
               const SizedBox(height: 20),
@@ -111,7 +112,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                   ),
                   child: _isLoading
                       ? const CircularProgressIndicator(color: Colors.white, strokeWidth: 2)
-                      : const Text("Send Reset Link", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      : Text(AppLocalizations.of(context)!.sendResetLinkButton, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
               ),
 
@@ -120,13 +121,13 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Don’t have an account?", style: TextStyle(color: Colors.white)),
+                    Text(AppLocalizations.of(context)!.noAccount, style: const TextStyle(color: Colors.white)),
                     const SizedBox(width: 5),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) =>RegistrationPage(onTap: (){})));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationPage(onTap: () {})));
                       },
-                      child: const Text('Sign up', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+                      child: Text(AppLocalizations.of(context)!.signUpAction, style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
                     ),
                   ],
                 ),

@@ -16,6 +16,10 @@ import 'package:echat/Vendors%20View/NotificationCenterScreen.dart';
 import 'package:echat/Services/farm_persistence_service.dart';
 import 'package:echat/Services/notification_service.dart';
 import 'package:echat/Models/notification_model.dart';
+import 'package:echat/Models/notification_model.dart';
+import 'package:echat/Services/locale_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 import 'dart:async';
 
 class FarmersHomePage extends StatefulWidget {
@@ -33,96 +37,87 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
   bool _isFirstLoad = true;
   DateTime _lastNotificationTime = DateTime.now();
 
-  final List<Map<String, dynamic>> _menuItems = [
-    {
-      'title': 'Sell Produce',
-      'icon': Icons.sell,
-      'image': 'assets/sell_item.jpg',
-      'page': SellItem(),
-      'gradient': const LinearGradient(
-        colors: [Color(0xFF4CAF50), Color(0xFF2E7D32)],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
-    },
-    {
-      'title': 'My Products',
-      'icon': Icons.inventory,
-      'image': 'assets/my_products.png', // You might need to ensure this asset exists or reuse another
-      'page': const MyProductsScreen(),
-      'gradient': const LinearGradient(
-        colors: [Color(0xFFFF9800), Color(0xFFF57C00)],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
-    },
-    {
-      'title': 'Buy Inputs',
-      'icon': Icons.shopping_bag, // Pesticides, fertilizers etc.
-      'image': 'assets/products.png', 
-      'page': const ProductListScreen(), // Link to Vendors/Products
-      'gradient': const LinearGradient(
-        colors: [Color(0xFF2196F3), Color(0xFF0D47A1)],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
-    },
-    {
-      'title': 'Market Prices',
-      'icon': Icons.currency_exchange,
-      'image': 'assets/prices.png',
-      'page': const MarketPricesPage(), // Link to Market Prices
-      'gradient': const LinearGradient(
-        colors: [Color(0xFF9C27B0), Color(0xFF6A1B9A)],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
-    },
-    {
-      'title': 'Messages',
-      'icon': Icons.chat,
-      'image': 'assets/chat.png',
-      'page': const ChatListScreen(),
-      'gradient': const LinearGradient(
-        colors: [Color(0xFF607D8B), Color(0xFF455A64)],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
-    },
-    {
-      'title': 'Delivery Services',
-      'icon': Icons.local_shipping,
-      'image': 'assets/delivery.png',
-      'page': availabledriverylist(),
-      'gradient': const LinearGradient(
-        colors: [Color(0xFF00BCD4), Color(0xFF00838F)],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
-    },
-    {
-      'title': 'Expert Advice',
-      'icon': Icons.school,
-      'image': 'assets/advice.png',
-      'page': const AdviceFeedScreen(),
-      'gradient': const LinearGradient(
-        colors: [Color(0xFFE91E63), Color(0xFFC2185B)],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
-    },
-    {
-      'title': 'My Land Planner',
-      'icon': Icons.landscape,
-      'image': 'assets/game.png',
-      'page': const MyLandsScreen(),
-      'gradient': const LinearGradient(
-        colors: [Color(0xFF3F51B5), Color(0xFF303F9F)],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
-    },
-  ];
+  List<Map<String, dynamic>> _getLocalizedMenuItems(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return [
+      {
+        'title': l10n.sellProduce,
+        'icon': Icons.sell,
+        'image': 'assets/sell_item.jpg',
+        'page': SellItem(),
+        'gradient': const LinearGradient(
+          colors: [Color(0xFF4CAF50), Color(0xFF2E7D32)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      },
+      {
+        'title': l10n.myProducts,
+        'icon': Icons.inventory,
+        'image': 'assets/my_products.png',
+        'page': const MyProductsScreen(),
+        'gradient': const LinearGradient(
+          colors: [Color(0xFFFF9800), Color(0xFFF57C00)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      },
+      {
+        'title': l10n.buyInputs,
+        'icon': Icons.shopping_bag,
+        'image': 'assets/products.png',
+        'page': const ProductListScreen(),
+        'gradient': const LinearGradient(
+          colors: [Color(0xFF2196F3), Color(0xFF0D47A1)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      },
+      {
+        'title': l10n.marketPrices,
+        'icon': Icons.currency_exchange,
+        'image': 'assets/prices.png',
+        'page': const MarketPricesPage(),
+        'gradient': const LinearGradient(
+          colors: [Color(0xFF9C27B0), Color(0xFF6A1B9A)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      },
+      {
+        'title': l10n.messages,
+        'icon': Icons.chat,
+        'image': 'assets/chat.png',
+        'gradient': const LinearGradient(
+          colors: [Color(0xFF607D8B), Color(0xFF455A64)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      },
+      {
+        'title': l10n.expertAdvice,
+        'icon': Icons.school,
+        'image': 'assets/advice.png',
+        'page': const AdviceFeedScreen(),
+        'gradient': const LinearGradient(
+          colors: [Color(0xFFE91E63), Color(0xFFC2185B)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      },
+      {
+        'title': l10n.landPlanner,
+        'icon': Icons.landscape,
+        'image': 'assets/game.png',
+        'page': const MyLandsScreen(),
+        'gradient': const LinearGradient(
+          colors: [Color(0xFF3F51B5), Color(0xFF303F9F)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      },
+    ];
+  }
 
   @override
   void initState() {
@@ -170,6 +165,7 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
       body: CustomScrollView(
@@ -205,9 +201,9 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
                   ),
                 ],
               ),
-              title: const Text(
-                "Farmer Dashboard",
-                style: TextStyle(
+              title: Text(
+                l10n.farmerDashboard,
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
@@ -215,6 +211,7 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
               centerTitle: true,
             ),
             actions: [
+              _buildLanguageSwitcher(context),
               StreamBuilder<List<AppNotification>>(
                 stream: _persistence.streamNotifications(),
                 builder: (context, snapshot) {
@@ -266,16 +263,16 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "Welcome back!",
-                    style: TextStyle(
+                   Text(
+                    AppLocalizations.of(context)!.welcomeBack,
+                    style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
                     ),
                   ),
                   Text(
-                    "Manage your farm and crops efficiently.",
+                    AppLocalizations.of(context)!.manageFarm,
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey[600],
@@ -298,14 +295,41 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
               ),
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
-                  return _buildMenuCard(_menuItems[index], context);
+                  final menuItems = _getLocalizedMenuItems(context);
+                  return _buildMenuCard(menuItems[index], context);
                 },
-                childCount: _menuItems.length,
+                childCount: _getLocalizedMenuItems(context).length,
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildLanguageSwitcher(BuildContext context) {
+    final localeProvider = Provider.of<LocaleProvider>(context);
+    final l10n = AppLocalizations.of(context)!;
+
+    return PopupMenuButton<String>(
+      icon: const Icon(Icons.language, color: Colors.white),
+      onSelected: (String code) {
+        localeProvider.setLocale(Locale(code));
+      },
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+        const PopupMenuItem<String>(
+          value: 'en',
+          child: Text('English'),
+        ),
+        const PopupMenuItem<String>(
+          value: 'am',
+          child: Text('አማርኛ'),
+        ),
+        const PopupMenuItem<String>(
+          value: 'om',
+          child: Text('Oromiffa'),
+        ),
+      ],
     );
   }
 
@@ -322,7 +346,7 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
             );
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("${item['title']} coming soon!")),
+              SnackBar(content: Text(AppLocalizations.of(context)!.comingSoon(item['title']))),
             );
           }
         },

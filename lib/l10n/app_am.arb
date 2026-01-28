@@ -1,0 +1,284 @@
+{
+  "@@locale": "am",
+  "appTitle": "አግሪሊድ",
+  "home": "መነሻ",
+  "sellProduce": "ምርት ይሽጡ",
+  "myProducts": "የእኔ ምርቶች",
+  "buyInputs": "ግብዓቶችን ይግዙ",
+  "marketPrices": "የገበያ ዋጋ",
+  "messages": "መልዕክቶች",
+  "deliveryServices": "የማጓጓዣ አገልግሎቶች",
+  "expertAdvice": "የባለሙያ ምክር",
+  "landPlanner": "የመሬት እቅድ አውጪ",
+  "welcomeBack": "እንኳን ደህና መጡ!",
+  "manageFarm": "እርሻዎን እና ሰብሎችዎን በብቃት ያስተዳድሩ።",
+  "selectLanguage": "ቋንቋ ይምረጡ",
+  "farmerDashboard": "የአርሶ አደር ዳሽቦርድ",
+  "loginSubTitle": "ወደ መለያዎ ይግቡ",
+  "emailHint": "ኢሜልዎን ያስገቡ",
+  "passwordHint": "የይለፍ ቃልዎን ያስገቡ",
+  "loginButton": "ግባ",
+  "noAccount": "መለያ የለዎትም? ",
+  "registerAction": "ይመዝገቡ",
+  "forgotPassword": "የይለፍ ቃል ረስተዋል?",
+  "fillAllFields": "እባክዎ ሁሉንም መስኮች ይሙሉ",
+  "userNotFound": "ተጠቃሚ አልተገኘም",
+  "wrongPassword": "የተሳሳተ የይለፍ ቃል",
+  "invalidEmail": "የተሳሳተ ኢሜል",
+  "userDisabled": "ተጠቃሚው ታግዷል",
+  "somethingWentWrong": "ችግር ተፈጥሯል",
+  "completeProfileSetup": "እባክዎ የመለያዎን ዝግጅት ያጠናቅቁ።",
+  "completeProfile": "እባክዎ መገለጫዎን ያጠናቅቁ።",
+  "registerSubTitle": "መለያዎን ይፍጠሩ",
+  "fullNameHint": "ሙሉ ስምዎን ያስገቡ",
+  "phoneHint": "የስልክ ቁጥርዎን ያስገቡ",
+  "selectRole": "ሚናዎን ይምረጡ",
+  "roleFarmer": "አርሶ አደር",
+  "roleVendor": "ነጋዴ",
+  "roleAdvisor": "አማካሪ ባለሙያ",
+  "roleDelivery": "አቅራቢ/መልእክተኛ",
+  "roleShopper": "ሾፐር (ግብዓት አቅራቢ)",
+  "confirmPasswordHint": "የይለፍ ቃልዎን ያረጋግጡ",
+  "registerButton": "ይመዝገቡ",
+  "alreadyHaveAccount": "ቀድሞውኑ መለያ አለዎት? ",
+  "passwordsNotMatch": "የይለፍ ቃላት አይዛመዱም",
+  "passwordTooShort": "የይለፍ ቃል ቢያንስ 6 ቁምፊዎች መሆን አለበት",
+  "registrationSuccess": "ምዝገባው በተሳካ ሁኔታ ተጠናቅቋል!",
+  "emailInUse": "ኢሜል አስቀድሞ ጥቅም ላይ ውሏል",
+  "weakPassword": "የይለፍ ቃሉ በጣም ደካማ ነው",
+  "invalidEmailAddress": "የተሳሳተ የኢሜል አድራሻ",
+  "completeProfileTitle": "መገለጫዎን ያጠናቅቁ",
+  "userNotLoggedIn": "ተጠቃሚ አልገባም",
+  "userDataNotFound": "የተጠቃሚ ውሂብ አልተገኘም",
+  "profileCompletedSuccess": "መገለጫ በተሳካ ሁኔታ ተጠናቅቋል!",
+  "profileCompletedFailed": "መገለጫውን ማጠናቀቅ አልተቻለም",
+  "deliveryInfoTitle": "የማድረሻ መረጃ",
+  "yourLocationLabel": "የእርስዎ አካባቢ",
+  "carTypeLabel": "የመኪና ዓይነት",
+  "licenseIdLabel": "የመንጃ ፍቃድ መታወቂያ",
+  "reviewCompleteTitle": "ይገምግሙ እና ያጠናቅቁ",
+  "reviewInfoLabel": "መረጃዎን ይገምግሙ፡",
+  "locationLabel": "አካባቢ፡",
+  "licenseIdPrefix": "የፍቃድ መታወቂያ፡",
+  "carTypePrefix": "የመኪና ዓይነት፡",
+  "clickCompleteLabel": "የመገለጫ ዝግጅትዎን ለማጠናቀቅ አጠናቅቅ የሚለውን ይጫኑ።",
+  "farmInfoTitle": "የእርሻ መረጃ",
+  "farmNameLabel": "የእርሻ ስም",
+  "farmLocationLabel": "የእርሻ ቦታ",
+  "farmSizeLabel": "የእርሻ መጠን (በኤከር)",
+  "cropsGrownLabel": "የሚመረቱ ሰብሎች",
+  "cropsHint": "ለምሳሌ፡ ቡና፣ በቆሎ፣ አትክልት",
+  "businessInfoTitle": "የንግድ መረጃ",
+  "businessNameLabel": "የንግድ ስም",
+  "businessTypeLabel": "የንግድ ዓይነት",
+  "businessTypeHint": "ለምሳሌ፡ አቅራቢ፣ ቸርቻሪ፣ ጅምላ ሻጭ",
+  "contactPersonLabel": "ተጠሪ ሰው",
+  "businessAddressLabel": "የንግድ አድራሻ",
+  "productsServicesLabel": "ምርቶች/አገልግሎቶች",
+  "productsServicesHint": "ለምሳሌ፡ ማዳበሪያ፣ ዘር፣ መሳሪያዎች",
+  "professionalProfileTitle": "የሙያ መገለጫ",
+  "specializationLabel": "ልዩ ሙያ",
+  "specializationHint": "ለምሳሌ፡ የሰብል ሳይንስ፣ የእንስሳት ጤና",
+  "experienceLabel": "ልምድ (በዓመታት)",
+  "qualificationLabel": "ደረጃ / ዲግሪ",
+  "farmerProfileSetup": "የአርሶ አደር መገለጫ ዝግጅት",
+  "vendorProfileSetup": "የነጋዴ መገለጫ ዝግጅት",
+  "advisorProfileSetup": "የአማካሪ ባለሙያ መገለጫ ዝግጅት",
+  "shopperProfileSetup": "የሾፐር መገለጫ ዝግጅት",
+  "defaultProfileSetup": "የመገለጫ ዝግጅት",
+  "welcomeName": "እንኳን ደህና መጡ፣ {name}!",
+  "@welcomeName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "resetLinkSent": "የይለፍ ቃል መቀየሪያ ሊንክ ተልኳል! ኢሜልዎን ይፈትሹ።",
+  "noAccountFound": "በዚህ ኢሜል የተመዘገበ መለያ አልተገኘም።",
+  "invalidEmailFormat": "የተሳሳተ የኢሜል ፎርማት።",
+  "networkError": "የኔትወርክ ችግር። እባክዎ እንደገና ይሞክሩ።",
+  "passwordRecoveryTitle": "የይለፍ ቃል መልሶ ማግኛ",
+  "enterRegisteredEmail": "የተመዘገበ ኢሜልዎን ያስገቡ",
+  "emailAddressLabel": "የኢሜል አድራሻ",
+  "sendResetLinkButton": "ሊንክ ላክ",
+  "signUpAction": "ይመዝገቡ",
+  "comingSoon": "{feature} በቅርቡ ይቀርባል!",
+  "@comingSoon": {
+    "placeholders": {
+      "feature": {
+        "type": "String"
+      }
+    }
+  },
+  "productImagesTitle": "የምርት ምስሎች",
+  "addPhotosTitle": "ምስሎችን ያክሉ",
+  "chooseImageSource": "የምስል ምንጭ ይምረጡ",
+  "cameraAction": "ካሜራ",
+  "galleryAction": "ጋለሪ",
+  "photoAddedSuccess": "ምስል በተሳካ ሁኔታ ተጨምሯል",
+  "errorTakingPhoto": "ፎቶ በማንሳት ላይ ስህተት ተከስቷል",
+  "errorSelectingImages": "ምስሎችን በመምረጥ ላይ ስህተት ተከስቷል",
+  "photoRemoved": "ምስል ተወግዷል",
+  "locationSelectedSuccess": "ቦታ በተሳካ ሁኔታ ተመርጧል",
+  "enterProductName": "እባክዎ የምርት ስም ያስገቡ",
+  "selectCategory": "እባክዎ ምድብ ይምረጡ",
+  "enterProductDescription": "እባክዎ የምርት መግለጫ ያስገቡ",
+  "enterValidPrice": "እባክዎ ትክክለኛ ዋጋ ያስገቡ",
+  "enterValidQuantity": "እባክዎ ትክክለኛ መጠን ያስገቡ",
+  "selectLocation": "እባክዎ ቦታ ይምረጡ",
+  "enterSellerName": "እባክዎ የሻጭ ስም ያስገቡ",
+  "enterContactInfo": "እባክዎ የመገናኛ መረጃ ያስገቡ",
+  "addAtLeastOnePhoto": "እባክዎ ቢያንስ አንድ የምርት ፎቶ ያክሉ",
+  "uploading": "በመጫን ላይ...",
+  "uploadingImagesCount": "{count} አዲስ ምስሎችን በመጫን ላይ",
+  "@uploadingImagesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "takeAMoment": "ይህ ጥቂት ጊዜ ሊወስድ ይችላል",
+  "savedLocallySyncLater": "በአካባቢው ተቀምጧል! ኢንተርኔት ሲኖር ይላካል።",
+  "errorTitle": "ስህተት",
+  "okAction": "እሺ",
+  "retryAction": "እንደገና ይሞክሩ",
+  "successTitle": "ተሳክቷል!",
+  "itemListedSuccess": "{name} በተሳካ ሁኔታ ለገበያ ቀርቧል!",
+  "@itemListedSuccess": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "imagesUploadedCloudinary": "{count} ምስሎች ተጭነዋል",
+  "@imagesUploadedCloudinary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "itemLiveMarketplace": "ምርትዎ አሁን በገበያ ላይ ይገኛል።",
+  "addAnotherAction": "ሌላ ጨምር",
+  "doneAction": "ተጠናቀቀ",
+  "formCleared": "ቅጹ ጸድቷል",
+  "productInformation": "የምርት መረጃ",
+  "productNameLabel": "የምርት ስም *",
+  "categoryLabel": "ምድብ *",
+  "subcategoryOptional": "ንዑስ ምድብ (አማራጭ)",
+  "descriptionLabel": "መግለጫ *",
+  "describeProductDetail": "ስለ ምርቱ ዝርዝር መግለጫ ይስጡ...",
+  "priceEtbLabel": "ዋጋ (በብር) *",
+  "quantityLabel": "መጠን *",
+  "unitLabel": "መመዘኛ",
+  "conditionLabel": "ሁኔታ",
+  "locationTitle": "ቦታ",
+  "locationOnMap": "ቦታ በካርታ ላይ *",
+  "tapToSelectLocation": "ቦታ ለመምረጥ ይጫኑ",
+  "editProduct": "ምርት ይቀይሩ",
+  "sellProduceAction": "ምርት ይሽጡ",
+  "addMorePhotos": "ተጨማሪ ምስሎችን ያክሉ ({count}/10)",
+  "@addMorePhotos": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteProductTitle": "ምርት ይሰርዙ",
+  "deleteProductConfirm": "\"{name}\" መሰረዝዎን እርግጠኛ ነዎት?",
+  "@deleteProductConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cancelAction": "አይሁን",
+  "deleteAction": "ሰርዝ",
+  "productDeletedSuccess": "ምርት በተሳካ ሁኔታ ተሰርዟል",
+  "loginToViewProducts": "ምርቶችዎን ለማየት እባክዎ ይግቡ",
+  "myProductsTitle": "የእኔ ምርቶች",
+  "noProductsListed": "እስካሁን ምንም ምርት አላቀረቡም",
+  "listFirstProductButton": "የመጀመሪያ ምርትዎን ያቅርቡ",
+  "editAction": "አስተካክል",
+  "shareNearbyAction": "ለአቅራቢያ ያካፍሉ",
+  "viewsLabel": "{count} እይታዎች",
+  "@viewsLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "likesLabel": "{count} ተወዳጅነት",
+  "@likesLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shareWifiTitle": "በዋይፋይ ያካፍሉ",
+  "enterFarmerIpLabel": "የአቅራቢያ አርሶ አደር IP አድራሻ ያስገቡ፡",
+  "propagatingToIp": "ወደ {ip} በመላክ ላይ...",
+  "@propagatingToIp": {
+    "placeholders": {
+      "ip": {
+        "type": "String"
+      }
+    }
+  },
+  "propagatedSuccess": "በተሳካ ሁኔታ ተልኳል!",
+  "failedToConnectIp": "ከ {ip} ጋር መገናኘት አልተቻለም",
+  "@failedToConnectIp": {
+    "placeholders": {
+      "ip": {
+        "type": "String"
+      }
+    }
+  },
+  "sendAction": "ላክ",
+  "catCereals": "ጥራጥሬዎች",
+  "catPulses": "አተርና ባቄላ",
+  "catVegetables": "አትክልቶች",
+  "catFruits": "ፍራፍሬዎች",
+  "catSpices": "ቅመማ ቅመሞች",
+  "catCoffee": "ቡና",
+  "catOilSeeds": "የቅባት እህሎች",
+  "catTubers": "ስርወ ምድሮች",
+  "catLivestock": "የከብት እርባታ",
+  "catOthers": "ሌሎች",
+  "condFresh": "ትኩስ",
+  "condDry": "ደረቅ",
+  "condOrganic": "ተፈጥሯዊ",
+  "condProcessed": "የተቀነባበረ",
+  "condFrozen": "የበረዶ",
+  "unitKg": "ኪሎ",
+  "unitQuintal": "ኩንታል",
+  "unitTon": "ቶን",
+  "unitSack": "ጆንያ",
+  "unitPiece": "ፍሬ",
+  "unitLiter": "ሊትር",
+  "addClearPhotosHint": "ስለ ምርቱ ግልጽ ፎቶዎችን ከተለያዩ አቅጣጫዎች ያክሉ",
+  "locationNotFound": "ቦታው አልተገኘም",
+  "networkError": "የኔትወርክ ስህተት። እባክዎ ኢንተርኔትዎን ያረጋግጡ።",
+  "unableToFindLocation": "ቦታውን ለማግኘት አልተቻለም። እባክዎ እንደገና ይሞክሩ።",
+  "searchLocationHint": "ቦታ ይፈልጉ...",
+  "selectLocationTitle": "ቦታ ይምረጡ",
+  "draggingStatus": "በመጎተት ላይ...",
+  "fetchingStatus": "በመፈለግ ላይ...",
+  "confirmLocationButton": "ቦታውን አረጋግጥ",
+  "unknownLocation": "ያልታወቀ ቦታ",
+  "catPesticide": "ፀረ-ተባይ",
+  "catHerbicide": "ፀረ-አረም",
+  "catFungicide": "ፀረ-ፈንገስ",
+  "catFertilizer": "ማዳበሪያ",
+  "buyInputs": "የግብርና ግብዓቶችን ይግዙ",
+  "sellInputs": "የግብርና ግብዓቶችን ይሽጡ",
+  "offline": "ከመስመር ውጭ",
+  "synced": "ተ синхሮናይዝድ"
+}

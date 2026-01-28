@@ -6,6 +6,7 @@ import 'package:echat/Services/wifi_share_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MyProductsScreen extends StatefulWidget {
   const MyProductsScreen({super.key});
@@ -31,17 +32,17 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Product'),
-        content: Text('Are you sure you want to delete "${product.name}"?'),
+        title: Text(AppLocalizations.of(context)!.deleteProductTitle),
+        content: Text(AppLocalizations.of(context)!.deleteProductConfirm(product.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancelAction),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Delete'),
+            child: Text(AppLocalizations.of(context)!.deleteAction),
           ),
         ],
       ),
@@ -50,7 +51,7 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
     if (confirmed == true && product.id != null) {
       await _firestoreService.deleteAgriculturalItem(product.id!);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Product deleted successfully')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.productDeletedSuccess)),
       );
     }
   }
@@ -60,13 +61,13 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
     final currentUser = _auth.currentUser;
 
     if (currentUser == null) {
-      return const Scaffold(
-        body: Center(child: Text("Please login to view your products")),
+      return Scaffold(
+        body: Center(child: Text(AppLocalizations.of(context)!.loginToViewProducts)),
       );
     }
     return Scaffold(
       appBar: AppBar(
-        title: const Text("My Products"),
+        title: Text(AppLocalizations.of(context)!.myProductsTitle),
         backgroundColor: Colors.green[700],
         foregroundColor: Colors.white,
       ),
@@ -83,9 +84,9 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                 children: [
                   const Icon(Icons.shopping_basket_outlined, size: 64, color: Colors.grey),
                   const SizedBox(height: 16),
-                  const Text(
-                    "You haven't listed any products yet",
-                    style: TextStyle(color: Colors.grey, fontSize: 16),
+                  Text(
+                    AppLocalizations.of(context)!.noProductsListed,
+                    style: const TextStyle(color: Colors.grey, fontSize: 16),
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton.icon(
@@ -96,7 +97,7 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                       );
                     },
                     icon: const Icon(Icons.add),
-                    label: const Text("List Your First Product"),
+                    label: Text(AppLocalizations.of(context)!.listFirstProductButton),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                       foregroundColor: Colors.white,
@@ -183,27 +184,27 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                               children: [
                                 Icon(Icons.edit, color: Colors.blue),
                                 SizedBox(width: 8),
-                                Text('Edit'),
+                                Text(AppLocalizations.of(context)!.editAction),
                               ],
                             ),
                           ),
-                          const PopupMenuItem<String>(
+                          PopupMenuItem<String>(
                             value: 'propagate',
                             child: Row(
                               children: [
-                                Icon(Icons.wifi_tethering, color: Colors.orange),
-                                SizedBox(width: 8),
-                                Text('Share with Nearby'),
+                                const Icon(Icons.wifi_tethering, color: Colors.orange),
+                                const SizedBox(width: 8),
+                                Text(AppLocalizations.of(context)!.shareNearbyAction),
                               ],
                             ),
                           ),
-                          const PopupMenuItem<String>(
+                          PopupMenuItem<String>(
                             value: 'delete',
                             child: Row(
                                                      children: [
-                                Icon(Icons.delete, color: Colors.red),
-                                SizedBox(width: 8),
-                                Text('Delete'),
+                                const Icon(Icons.delete, color: Colors.red),
+                                const SizedBox(width: 8),
+                                Text(AppLocalizations.of(context)!.deleteAction),
                               ],
                             ),
                           ),
@@ -244,13 +245,13 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                   // Stats
                   Row(
                     children: [
-                      _buildStatChip(Icons.remove_red_eye_outlined, '${product.views} Views', Colors.blue),
+                      _buildStatChip(Icons.remove_red_eye_outlined, AppLocalizations.of(context)!.viewsLabel(product.views), Colors.blue),
                       const SizedBox(width: 8),
-                      _buildStatChip(Icons.favorite_outline, '${product.likes} Likes', Colors.red),
+                      _buildStatChip(Icons.favorite_outline, AppLocalizations.of(context)!.likesLabel(product.likes), Colors.red),
                       const Spacer(),
                       _buildStatChip(
                         product.isSynced ? Icons.cloud_done : Icons.cloud_off, 
-                        product.isSynced ? 'Synced' : 'Offline', 
+                        product.isSynced ? AppLocalizations.of(context)!.synced : AppLocalizations.of(context)!.offline, 
                         product.isSynced ? Colors.green : Colors.orange
                       ),
                     ],
@@ -269,11 +270,11 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Share via Wi-Fi"),
+        title: Text(AppLocalizations.of(context)!.shareWifiTitle),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text("Enter the nearby farmer's IP address:"),
+            Text(AppLocalizations.of(context)!.enterFarmerIpLabel),
             const SizedBox(height: 8),
             TextField(
               controller: ipController,
@@ -286,25 +287,25 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
+          TextButton(onPressed: () => Navigator.pop(context), child: Text(AppLocalizations.of(context)!.cancelAction)),
           ElevatedButton(
             onPressed: () async {
               final ip = ipController.text.trim();
               if (ip.isEmpty) return;
               
               Navigator.pop(context);
-              _showSnackBar("Propagating to $ip...");
+              _showSnackBar(AppLocalizations.of(context)!.propagatingToIp(ip));
               
               final wifiService = Provider.of<WifiShareService>(context, listen: false);
               final success = await wifiService.sendProduct(product, ip);
               
               if (success) {
-                _showSnackBar("✅ Propagated successfully!");
+                _showSnackBar("✅ ${AppLocalizations.of(context)!.propagatedSuccess}");
               } else {
-                _showSnackBar("❌ Failed to connect to $ip");
+                _showSnackBar("❌ ${AppLocalizations.of(context)!.failedToConnectIp(ip)}");
               }
             }, 
-            child: const Text("Send"),
+            child: Text(AppLocalizations.of(context)!.sendAction),
           ),
         ],
       ),

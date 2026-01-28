@@ -2,11 +2,13 @@ import 'package:echat/Dlivery%20View/Delivery_Home_Page.dart';
 import 'package:echat/Farmers%20View/Farmers_Home.dart';
 import 'package:echat/Vendors%20View/Product_Home.dart';
 import 'package:echat/Advisor%20View/Advisor_Home.dart';
+import 'package:echat/Shopper%20View/Shopper_Home.dart';
 import 'package:echat/User%20Credential/create_account.dart';
 import 'package:echat/User%20Credential/forget_password.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'TextField.dart';
 import 'firebaseauthservice.dart';
 
@@ -30,7 +32,7 @@ class _LogInPageState extends State<LogInPage> {
 
     if (_email.isEmpty || _password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please fill all fields")),
+        SnackBar(content: Text(AppLocalizations.of(context)!.fillAllFields)),
       );
       return;
     }
@@ -60,8 +62,8 @@ class _LogInPageState extends State<LogInPage> {
       if (!userDoc.exists) {
         // User doesn't exist in Usersstore - redirect to create account
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Please complete your profile setup."),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.completeProfileSetup),
           ),
         );
         Navigator.pushReplacement(
@@ -79,8 +81,8 @@ class _LogInPageState extends State<LogInPage> {
       if (!profileCompleted) {
         // Profile not completed - redirect to create account
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Please complete your profile."),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.completeProfile),
           ),
         );
         Navigator.pushReplacement(
@@ -100,6 +102,8 @@ class _LogInPageState extends State<LogInPage> {
           targetPage = const Delivery_Home_Page();
         } else if (userType == 'advisor') {
           targetPage = const AdvisorHomePage();
+        } else if (userType == 'shopper') {
+          targetPage = const ShopperHomePage();
         } else {
           // Default
           targetPage = const FarmersHomePage();
@@ -112,18 +116,19 @@ class _LogInPageState extends State<LogInPage> {
       }
 
     } on FirebaseAuthException catch (e) {
-      String message = "Login failed";
-      if (e.code == 'user-not-found') message = "User not found";
-      else if (e.code == 'wrong-password') message = "Wrong password";
-      else if (e.code == 'invalid-email') message = "Invalid email";
-      else if (e.code == 'user-disabled') message = "User disabled";
+      final l10n = AppLocalizations.of(context)!;
+      String message = l10n.somethingWentWrong;
+      if (e.code == 'user-not-found') message = l10n.userNotFound;
+      else if (e.code == 'wrong-password') message = l10n.wrongPassword;
+      else if (e.code == 'invalid-email') message = l10n.invalidEmail;
+      else if (e.code == 'user-disabled') message = l10n.userDisabled;
       
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(message)),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Something went wrong: $e")),
+        SnackBar(content: Text("${AppLocalizations.of(context)!.somethingWentWrong}: $e")),
       );
     } finally {
       setState(() => _isLoading = false);
@@ -144,7 +149,7 @@ class _LogInPageState extends State<LogInPage> {
                 Icon(Icons.agriculture, size: 80, color: Colors.green[700]),
                 const SizedBox(height: 20),
                 Text(
-                  "AgriLead",
+                  AppLocalizations.of(context)!.appTitle,
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
@@ -154,9 +159,9 @@ class _LogInPageState extends State<LogInPage> {
 
                 const SizedBox(height: 20),
                 const SizedBox(height: 10),
-                const Text(
-                  "Login to your account",
-                  style: TextStyle(
+                Text(
+                  AppLocalizations.of(context)!.loginSubTitle,
+                  style: const TextStyle(
                     fontSize: 16,
                     color: Colors.grey,
                   ),
@@ -165,14 +170,14 @@ class _LogInPageState extends State<LogInPage> {
 
                 Mytextfield(
                   con: email,
-                  HintText: "Enter your email",
+                  HintText: AppLocalizations.of(context)!.emailHint,
                   valid: false,
                 ),
                 const SizedBox(height: 15),
 
                 Mytextfield(
                   con: password,
-                  HintText: "Enter your password",
+                  HintText: AppLocalizations.of(context)!.passwordHint,
                   valid: true,
                 ),
                 const SizedBox(height: 25),
@@ -195,10 +200,10 @@ class _LogInPageState extends State<LogInPage> {
                               ),
                             ],
                           ),
-                          child: const Center(
+                          child: Center(
                             child: Text(
-                              "Login",
-                              style: TextStyle(
+                              AppLocalizations.of(context)!.loginButton,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -212,11 +217,11 @@ class _LogInPageState extends State<LogInPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Don't have an account? "),
+                    Text(AppLocalizations.of(context)!.noAccount),
                     GestureDetector(
                       onTap: widget.onTap,
                       child: Text(
-                        "Register",
+                        AppLocalizations.of(context)!.registerAction,
                         style: TextStyle(
                           color: Colors.green[700],
                           fontWeight: FontWeight.bold,
@@ -236,7 +241,7 @@ class _LogInPageState extends State<LogInPage> {
                     );
                   },
                   child: Text(
-                    "Forgot password?",
+                    AppLocalizations.of(context)!.forgotPassword,
                     style: TextStyle(
                       color: Colors.green[700],
                       fontWeight: FontWeight.bold,

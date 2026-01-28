@@ -6,6 +6,7 @@ import 'package:echat/User%20Credential/userfirestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'log_in_page.dart';
 class CreateAccount extends StatefulWidget {
   const CreateAccount({super.key});
@@ -36,10 +37,12 @@ final TextEditingController _drivinglisence=TextEditingController();
 
 final TextEditingController _cartype=TextEditingController();
 
-// Advisor Controllers
-final TextEditingController _specializationController = TextEditingController();
-final TextEditingController _experienceController = TextEditingController();
 final TextEditingController _qualificationController = TextEditingController();
+
+  // Shopper Controllers
+  final TextEditingController _shopNameController = TextEditingController();
+  final TextEditingController _shopAddressController = TextEditingController();
+  final TextEditingController _inputCategoriesController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -74,14 +77,14 @@ final TextEditingController _qualificationController = TextEditingController();
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("User not logged in")),
+        SnackBar(content: Text(AppLocalizations.of(context)!.userNotLoggedIn)),
       );
       return;
     }
 
     if (_userData == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("User data not found")),
+        SnackBar(content: Text(AppLocalizations.of(context)!.userDataNotFound)),
       );
       return;
     }
@@ -128,8 +131,8 @@ final TextEditingController _qualificationController = TextEditingController();
       await _userRepository.completeUserProfile(user.uid, profileData);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Profile completed successfully!"),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.profileCompletedSuccess),
           backgroundColor: Colors.green,
         ),
       );
@@ -143,6 +146,8 @@ final TextEditingController _qualificationController = TextEditingController();
         targetPage = const Delivery_Home_Page();
       } else if (_userData!['userType'] == 'advisor') {
         targetPage = const AdvisorHomePage();
+      } else if (_userData!['userType'] == 'shopper') {
+        targetPage = const ShopperHomePage();
       } else {
         targetPage = const FarmersHomePage();
       }
@@ -157,7 +162,7 @@ final TextEditingController _qualificationController = TextEditingController();
       print("❌ Error completing profile: $e");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Failed to complete profile: $e"),
+          content: Text("${AppLocalizations.of(context)!.profileCompletedFailed}: $e"),
           backgroundColor: Colors.red,
         ),
       );
@@ -181,6 +186,8 @@ final TextEditingController _qualificationController = TextEditingController();
       return _builddliverySteps();
     } else if (userType == 'advisor') {
       return _buildAdvisorSteps();
+    } else if (userType == 'shopper') {
+      return _buildShopperSteps();
     }
     return [];
   }
@@ -188,34 +195,32 @@ final TextEditingController _qualificationController = TextEditingController();
   List<Step>_builddliverySteps() {
     return [
       Step(
-        title: const Text('Delivery Information'),
+        title: Text(AppLocalizations.of(context)!.deliveryInfoTitle),
         content: Column(
           children: [
          
             const SizedBox(height: 15),
             TextField(
               controller:_addreess,
-              decoration: const InputDecoration(
-                labelText: 'your location',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.yourLocationLabel,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 15),
             TextField(
               controller: _cartype,
-              decoration: const InputDecoration(
-                labelText: 'Car Type',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.carTypeLabel,
+                border: const OutlineInputBorder(),
               ),
-           
             ),
             const SizedBox(height: 15),
             TextField(
               controller:_drivinglisence ,
-              decoration: const InputDecoration(
-                labelText: 'Driven license id',
-                border: OutlineInputBorder(),
-                hintText: 'driven licence id ',
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.licenseIdLabel,
+                border: const OutlineInputBorder(),
               ),
             ),
           ],
@@ -223,22 +228,22 @@ final TextEditingController _qualificationController = TextEditingController();
         isActive: _currentStep >= 0,
       ),
       Step(
-        title: const Text('Review & Complete'),
+        title: Text(AppLocalizations.of(context)!.reviewCompleteTitle),
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Review your information:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            Text(
+              AppLocalizations.of(context)!.reviewInfoLabel,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 15),
-            Text('Location: ${_addreess.text}'),
-            Text('License ID: ${_drivinglisence.text}'),
-            Text('Car Type: ${_cartype.text}'),
+            Text('${AppLocalizations.of(context)!.locationLabel} ${_addreess.text}'),
+            Text('${AppLocalizations.of(context)!.licenseIdPrefix} ${_drivinglisence.text}'),
+            Text('${AppLocalizations.of(context)!.carTypePrefix} ${_cartype.text}'),
             const SizedBox(height: 20),
-            const Text(
-              'Click Complete to finish your profile setup.',
-              style: TextStyle(color: Colors.grey),
+            Text(
+              AppLocalizations.of(context)!.clickCompleteLabel,
+              style: const TextStyle(color: Colors.grey),
             ),
           ],
         ),
@@ -251,40 +256,40 @@ final TextEditingController _qualificationController = TextEditingController();
   List<Step> _buildFarmerSteps() {
     return [
       Step(
-        title: const Text('Farm Information'),
+        title: Text(AppLocalizations.of(context)!.farmInfoTitle),
         content: Column(
           children: [
             TextField(
               controller: _farmNameController,
-              decoration: const InputDecoration(
-                labelText: 'Farm Name',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.farmNameLabel,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 15),
             TextField(
               controller: _farmLocationController,
-              decoration: const InputDecoration(
-                labelText: 'Farm Location',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.farmLocationLabel,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 15),
             TextField(
               controller: _farmSizeController,
-              decoration: const InputDecoration(
-                labelText: 'Farm Size (acres)',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.farmSizeLabel,
+                border: const OutlineInputBorder(),
               ),
               keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 15),
             TextField(
               controller: _cropsController,
-              decoration: const InputDecoration(
-                labelText: 'Crops Grown',
-                border: OutlineInputBorder(),
-                hintText: 'e.g., Coffee, Maize, Vegetables',
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.cropsGrownLabel,
+                border: const OutlineInputBorder(),
+                hintText: AppLocalizations.of(context)!.cropsHint,
               ),
             ),
           ],
@@ -292,23 +297,23 @@ final TextEditingController _qualificationController = TextEditingController();
         isActive: _currentStep >= 0,
       ),
       Step(
-        title: const Text('Review & Complete'),
+        title: Text(AppLocalizations.of(context)!.reviewCompleteTitle),
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Review your information:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            Text(
+              AppLocalizations.of(context)!.reviewInfoLabel,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 15),
-            Text('Farm Name: ${_farmNameController.text}'),
-            Text('Location: ${_farmLocationController.text}'),
-            Text('Farm Size: ${_farmSizeController.text} acres'),
-            Text('Crops: ${_cropsController.text}'),
+            Text('${AppLocalizations.of(context)!.farmNameLabel}: ${_farmNameController.text}'),
+            Text('${AppLocalizations.of(context)!.farmLocationLabel}: ${_farmLocationController.text}'),
+            Text('${AppLocalizations.of(context)!.farmSizeLabel}: ${_farmSizeController.text}'),
+            Text('${AppLocalizations.of(context)!.cropsGrownLabel}: ${_cropsController.text}'),
             const SizedBox(height: 20),
-            const Text(
-              'Click Complete to finish your profile setup.',
-              style: TextStyle(color: Colors.grey),
+            Text(
+              AppLocalizations.of(context)!.clickCompleteLabel,
+              style: const TextStyle(color: Colors.grey),
             ),
           ],
         ),
@@ -320,48 +325,48 @@ final TextEditingController _qualificationController = TextEditingController();
   List<Step> _buildVendorSteps() {
     return [
       Step(
-        title: const Text('Business Information'),
+        title: Text(AppLocalizations.of(context)!.businessInfoTitle),
         content: Column(
           children: [
             TextField(
               controller: _businessNameController,
-              decoration: const InputDecoration(
-                labelText: 'Business Name',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.businessNameLabel,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 15),
             TextField(
               controller: _businessTypeController,
-              decoration: const InputDecoration(
-                labelText: 'Business Type',
-                border: OutlineInputBorder(),
-                hintText: 'e.g., Supplier, Retailer, Wholesaler',
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.businessTypeLabel,
+                border: const OutlineInputBorder(),
+                hintText: AppLocalizations.of(context)!.businessTypeHint,
               ),
             ),
             const SizedBox(height: 15),
             TextField(
               controller: _contactPersonController,
-              decoration: const InputDecoration(
-                labelText: 'Contact Person',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.contactPersonLabel,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 15),
             TextField(
               controller: _businessAddressController,
-              decoration: const InputDecoration(
-                labelText: 'Business Address',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.businessAddressLabel,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 15),
             TextField(
               controller: _productsController,
-              decoration: const InputDecoration(
-                labelText: 'Products/Services',
-                border: OutlineInputBorder(),
-                hintText: 'e.g., Fertilizers, Seeds, Equipment',
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.productsServicesLabel,
+                border: const OutlineInputBorder(),
+                hintText: AppLocalizations.of(context)!.productsServicesHint,
               ),
             ),
           ],
@@ -369,24 +374,24 @@ final TextEditingController _qualificationController = TextEditingController();
         isActive: _currentStep >= 0,
       ),
       Step(
-        title: const Text('Review & Complete'),
+        title: Text(AppLocalizations.of(context)!.reviewCompleteTitle),
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Review your information:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            Text(
+              AppLocalizations.of(context)!.reviewInfoLabel,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 15),
-            Text('Business Name: ${_businessNameController.text}'),
-            Text('Business Type: ${_businessTypeController.text}'),
-            Text('Contact Person: ${_contactPersonController.text}'),
-            Text('Address: ${_businessAddressController.text}'),
-            Text('Products: ${_productsController.text}'),
+            Text('${AppLocalizations.of(context)!.businessNameLabel}: ${_businessNameController.text}'),
+            Text('${AppLocalizations.of(context)!.businessTypeLabel}: ${_businessTypeController.text}'),
+            Text('${AppLocalizations.of(context)!.contactPersonLabel}: ${_contactPersonController.text}'),
+            Text('${AppLocalizations.of(context)!.businessAddressLabel}: ${_businessAddressController.text}'),
+            Text('${AppLocalizations.of(context)!.productsServicesLabel}: ${_productsController.text}'),
             const SizedBox(height: 20),
-            const Text(
-              'Click Complete to finish your profile setup.',
-              style: TextStyle(color: Colors.grey),
+            Text(
+              AppLocalizations.of(context)!.clickCompleteLabel,
+              style: const TextStyle(color: Colors.grey),
             ),
           ],
         ),
@@ -398,32 +403,32 @@ final TextEditingController _qualificationController = TextEditingController();
   List<Step> _buildAdvisorSteps() {
     return [
       Step(
-        title: const Text('Professional Profile'),
+        title: Text(AppLocalizations.of(context)!.professionalProfileTitle),
         content: Column(
           children: [
             TextField(
               controller: _specializationController,
-              decoration: const InputDecoration(
-                labelText: 'Specialization',
-                hintText: 'e.g., Crop Science, Animal Health',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.specializationLabel,
+                hintText: AppLocalizations.of(context)!.specializationHint,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 15),
             TextField(
               controller: _experienceController,
-              decoration: const InputDecoration(
-                labelText: 'Experience (Years)',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.experienceLabel,
+                border: const OutlineInputBorder(),
               ),
               keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 15),
             TextField(
               controller: _qualificationController,
-              decoration: const InputDecoration(
-                labelText: 'Qualification / Degree',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.qualificationLabel,
+                border: const OutlineInputBorder(),
               ),
             ),
           ],
@@ -431,22 +436,22 @@ final TextEditingController _qualificationController = TextEditingController();
         isActive: _currentStep >= 0,
       ),
       Step(
-        title: const Text('Review & Complete'),
+        title: Text(AppLocalizations.of(context)!.reviewCompleteTitle),
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Review your information:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            Text(
+              AppLocalizations.of(context)!.reviewInfoLabel,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 15),
-            Text('Specialization: ${_specializationController.text}'),
-            Text('Experience: ${_experienceController.text} years'),
-            Text('Qualification: ${_qualificationController.text}'),
+            Text('${AppLocalizations.of(context)!.specializationLabel}: ${_specializationController.text}'),
+            Text('${AppLocalizations.of(context)!.experienceLabel}: ${_experienceController.text}'),
+            Text('${AppLocalizations.of(context)!.qualificationLabel}: ${_qualificationController.text}'),
             const SizedBox(height: 20),
-            const Text(
-              'Click Complete to finish your profile setup.',
-              style: TextStyle(color: Colors.grey),
+            Text(
+              AppLocalizations.of(context)!.clickCompleteLabel,
+              style: const TextStyle(color: Colors.grey),
             ),
           ],
         ),
@@ -454,18 +459,82 @@ final TextEditingController _qualificationController = TextEditingController();
       ),
     ];
   }
-  String _getUserTypeDisplay() {
+    ];
+  }
+
+  List<Step> _buildShopperSteps() {
+    return [
+      Step(
+        title: Text(AppLocalizations.of(context)!.shopperProfileSetup),
+        content: Column(
+          children: [
+            TextField(
+              controller: _shopNameController,
+              decoration: InputDecoration(
+                labelText: "Shop Name", // Fallback if L10n missing
+                border: const OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 15),
+            TextField(
+              controller: _shopAddressController,
+              decoration: InputDecoration(
+                labelText: "Shop Address",
+                border: const OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 15),
+            TextField(
+              controller: _inputCategoriesController,
+              decoration: InputDecoration(
+                labelText: "Input Categories (Pesticides, Seeds, etc.)",
+                border: const OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ),
+        isActive: _currentStep >= 0,
+      ),
+      Step(
+        title: Text(AppLocalizations.of(context)!.reviewCompleteTitle),
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              AppLocalizations.of(context)!.reviewInfoLabel,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 15),
+            Text('Shop Name: ${_shopNameController.text}'),
+            Text('Address: ${_shopAddressController.text}'),
+            Text('Inputs: ${_inputCategoriesController.text}'),
+            const SizedBox(height: 20),
+            Text(
+              AppLocalizations.of(context)!.clickCompleteLabel,
+              style: const TextStyle(color: Colors.grey),
+            ),
+          ],
+        ),
+        isActive: _currentStep >= 1,
+      ),
+    ];
+  }
+
+  String _getUserTypeDisplay(BuildContext context) {
     if (_userData == null) return '';
+    final l10n = AppLocalizations.of(context)!;
     
     switch (_userData!['userType']) {
       case 'farmer':
-        return 'Farmer Profile Setup';
+        return l10n.farmerProfileSetup;
       case 'vendor':
-        return 'Vendor Profile Setup';
+        return l10n.vendorProfileSetup;
       case 'advisor':
-        return 'Expert Advisor Profile Setup';
+        return l10n.advisorProfileSetup;
+      case 'shopper':
+        return l10n.shopperProfileSetup;
       default:
-        return 'Profile Setup';
+        return l10n.defaultProfileSetup;
     }
   }
 
@@ -479,6 +548,8 @@ final TextEditingController _qualificationController = TextEditingController();
         return Icons.business;
       case 'advisor':
         return Icons.school;
+      case 'shopper':
+        return Icons.shopping_basket;
       default:
         return Icons.person;
     }
@@ -489,9 +560,9 @@ final TextEditingController _qualificationController = TextEditingController();
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: const Text(
-          "Complete Your Profile",
-          style: TextStyle(
+        title: Text(
+          AppLocalizations.of(context)!.completeProfileTitle,
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
@@ -535,14 +606,14 @@ final TextEditingController _qualificationController = TextEditingController();
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Welcome, ${_userData!['fullName']}!",
+                                    AppLocalizations.of(context)!.welcomeName(_userData!['fullName']),
                                     style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   Text(
-                                    _getUserTypeDisplay(),
+                                    _getUserTypeDisplay(context),
                                     style: TextStyle(
                                       color: Colors.green[700],
                                       fontSize: 14,

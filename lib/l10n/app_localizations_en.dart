@@ -1,0 +1,643 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+import 'app_localizations.dart';
+
+// ignore_for_file: type=lint
+
+/// The translations for English (`en`).
+class AppLocalizationsEn extends AppLocalizations {
+  AppLocalizationsEn([String locale = 'en']) : super(locale);
+
+  @override
+  String get appTitle => 'Agrilead';
+
+  @override
+  String get home => 'Home';
+
+  @override
+  String get sellProduce => 'Sell Produce';
+
+  @override
+  String get myProducts => 'My Products';
+
+  @override
+  String get buyInputs => 'Buy Agricultural Inputs';
+
+  @override
+  String get marketPrices => 'Market Prices';
+
+  @override
+  String get messages => 'Messages';
+
+  @override
+  String get deliveryServices => 'Delivery Services';
+
+  @override
+  String get expertAdvice => 'Expert Advice';
+
+  @override
+  String get landPlanner => 'My Land Planner';
+
+  @override
+  String get welcomeBack => 'Welcome back!';
+
+  @override
+  String get manageFarm => 'Manage your farm and crops efficiently.';
+
+  @override
+  String get selectLanguage => 'Select Language';
+
+  @override
+  String get farmerDashboard => 'Farmer Dashboard';
+
+  @override
+  String get loginSubTitle => 'Login to your account';
+
+  @override
+  String get emailHint => 'Enter your email';
+
+  @override
+  String get passwordHint => 'Enter your password';
+
+  @override
+  String get loginButton => 'Login';
+
+  @override
+  String get noAccount => 'Don\'t have an account? ';
+
+  @override
+  String get registerAction => 'Register';
+
+  @override
+  String get forgotPassword => 'Forgot password?';
+
+  @override
+  String get fillAllFields => 'Please fill all fields';
+
+  @override
+  String get userNotFound => 'User not found';
+
+  @override
+  String get wrongPassword => 'Wrong password';
+
+  @override
+  String get invalidEmail => 'Invalid email';
+
+  @override
+  String get userDisabled => 'User disabled';
+
+  @override
+  String get somethingWentWrong => 'Something went wrong';
+
+  @override
+  String get completeProfileSetup => 'Please complete your profile setup.';
+
+  @override
+  String get completeProfile => 'Please complete your profile.';
+
+  @override
+  String get registerSubTitle => 'Create your account';
+
+  @override
+  String get fullNameHint => 'Enter your full name';
+
+  @override
+  String get phoneHint => 'Enter your phone number';
+
+  @override
+  String get selectRole => 'Select your role';
+
+  @override
+  String get roleFarmer => 'Farmer';
+
+  @override
+  String get roleVendor => 'Vendor';
+
+  @override
+  String get roleAdvisor => 'Expert Advisor';
+
+  @override
+  String get roleDelivery => 'Delivery';
+
+  @override
+  String get roleShopper => 'Shopper (Input Supplier)';
+
+  @override
+  String get confirmPasswordHint => 'Confirm your password';
+
+  @override
+  String get registerButton => 'Register';
+
+  @override
+  String get alreadyHaveAccount => 'Already have an account? ';
+
+  @override
+  String get passwordsNotMatch => 'Passwords do not match';
+
+  @override
+  String get passwordTooShort => 'Password must be at least 6 characters';
+
+  @override
+  String get registrationSuccess => 'Registration successful!';
+
+  @override
+  String get emailInUse => 'Email already in use';
+
+  @override
+  String get weakPassword => 'Password is too weak';
+
+  @override
+  String get invalidEmailAddress => 'Invalid email address';
+
+  @override
+  String get completeProfileTitle => 'Complete Your Profile';
+
+  @override
+  String get userNotLoggedIn => 'User not logged in';
+
+  @override
+  String get userDataNotFound => 'User data not found';
+
+  @override
+  String get profileCompletedSuccess => 'Profile completed successfully!';
+
+  @override
+  String get profileCompletedFailed => 'Failed to complete profile';
+
+  @override
+  String get deliveryInfoTitle => 'Delivery Information';
+
+  @override
+  String get yourLocationLabel => 'Your location';
+
+  @override
+  String get carTypeLabel => 'Car Type';
+
+  @override
+  String get licenseIdLabel => 'Driven license id';
+
+  @override
+  String get reviewCompleteTitle => 'Review & Complete';
+
+  @override
+  String get reviewInfoLabel => 'Review your information:';
+
+  @override
+  String get locationLabel => 'Location:';
+
+  @override
+  String get licenseIdPrefix => 'License ID:';
+
+  @override
+  String get carTypePrefix => 'Car Type:';
+
+  @override
+  String get clickCompleteLabel =>
+      'Click Complete to finish your profile setup.';
+
+  @override
+  String get farmInfoTitle => 'Farm Information';
+
+  @override
+  String get farmNameLabel => 'Farm Name';
+
+  @override
+  String get farmLocationLabel => 'Farm Location';
+
+  @override
+  String get farmSizeLabel => 'Farm Size (acres)';
+
+  @override
+  String get cropsGrownLabel => 'Crops Grown';
+
+  @override
+  String get cropsHint => 'e.g., Coffee, Maize, Vegetables';
+
+  @override
+  String get businessInfoTitle => 'Business Information';
+
+  @override
+  String get businessNameLabel => 'Business Name';
+
+  @override
+  String get businessTypeLabel => 'Business Type';
+
+  @override
+  String get businessTypeHint => 'e.g., Supplier, Retailer, Wholesaler';
+
+  @override
+  String get contactPersonLabel => 'Contact Person';
+
+  @override
+  String get businessAddressLabel => 'Business Address';
+
+  @override
+  String get productsServicesLabel => 'Products/Services';
+
+  @override
+  String get productsServicesHint => 'e.g., Fertilizers, Seeds, Equipment';
+
+  @override
+  String get professionalProfileTitle => 'Professional Profile';
+
+  @override
+  String get specializationLabel => 'Specialization';
+
+  @override
+  String get specializationHint => 'e.g., Crop Science, Animal Health';
+
+  @override
+  String get experienceLabel => 'Experience (Years)';
+
+  @override
+  String get qualificationLabel => 'Qualification / Degree';
+
+  @override
+  String get farmerProfileSetup => 'Farmer Profile Setup';
+
+  @override
+  String get vendorProfileSetup => 'Vendor Profile Setup';
+
+  @override
+  String get advisorProfileSetup => 'Expert Advisor Profile Setup';
+
+  @override
+  String get shopperProfileSetup => 'Shopper Profile Setup';
+
+  @override
+  String get defaultProfileSetup => 'Profile Setup';
+
+  @override
+  String welcomeName(String name) {
+    return 'Welcome, $name!';
+  }
+
+  @override
+  String get resetLinkSent => 'Reset link sent! Check your inbox.';
+
+  @override
+  String get noAccountFound => 'No account found with this email.';
+
+  @override
+  String get invalidEmailFormat => 'Invalid email format.';
+
+  @override
+  String get networkError =>
+      'Network error. Please check your internet connection.';
+
+  @override
+  String get passwordRecoveryTitle => 'Password Recovery';
+
+  @override
+  String get enterRegisteredEmail => 'Enter your registered email';
+
+  @override
+  String get emailAddressLabel => 'Email address';
+
+  @override
+  String get sendResetLinkButton => 'Send Reset Link';
+
+  @override
+  String get signUpAction => 'Sign up';
+
+  @override
+  String comingSoon(String feature) {
+    return '$feature coming soon!';
+  }
+
+  @override
+  String get productImagesTitle => 'Product Images';
+
+  @override
+  String get addPhotosTitle => 'Add Photos';
+
+  @override
+  String get chooseImageSource => 'Choose image source';
+
+  @override
+  String get cameraAction => 'Camera';
+
+  @override
+  String get galleryAction => 'Gallery';
+
+  @override
+  String get photoAddedSuccess => 'Photo added successfully';
+
+  @override
+  String get errorTakingPhoto => 'Error taking photo';
+
+  @override
+  String get errorSelectingImages => 'Error selecting images';
+
+  @override
+  String get photoRemoved => 'Photo removed';
+
+  @override
+  String get locationSelectedSuccess => 'Location selected successfully';
+
+  @override
+  String get enterProductName => 'Please enter product name';
+
+  @override
+  String get selectCategory => 'Please select a category';
+
+  @override
+  String get enterProductDescription => 'Please enter product description';
+
+  @override
+  String get enterValidPrice => 'Please enter a valid price';
+
+  @override
+  String get enterValidQuantity => 'Please enter a valid quantity';
+
+  @override
+  String get selectLocation => 'Please select a location';
+
+  @override
+  String get enterSellerName => 'Please enter seller name';
+
+  @override
+  String get enterContactInfo => 'Please enter contact information';
+
+  @override
+  String get addAtLeastOnePhoto => 'Please add at least one product photo';
+
+  @override
+  String get uploading => 'Uploading...';
+
+  @override
+  String uploadingImagesCount(int count) {
+    return 'Uploading $count new image(s)';
+  }
+
+  @override
+  String get takeAMoment => 'This may take a few moments';
+
+  @override
+  String get savedLocallySyncLater =>
+      'Saved locally! Will sync when internet is back.';
+
+  @override
+  String get errorTitle => 'Error';
+
+  @override
+  String get okAction => 'OK';
+
+  @override
+  String get retryAction => 'Retry';
+
+  @override
+  String get successTitle => 'Success!';
+
+  @override
+  String itemListedSuccess(String name) {
+    return '$name has been listed successfully!';
+  }
+
+  @override
+  String imagesUploadedCloudinary(int count) {
+    return '$count image(s) uploaded to Cloudinary';
+  }
+
+  @override
+  String get itemLiveMarketplace => 'Your item is now live on the marketplace.';
+
+  @override
+  String get addAnotherAction => 'Add Another';
+
+  @override
+  String get doneAction => 'Done';
+
+  @override
+  String get formCleared => 'Form cleared';
+
+  @override
+  String get productInformation => 'Product Information';
+
+  @override
+  String get productNameLabel => 'Product Name *';
+
+  @override
+  String get categoryLabel => 'Category *';
+
+  @override
+  String get subcategoryOptional => 'Subcategory (Optional)';
+
+  @override
+  String get descriptionLabel => 'Description *';
+
+  @override
+  String get describeProductDetail => 'Describe your product in detail...';
+
+  @override
+  String get priceEtbLabel => 'Price (ETB) *';
+
+  @override
+  String get quantityLabel => 'Quantity *';
+
+  @override
+  String get unitLabel => 'Unit';
+
+  @override
+  String get conditionLabel => 'Condition';
+
+  @override
+  String get locationTitle => 'Location';
+
+  @override
+  String get locationOnMap => 'Location on Map *';
+
+  @override
+  String get tapToSelectLocation => 'Tap to select location';
+
+  @override
+  String get editProduct => 'Edit Product';
+
+  @override
+  String get sellProduceAction => 'Sell Produce';
+
+  @override
+  String addMorePhotos(int count) {
+    return 'Add More Photos ($count/10)';
+  }
+
+  @override
+  String get deleteProductTitle => 'Delete Product';
+
+  @override
+  String deleteProductConfirm(String name) {
+    return 'Are you sure you want to delete \"$name\"?';
+  }
+
+  @override
+  String get cancelAction => 'Cancel';
+
+  @override
+  String get deleteAction => 'Delete';
+
+  @override
+  String get productDeletedSuccess => 'Product deleted successfully';
+
+  @override
+  String get loginToViewProducts => 'Please login to view your products';
+
+  @override
+  String get myProductsTitle => 'My Products';
+
+  @override
+  String get noProductsListed => 'You haven\'t listed any products yet';
+
+  @override
+  String get listFirstProductButton => 'List Your First Product';
+
+  @override
+  String get editAction => 'Edit';
+
+  @override
+  String get shareNearbyAction => 'Share with Nearby';
+
+  @override
+  String viewsLabel(int count) {
+    return '$count Views';
+  }
+
+  @override
+  String likesLabel(int count) {
+    return '$count Likes';
+  }
+
+  @override
+  String get shareWifiTitle => 'Share via Wi-Fi';
+
+  @override
+  String get enterFarmerIpLabel => 'Enter the nearby farmer\'s IP address:';
+
+  @override
+  String propagatingToIp(String ip) {
+    return 'Propagating to $ip...';
+  }
+
+  @override
+  String get propagatedSuccess => 'Propagated successfully!';
+
+  @override
+  String failedToConnectIp(String ip) {
+    return 'Failed to connect to $ip';
+  }
+
+  @override
+  String get sendAction => 'Send';
+
+  @override
+  String get catCereals => 'Cereals';
+
+  @override
+  String get catPulses => 'Pulses';
+
+  @override
+  String get catVegetables => 'Vegetables';
+
+  @override
+  String get catFruits => 'Fruits';
+
+  @override
+  String get catSpices => 'Spices';
+
+  @override
+  String get catCoffee => 'Coffee';
+
+  @override
+  String get catOilSeeds => 'Oil Seeds';
+
+  @override
+  String get catTubers => 'Tubers';
+
+  @override
+  String get catLivestock => 'Livestock';
+
+  @override
+  String get catOthers => 'Others';
+
+  @override
+  String get condFresh => 'Fresh';
+
+  @override
+  String get condDry => 'Dry';
+
+  @override
+  String get condOrganic => 'Organic';
+
+  @override
+  String get condProcessed => 'Processed';
+
+  @override
+  String get condFrozen => 'Frozen';
+
+  @override
+  String get unitKg => 'kg';
+
+  @override
+  String get unitQuintal => 'quintal';
+
+  @override
+  String get unitTon => 'ton';
+
+  @override
+  String get unitSack => 'sack';
+
+  @override
+  String get unitPiece => 'piece';
+
+  @override
+  String get unitLiter => 'liter';
+
+  @override
+  String get addClearPhotosHint =>
+      'Add clear photos of your product from different angles';
+
+  @override
+  String get locationNotFound => 'Location not found';
+
+  @override
+  String get unableToFindLocation =>
+      'Unable to find location. Please try again.';
+
+  @override
+  String get searchLocationHint => 'Search location...';
+
+  @override
+  String get selectLocationTitle => 'Select Location';
+
+  @override
+  String get draggingStatus => 'Dragging...';
+
+  @override
+  String get fetchingStatus => 'Fetching...';
+
+  @override
+  String get confirmLocationButton => 'Confirm Location';
+
+  @override
+  String get unknownLocation => 'Unknown Location';
+
+  @override
+  String get catPesticide => 'Pesticide';
+
+  @override
+  String get catHerbicide => 'Herbicide';
+
+  @override
+  String get catFungicide => 'Fungicide';
+
+  @override
+  String get catFertilizer => 'Fertilizer';
+
+  @override
+  String get sellInputs => 'Sell Agricultural Inputs';
+
+  @override
+  String get offline => 'Offline';
+
+  @override
+  String get synced => 'Synced';
+}

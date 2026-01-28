@@ -55,6 +55,9 @@ class SyncService {
         print('Synced: ${product.name}');
       }
     }
+
+    // Cleanup old records to save memory
+    await _localStorageService.cleanupOldSyncedProducts();
   }
 
   void dispose() {

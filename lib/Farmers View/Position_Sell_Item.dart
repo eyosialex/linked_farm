@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MapTestScreen extends StatefulWidget {
   final Function(String, String, String) onLocationSelected;
@@ -83,13 +83,13 @@ class _MapTestScreenState extends State<MapTestScreen> {
         LatLng newPos = LatLng(loc.latitude, loc.longitude);
         mapController?.animateCamera(CameraUpdate.newLatLngZoom(newPos, 16));
       } else {
-        _showSnackBar("Location not found");
+        _showSnackBar(AppLocalizations.of(context)!.locationNotFound);
       }
     } catch (e) {
       if (e.toString().contains("IO_ERROR") || e.toString().contains("DEADLINE_EXCEEDED")) {
-         _showSnackBar("Network error. Please check your internet connection.");
+         _showSnackBar(AppLocalizations.of(context)!.networkError);
       } else {
-         _showSnackBar("Unable to find location. Please try again.");
+         _showSnackBar(AppLocalizations.of(context)!.unableToFindLocation);
       }
     } finally {
       setState(() {
@@ -118,7 +118,7 @@ class _MapTestScreenState extends State<MapTestScreen> {
     widget.onLocationSelected(
       _center.latitude.toStringAsFixed(6),
       _center.longitude.toStringAsFixed(6),
-      selectedAddress ?? "Unknown Location",
+      selectedAddress ?? AppLocalizations.of(context)!.unknownLocation,
     );
     Navigator.pop(context);
   }
@@ -180,8 +180,8 @@ class _MapTestScreenState extends State<MapTestScreen> {
                   Expanded(
                     child: TextField(
                       controller: _searchController,
-                      decoration: const InputDecoration(
-                        hintText: "Search location...",
+                      decoration: InputDecoration(
+                        hintText: AppLocalizations.of(context)!.searchLocationHint,
                         border: InputBorder.none,
                       ),
                       onSubmitted: (_) => _searchLocation(),
@@ -226,29 +226,29 @@ class _MapTestScreenState extends State<MapTestScreen> {
                 borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                 boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, spreadRadius: 2)],
               ),
-              child: Column(
+               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                   const Text(
-                     "Select Location",
-                     style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold),
+                   Text(
+                     AppLocalizations.of(context)!.selectLocationTitle,
+                     style: const TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold),
                    ),
                    const SizedBox(height: 8),
                    Row(
                      children: [
                        const Icon(Icons.place, color: Colors.red, size: 24),
                        const SizedBox(width: 12),
-                       Expanded(
-                         child: _isMoving
-                             ? const Text("Dragging...", style: TextStyle(fontSize: 16, color: Colors.grey))
-                             : Text(
-                                 selectedAddress ?? "Fetching...",
-                                 style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                                 maxLines: 2,
-                                 overflow: TextOverflow.ellipsis,
-                               ),
-                       ),
+                        Expanded(
+                          child: _isMoving
+                              ? Text(AppLocalizations.of(context)!.draggingStatus, style: const TextStyle(fontSize: 16, color: Colors.grey))
+                              : Text(
+                                  selectedAddress ?? AppLocalizations.of(context)!.fetchingStatus,
+                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                        ),
                      ],
                    ),
                    const SizedBox(height: 20),
@@ -261,9 +261,9 @@ class _MapTestScreenState extends State<MapTestScreen> {
                          foregroundColor: Colors.white,
                          padding: const EdgeInsets.symmetric(vertical: 16),
                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                         elevation: 2,
+                          elevation: 2,
                        ),
-                       child: const Text("Confirm Location", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                       child: Text(AppLocalizations.of(context)!.confirmLocationButton, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                      ),
                    ),
                 ],

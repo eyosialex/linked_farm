@@ -1,0 +1,276 @@
+{
+  "@@locale": "om",
+  "appTitle": "Agrilead",
+  "home": "Mana",
+  "sellProduce": "Omiisha Gurguri",
+  "myProducts": "Omiishawwan koo",
+  "buyInputs": "Galiilee Bitachuu",
+  "marketPrices": "Gatiwwan Gabaa",
+  "messages": "Ergaawwan",
+  "deliveryServices": "Tajaajila Geejjibaa",
+  "expertAdvice": "Gorsa Ekspeertii",
+  "landPlanner": "Karoorsituu Lafaa",
+  "welcomeBack": "Baga nagaan dhuftan!",
+  "manageFarm": "Qubannaa fi callaa keessan haala gaariin bulchaa.",
+  "selectLanguage": "Afaan Filadhu",
+  "farmerDashboard": "Daashboordii Qonnaan Bulaa",
+  "loginSubTitle": "Gara herrega keetti seeni",
+  "emailHint": "Iimeelii kee galchi",
+  "passwordHint": "Jecha icciitii kee galchi",
+  "loginButton": "Seeni",
+  "noAccount": "Herrega hin qabduu? ",
+  "registerAction": "Galmaa'i",
+  "forgotPassword": "Jecha icciitii dagattee?",
+  "fillAllFields": "Maaloo bakka hundaa guuti",
+  "userNotFound": "Fayyadamaa hin argamne",
+  "wrongPassword": "Jecha icciitii dogoggoraa",
+  "invalidEmail": "Iimeelii dogoggoraa",
+  "userDisabled": "Fayyadamaa dhorkame",
+  "somethingWentWrong": "Wanti tokko dogoggoreera",
+  "completeProfileSetup": "Maaloo qindaa'ina piroofaayila kee xumuri.",
+  "completeProfile": "Maaloo piroofaayila kee xumuri.",
+  "registerSubTitle": "Herrega kee uumi",
+  "fullNameHint": "Maqaa kee guutuu galchi",
+  "phoneHint": "Lakkoofsa bilbilaa kee galchi",
+  "selectRole": "Gahee kee filadhu",
+  "roleFarmer": "Qonnaan Bulaa",
+  "roleVendor": "Daldalaa",
+  "roleAdvisor": "Gorsa Ekspeertii",
+  "roleDelivery": "Geejjibaa",
+  "roleShopper": "Shopper (Dhiyeessaa Meeshaa)",
+  "confirmPasswordHint": "Jecha icciitii mirkaneessi",
+  "registerButton": "Galmaa'i",
+  "alreadyHaveAccount": "Duraan herrega qabdaa? ",
+  "passwordsNotMatch": "Jechi icciitii wal hin fudhatu",
+  "passwordTooShort": "Jechi icciitii yoo xiqqaate mallattoo 6 ta'uu qaba",
+  "registrationSuccess": "Galmeen milkaa'inaan xumurameera!",
+  "emailInUse": "Iimeeliin duraan itti fayyadameera",
+  "weakPassword": "Jechi icciitii baay'ee laafaadha",
+  "invalidEmailAddress": "Teessoo iimeelii dogoggoraa",
+  "completeProfileTitle": "Piroofaayila kee guuti",
+  "userNotLoggedIn": "Fayyadamaan hin seenne",
+  "userDataNotFound": "Wanti fayyadamaa hin argamne",
+  "profileCompletedSuccess": "Piroofaayilli milkaa'inaan xumurameera!",
+  "profileCompletedFailed": "Piroofaayila xumuruun hin danda'amne",
+  "deliveryInfoTitle": "Odeeffannoo Geejjibaa",
+  "yourLocationLabel": "Bakka kee",
+  "carTypeLabel": "Gosa Konkolaataa",
+  "licenseIdLabel": "Id eeyyama konkolaachisummaa",
+  "reviewCompleteTitle": "Irra deebi'ii ilaali & Xumuri",
+  "reviewInfoLabel": "Odeeffannoo kee irra deebi'ii ilaali:",
+  "locationLabel": "Bakka:",
+  "licenseIdPrefix": "Id Eeyyamaa:",
+  "carTypePrefix": "Gosa Konkolaataa:",
+  "clickCompleteLabel": "Qindaa'ina piroofaayila kee xumuruuf Xumuri kan jedhu cuqaasi.",
+  "farmInfoTitle": "Odeeffannoo Qubannaa",
+  "farmNameLabel": "Maqaa Qubannaa",
+  "farmLocationLabel": "Bakka Qubannaa",
+  "farmSizeLabel": "Bal'ina Qubannaa (acres)",
+  "cropsGrownLabel": "Callaa Omishamu",
+  "cropsHint": "fkn, Buna, Boqqoolloo, Kuduraa",
+  "businessInfoTitle": "Odeeffannoo Daldalaa",
+  "businessNameLabel": "Maqaa Daldalaa",
+  "businessTypeLabel": "Gosa Daldalaa",
+  "businessTypeHint": "fkn, Dhiyeessaa, Reetaayilaa, Tooraa",
+  "contactPersonLabel": "Nama Qunnamamu",
+  "businessAddressLabel": "Teessoo Daldalaa",
+  "productsServicesLabel": "Omiishaalee/Tajaajilaalee",
+  "productsServicesHint": "fkn, xaa'oo, sanyii, meeshaalee",
+  "professionalProfileTitle": "Piroofaayila Ogummaa",
+  "specializationLabel": "Lutuubummaa",
+  "specializationHint": "fkn, Saayinsii Callaa, Fayyaa Neefka",
+  "experienceLabel": "Muuxannoo (Waggaa)",
+  "qualificationLabel": "Sadarkaa / Digrii",
+  "farmerProfileSetup": "Qindaa'ina Piroofaayila Qonnaan Bulaa",
+  "vendorProfileSetup": "Qindaa'ina Piroofaayila Daldalaa",
+  "advisorProfileSetup": "Qindaa'ina Piroofaayila Gorsa Ekspeertii",
+  "shopperProfileSetup": "Qindaa'ina Piroofaayila Shopper",
+  "defaultProfileSetup": "Qindaa'ina Piroofaayilaa",
+  "welcomeName": "Baga nagaan dhuftan, {name}!",
+  "@welcomeName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "signUpAction": "Galmaa'i",
+  "comingSoon": "{feature} dhiyootti ni dhufa!",
+  "@comingSoon": {
+    "placeholders": {
+      "feature": {
+        "type": "String"
+      }
+    }
+  },
+  "productImagesTitle": "Fakkiiwwan Omiishaa",
+  "addPhotosTitle": "Fakkiiwwan Dabali",
+  "chooseImageSource": "Madda fakkii filadhu",
+  "cameraAction": "Kaameeraa",
+  "galleryAction": "Gaalarii",
+  "photoAddedSuccess": "Fakkii milkaa'inaan dabaleera",
+  "errorTakingPhoto": "Fakkii kaasuuf rakkon uumameera",
+  "errorSelectingImages": "Fakkiiwwan filachuuf rakkon uumameera",
+  "photoRemoved": "Fakkii haqameera",
+  "locationSelectedSuccess": "Bakki milkaa'inaan filatameera",
+  "enterProductName": "Maaloo maqaa omiishaa galchi",
+  "selectCategory": "Maaloo gosa omiishaa filadhu",
+  "enterProductDescription": "Maaloo ibsa omiishaa galchi",
+  "enterValidPrice": "Maaloo gatii sirrii galchi",
+  "enterValidQuantity": "Maaloo baay'ina sirrii galchi",
+  "selectLocation": "Maaloo bakka filadhu",
+  "enterSellerName": "Maaloo maqaa gurguraa galchi",
+  "enterContactInfo": "Maaloo odeeffannoo qunnamtii galchi",
+  "addAtLeastOnePhoto": "Maaloo yoo xiqqaate fakkii omiishaa tokko dabali",
+  "uploading": "Olif fe'amaa jira...",
+  "uploadingImagesCount": "Fakkiiwwan haaraa {count} ol fe'amaa jira",
+  "@uploadingImagesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "takeAMoment": "Kun yeroo murasase fudhachuu danda'a",
+  "savedLocallySyncLater": "Bakka kanatti kuufameera! Yeroo interneetiin deebi'u ni fe'ama.",
+  "errorTitle": "Dogoggora",
+  "okAction": "Tole",
+  "retryAction": "Irra deebi'ii yaali",
+  "successTitle": "Milkaa'eera!",
+  "itemListedSuccess": "{name} milkaa'inaan gabaaf dhiyaateera!",
+  "@itemListedSuccess": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "imagesUploadedCloudinary": "Fakkiiwwan {count} ol fe'amaniiru",
+  "@imagesUploadedCloudinary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "itemLiveMarketplace": "Omiishni kee ammas gabaa irratti argama.",
+  "addAnotherAction": "Kan biraa dabali",
+  "doneAction": "Xumurameera",
+  "formCleared": "Unki qulqulleeffameera",
+  "productInformation": "Odeeffannoo Omiishaa",
+  "productNameLabel": "Maqaa Omiishaa *",
+  "categoryLabel": "Gosa Omiishaa *",
+  "subcategoryOptional": "Gosa xiqqaa (Filaannoo)",
+  "descriptionLabel": "Ibsa *",
+  "describeProductDetail": "Ibsa omiishaa kee bal'inaan galchi...",
+  "priceEtbLabel": "Gatii (ETB) *",
+  "quantityLabel": "Baay'ina *",
+  "unitLabel": "Safara",
+  "conditionLabel": "Haala",
+  "locationTitle": "Bakka",
+  "locationOnMap": "Bakka Kaartaa irratti *",
+  "tapToSelectLocation": "Bakka filachuuf cuqaasi",
+  "editProduct": "Omiishaa Gulaali",
+  "sellProduceAction": "Omiishaa Gurguri",
+  "addMorePhotos": "Fakkiiwwan dabalataa dabali ({count}/10)",
+  "@addMorePhotos": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteProductTitle": "Omiishaa Haqi",
+  "deleteProductConfirm": "\"{name}\" haquu kee mirkaneessiteettaa?",
+  "@deleteProductConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cancelAction": "Dhiisi",
+  "deleteAction": "Haqi",
+  "productDeletedSuccess": "Omiishni milkaa'inaan haqameera",
+  "loginToViewProducts": "Maaloo omiishawwan kee arguuf seeni",
+  "myProductsTitle": "Omiishawwan koo",
+  "noProductsListed": "Hamma amማatti omiishaa tokko illee hin gabaasne",
+  "listFirstProductButton": "Omiishaa kee isa jalqabaa gabaasi",
+  "editAction": "Gulaali",
+  "shareNearbyAction": "Warra dhiyoo jiraniif qoodi",
+  "viewsLabel": "{count} Daawwatamaniiru",
+  "@viewsLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "likesLabel": "{count} Jaallatama",
+  "@likesLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shareWifiTitle": "Wi-Fi'n qoodi",
+  "enterFarmerIpLabel": "Teessoo IP qonnaan bulaa dhiyoo jiru galchi:",
+  "propagatingToIp": "Gara {ip} ergamaa jira...",
+  "@propagatingToIp": {
+    "placeholders": {
+      "ip": {
+        "type": "String"
+      }
+    }
+  },
+  "propagatedSuccess": "Milkaa'inaan ergameera!",
+  "failedToConnectIp": "{ip} qunnamuun hin danda'amne",
+  "@failedToConnectIp": {
+    "placeholders": {
+      "ip": {
+        "type": "String"
+      }
+    }
+  },
+  "sendAction": "Ergi",
+  "catCereals": "Midhaan",
+  "catPulses": "Omiishaalee",
+  "catVegetables": "Kuduraalee",
+  "catFruits": "Muduraalee",
+  "catSpices": "Ushuratoota",
+  "catCoffee": "Buna",
+  "catOilSeeds": "Sanyiiwwan Zayitaa",
+  "catTubers": "Tubers",
+  "catLivestock": "Horsiisa Beeyladaa",
+  "catOthers": "Kan biraa",
+  "condFresh": "Haaraa",
+  "condDry": "Gogogaa",
+  "condOrganic": "Orgaanikii",
+  "condProcessed": "Kan qophaa'e",
+  "condFrozen": "Ciddaa",
+  "unitKg": "kg",
+  "unitQuintal": "quintal",
+  "unitTon": "ton",
+  "unitSack": "shoroobaa",
+  "unitPiece": "cipha",
+  "unitLiter": "liter",
+  "addClearPhotosHint": "Fakkiiwwan omiishaa kee kallattii garagaraan qulqulleessii dabali",
+  "locationNotFound": "Bakki hin argamne",
+  "networkError": "Dogoggora netwoorkii. Maaloo interneetii kee mirkaneessi.",
+  "unableToFindLocation": "Bakka argachuun hin danda'amne. Maaloo irra deebi'ii yaali.",
+  "searchLocationHint": "Bakka barbaadi...",
+  "selectLocationTitle": "Bakka filadhu",
+  "draggingStatus": "Harkifamaa jira...",
+  "fetchingStatus": "Fidamaa jira...",
+  "confirmLocationButton": "Bakka mirkaneessi",
+  "unknownLocation": "Bakka hin beekamne",
+  "catPesticide": "Qoricha Arrii",
+  "catHerbicide": "Qoricha Aramaa",
+  "catFungicide": "Qoricha Fangasii",
+  "catFertilizer": "Xaa'oo",
+  "buyInputs": "Meeshaalee Qonnaa Bitadhu",
+  "sellInputs": "Meeshaalee Qonnaa Gurguri",
+  "offline": "Siriin ala",
+  "synced": "Synced"
+}

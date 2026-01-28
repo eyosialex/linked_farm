@@ -11,6 +11,9 @@ import 'package:echat/Services/local_storage_service.dart';
 import 'package:echat/Services/wifi_share_service.dart';
 import 'package:echat/Services/sync_service.dart';
 import 'package:echat/Farmers%20View/FireStore_Config.dart';
+import 'package:echat/Services/locale_provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,6 +40,7 @@ void main() async {
         Provider<WifiShareService>.value(value: wifiService),
         Provider<FirestoreService>.value(value: firestoreService),
         Provider<SyncService>.value(value: syncService),
+        ChangeNotifierProvider(create: (_) => LocaleProvider()),
       ],
       child: const MyApp(),
     ),
@@ -125,6 +129,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    final localeProvider = Provider.of<LocaleProvider>(context);
+    
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Agrilead',
@@ -132,6 +138,18 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'),
+        Locale('am'),
+        Locale('om'),
+      ],
+      locale: localeProvider.locale,
       home: const LogInOrRegister(),
     );
   }

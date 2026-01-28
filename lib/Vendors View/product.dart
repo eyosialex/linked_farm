@@ -11,6 +11,9 @@ import 'package:echat/Farmers%20View/Sell_Item_Model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:echat/Chat/chat_screen.dart';
 import 'package:location/location.dart';
+import 'package:echat/Services/local_storage_service.dart';
+import 'package:provider/provider.dart';
+import 'dart:io';
 
 // Product List Screen - Shows all products
 class ProductListScreen extends StatefulWidget {
@@ -36,6 +39,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
     'Livestock',
     'Fertilizers',
     'Pesticides',
+    'Herbicides',
+    'Fungicides',
     'Machinery',
     'Others'
   ];
@@ -46,7 +51,29 @@ class _ProductListScreenState extends State<ProductListScreen> {
   @override
   void initState() {
     super.initState();
-    _productsStream = _firestoreService.getAgriculturalItems();
+    _initCombinedStream();
+  }
+
+  void _initCombinedStream() {
+    // We combine the Firestore stream with a local Hive check
+    _productsStream = _firestoreService.getAgriculturalItems().map((firestoreItems) {
+      final localStorage = Provider.of<LocalStorageService>(context, listen: false);
+      final localItems = localStorage.getAllProducts();
+      
+      // Merge: Prioritize Firestore items, but add unique local items (received via P2P or pending sync)
+      final merged = [...firestoreItems];
+      final firestoreIds = firestoreItems.map((e) => e.id).toSet();
+      
+      for (var localItem in localItems) {
+        if (!firestoreIds.contains(localItem.id)) {
+          merged.add(localItem);
+        }
+      }
+      
+      // Sort by creation date
+      merged.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      return merged;
+    });
   }
 
   // Filter products based on search and category
@@ -338,35 +365,19 @@ class _ProductListScreenState extends State<ProductListScreen> {
                               topLeft: Radius.circular(16),
                               topRight: Radius.circular(16),
                             ),
-                            child: Image.network(
-                              product.imageUrls![0],
-                              fit: BoxFit.cover,
-                              loadingBuilder: (context, child, loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return Container(
-                                  color: Colors.grey[200],
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      value: loadingProgress.expectedTotalBytes != null
-                                          ? loadingProgress.cumulativeBytesLoaded /
-                                              loadingProgress.expectedTotalBytes!
-                                          : null,
-                                      strokeWidth: 2,
-                                    ),
-                                  ),
-                                );
-                              },
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  color: Colors.grey[200],
-                                  child: const Icon(
-                                    Icons.image_not_supported_outlined,
-                                    color: Colors.grey,
-                                    size: 40,
-                                  ),
-                                );
-                              },
-                            ),
+                            child: (product.imageUrls != null && product.imageUrls!.isNotEmpty)
+                                ? Image.network(
+                                    product.imageUrls![0],
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) => _buildErrorPlaceholder(),
+                                  )
+                                : (product.localImagePaths != null && product.localImagePaths!.isNotEmpty)
+                                    ? Image.file(
+                                        File(product.localImagePaths![0]),
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (context, error, stackTrace) => _buildErrorPlaceholder(),
+                                      )
+                                    : _buildErrorPlaceholder(),
                           )
                         : const Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -427,7 +438,6 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   ),
                 ],
               ),
-
               // Product Info Section
               Padding(
                 padding: const EdgeInsets.all(12),
@@ -565,6 +575,17 @@ class _ProductListScreenState extends State<ProductListScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildErrorPlaceholder() {
+    return Container(
+      color: Colors.grey[200],
+      child: const Icon(
+        Icons.image_not_supported_outlined,
+        color: Colors.grey,
+        size: 40,
       ),
     );
   }

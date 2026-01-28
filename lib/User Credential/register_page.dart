@@ -5,6 +5,7 @@ import 'package:echat/User%20Credential/usermodel.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'TextField.dart';
 import 'firebaseauthservice.dart';
 import 'userfirestore.dart';    
@@ -35,21 +36,21 @@ class _RegistrationPageState extends State<RegistrationPage> {
     if (_email.isEmpty || _password.isEmpty || _confirmPassword.isEmpty || 
         _fullName.isEmpty || _phoneNumber.isEmpty || _selectedUserType == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please fill all fields")),
+        SnackBar(content: Text(AppLocalizations.of(context)!.fillAllFields)),
       );
       return;
     }
 
     if (_password != _confirmPassword) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Passwords do not match")),
+        SnackBar(content: Text(AppLocalizations.of(context)!.passwordsNotMatch)),
       );
       return;
     }
 
     if (_password.length < 6) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Password must be at least 6 characters")),
+        SnackBar(content: Text(AppLocalizations.of(context)!.passwordTooShort)),
       );
       return;
     }
@@ -77,7 +78,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         await _userRepository.createUser(userModel);
 
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Registration successful!")),
+          SnackBar(content: Text(AppLocalizations.of(context)!.registrationSuccess)),
         );
 
         // Navigate to create account to complete profile
@@ -87,13 +88,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
         );
       }
     } on FirebaseAuthException catch (e) {
-      String message = "Registration failed";
+      final l10n = AppLocalizations.of(context)!;
+      String message = l10n.somethingWentWrong;
       if (e.code == 'email-already-in-use') {
-        message = "Email already in use";
+        message = l10n.emailInUse;
       } else if (e.code == 'weak-password') {
-        message = "Password is too weak";
+        message = l10n.weakPassword;
       } else if (e.code == 'invalid-email') {
-        message = "Invalid email address";
+        message = l10n.invalidEmailAddress;
       }
       
       ScaffoldMessenger.of(context).showSnackBar(
@@ -101,7 +103,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Something went wrong: $e")),
+        SnackBar(content: Text("${AppLocalizations.of(context)!.somethingWentWrong}: $e")),
       );
     } finally {
       setState(() => _isLoading = false);
@@ -122,7 +124,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 Icon(Icons.agriculture, size: 80, color: Colors.green[700]),
                 const SizedBox(height: 20),
                 Text(
-                  "AgriLead",
+                  AppLocalizations.of(context)!.appTitle,
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
@@ -131,9 +133,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ),
 
                 const SizedBox(height: 20),
-                const Text(
-                  "Create your account",
-                  style: TextStyle(
+                Text(
+                  AppLocalizations.of(context)!.registerSubTitle,
+                  style: const TextStyle(
                     fontSize: 16,
                     color: Colors.grey,
                   ),
@@ -143,7 +145,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 // Full Name
                 Mytextfield(
                   con: fullName,
-                  HintText: "Enter your full name",
+                  HintText: AppLocalizations.of(context)!.fullNameHint,
                   valid: false,
                 ),
                 const SizedBox(height: 15),
@@ -151,7 +153,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 // Email
                 Mytextfield(
                   con: email,
-                  HintText: "Enter your email",
+                  HintText: AppLocalizations.of(context)!.emailHint,
                   valid: false,
                 ),
                 const SizedBox(height: 15),
@@ -159,7 +161,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 // Phone Number
                 Mytextfield(
                   con: phoneNumber,
-                  HintText: "Enter your phone number",
+                  HintText: AppLocalizations.of(context)!.phoneHint,
                   valid: false,
                 ),
                 const SizedBox(height: 15),
@@ -175,26 +177,30 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: DropdownButtonFormField<String>(
                       value: _selectedUserType,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         border: InputBorder.none,
-                        labelText: "Select your role",
+                        labelText: AppLocalizations.of(context)!.selectRole,
                       ),
-                      items: const [
+                      items: [
                         DropdownMenuItem(
                           value: 'farmer',
-                          child: Text('Farmer'),
+                          child: Text(AppLocalizations.of(context)!.roleFarmer),
                         ),
                         DropdownMenuItem(
                           value: 'vendor',
-                          child: Text('Vendor'),
+                          child: Text(AppLocalizations.of(context)!.roleVendor),
                         ),
                            DropdownMenuItem(
                           value: 'advisor',
-                          child: Text('Expert Advisor'),
+                          child: Text(AppLocalizations.of(context)!.roleAdvisor),
                         ),
                               DropdownMenuItem(
                           value: 'delivery',
-                          child: Text('Delivery'),
+                          child: Text(AppLocalizations.of(context)!.roleDelivery),
+                        ),
+                        DropdownMenuItem(
+                          value: 'shopper',
+                          child: Text(AppLocalizations.of(context)!.roleShopper),
                         ),
                       ],
                       onChanged: (value) {
@@ -210,7 +216,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 // Password
                 Mytextfield(
                   con: password,
-                  HintText: "Enter your password",
+                  HintText: AppLocalizations.of(context)!.passwordHint,
                   valid: true,
                 ),
                 const SizedBox(height: 15),
@@ -218,7 +224,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 // Confirm Password
                 Mytextfield(
                   con: confirmPassword,
-                  HintText: "Confirm your password",
+                  HintText: AppLocalizations.of(context)!.confirmPasswordHint,
                   valid: true,
                 ),
                 const SizedBox(height: 25),
@@ -242,10 +248,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               ),
                             ],
                           ),
-                          child: const Center(
+                          child: Center(
                             child: Text(
-                              "Register",
-                              style: TextStyle(
+                              AppLocalizations.of(context)!.registerButton,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -258,11 +264,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Already have an account? "),
+                    Text(AppLocalizations.of(context)!.alreadyHaveAccount),
                     GestureDetector(
                       onTap: widget.onTap,
                       child: Text(
-                        "Login",
+                        AppLocalizations.of(context)!.loginButton,
                         style: TextStyle(
                           color: Colors.green[700],
                           fontWeight: FontWeight.bold,

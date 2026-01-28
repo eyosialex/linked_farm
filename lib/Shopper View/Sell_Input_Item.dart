@@ -15,15 +15,16 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'Position_Sell_Item.dart';
-class SellItem extends StatefulWidget {
+class SellInputItem extends StatefulWidget {
   final AgriculturalItem? productToEdit;
 
-  const SellItem({super.key, this.productToEdit});
+  const SellInputItem({super.key, this.productToEdit});
 
   @override
-  State<SellItem> createState() => _SellItemState();
+  State<SellInputItem> createState() => _SellInputItemState();
 }
-class _SellItemState extends State<SellItem> {
+
+class _SellInputItemState extends State<SellInputItem> {
   // Form controllers
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
@@ -56,10 +57,8 @@ class _SellItemState extends State<SellItem> {
   final ImagePicker _imagePicker = ImagePicker();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // Product categories
+  // Product categories for agricultural inputs
   final List<String> _categories = [
-    'Cereals', 'Pulses', 'Vegetables', 'Fruits', 'Spices',
-    'Coffee', 'Oil Seeds', 'Tubers', 'Livestock',
     'Fertilizers', 'Pesticides', 'Herbicides', 'Fungicides', 'Others'
   ];
 
