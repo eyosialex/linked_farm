@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:echat/Chat/chat_model.dart';
+import 'package:echat/Chat/widgets/audio_player_widget.dart';
 
 class MediaPreview extends StatelessWidget {
   final MessageType type;
@@ -41,49 +42,69 @@ class MediaPreview extends StatelessWidget {
           ),
         );
       case MessageType.video:
-        return Row(
-          mainAxisSize: MainAxisSize.min,
+        return Stack(
+          alignment: Alignment.center,
           children: [
-            const Icon(Icons.video_library, size: 30, color: Colors.blue),
-            const SizedBox(width: 8),
-            Flexible(
-              child: Text(
-                fileName ?? "Video File",
-                style: TextStyle(color: textColor, fontSize: 13),
-                overflow: TextOverflow.ellipsis,
+            Container(
+              width: double.infinity,
+              height: 150,
+              decoration: BoxDecoration(
+                color: Colors.black87,
+                borderRadius: BorderRadius.circular(12),
               ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.video_library, size: 40, color: Colors.white54),
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(
+                      fileName ?? "Video File",
+                      style: const TextStyle(color: Colors.white70, fontSize: 11),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: const BoxDecoration(
+                color: Colors.teal,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.play_arrow, color: Colors.white, size: 30),
             ),
           ],
         );
       case MessageType.audio:
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.audiotrack, size: 30, color: Colors.orange),
-            const SizedBox(width: 8),
-            Flexible(
-              child: Text(
-                fileName ?? "Audio File",
-                style: TextStyle(color: textColor, fontSize: 13),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
+        return AudioPlayerWidget(
+          url: url!,
+          themeColor: textColor,
         );
       case MessageType.pdf:
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.picture_as_pdf, size: 30, color: Colors.red),
-            const SizedBox(width: 8),
-            Flexible(
-              child: Text(
-                fileName ?? "PDF Document",
-                style: TextStyle(color: textColor, fontSize: 13),
-                overflow: TextOverflow.ellipsis,
+        return Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: textColor.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.picture_as_pdf, size: 30, color: Colors.red),
+              const SizedBox(width: 12),
+              Flexible(
+                child: Text(
+                  fileName ?? "PDF Document",
+                  style: TextStyle(color: textColor, fontSize: 13, fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       default:
         return Text(

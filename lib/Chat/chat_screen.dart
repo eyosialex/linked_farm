@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:echat/Services/chat_service.dart';
 import 'package:echat/Chat/chat_model.dart';
 import 'package:echat/Chat/image_preview_page.dart';
+import 'package:echat/Chat/video_player_page.dart';
 import 'package:echat/Chat/widgets/chat_input_field.dart';
 import 'package:echat/Chat/widgets/message_bubble.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -168,6 +169,16 @@ class _ChatPageState extends State<ChatPage> {
             context,
             MaterialPageRoute(
               builder: (context) => ImagePreviewPage(imageUrl: mediaUrl),
+            ),
+          );
+        } else if (typeStr == MessageType.video.name && mediaUrl != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => VideoPlayerPage(
+                videoUrl: mediaUrl,
+                title: data['fileName'] ?? "Video",
+              ),
             ),
           );
         }
