@@ -108,7 +108,7 @@ class ChatService extends ChangeNotifier {
   }
 
   // GROUP LOGIC
-  Future<void> createGroup(String groupName, List<String> memberIds) async {
+  Future<void> createGroup(String groupName, List<String> memberIds, {String type = 'group'}) async {
     final String currentUserId = _auth.currentUser!.uid;
     if (!memberIds.contains(currentUserId)) {
       memberIds.add(currentUserId);
@@ -120,17 +120,17 @@ class ChatService extends ChangeNotifier {
       groupId: groupRef.id,
       name: groupName,
       members: memberIds,
-      lastMessage: "Group created",
+      adminIds: [currentUserId], // The creator is the admin
+      type: type,
+      lastMessage: type == 'channel' ? "Channel created" : "Group created",
       lastSenderId: currentUserId,
       timestamp: Timestamp.now(),
     );
 
     await groupRef.set(newGroup.toMap());
-
-    // Also notify via WebSocket (optional broadcast)
   }
 
-  Future<void> sendGroupMessage(String groupId, String message, {MessageType type = MessageType.text, String? mediaUrl, String? fileName}) async {
+  Future<void> sendGroupMessage(String groupId, String message, {MessageType type = MessageType.text, String? mediaUrl, String? fileName, String? parentMessageId}) async {
     final String currentUserId = _auth.currentUser!.uid;
     final String currentUserEmail = _auth.currentUser!.email!;
     final Timestamp timestamp = Timestamp.now();
@@ -144,6 +144,7 @@ class ChatService extends ChangeNotifier {
       messageType: type,
       mediaUrl: mediaUrl,
       fileName: fileName,
+      parentMessageId: parentMessageId,
     );
 
     // Broadcast via WebSocket
@@ -155,11 +156,13 @@ class ChatService extends ChangeNotifier {
         .collection('messages')
         .add(newMessage.toMap());
 
-    await _firestore.collection('groups').doc(groupId).update({
-      'lastMessage': type == MessageType.text ? message : '[Media]',
-      'lastSenderId': currentUserId,
-      'timestamp': timestamp,
-    });
+    if (parentMessageId == null) {
+      await _firestore.collection('groups').doc(groupId).update({
+        'lastMessage': type == MessageType.text ? message : '[Media]',
+        'lastSenderId': currentUserId,
+        'timestamp': timestamp,
+      });
+    }
   }
 
   Stream<QuerySnapshot> getGroupMessages(String groupId) {
@@ -167,7 +170,16 @@ class ChatService extends ChangeNotifier {
         .collection('groups')
         .doc(groupId)
         .collection('messages')
-        .orderBy('timestamp', descending: false)
+        .where('parentMessageId', isNull: true) // Only show top-level posts
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> getComments(String groupId, String parentMessageId) {
+    return _firestore
+        .collection('groups')
+        .doc(groupId)
+        .collection('messages')
+        .where('parentMessageId', isEqualTo: parentMessageId)
         .snapshots();
   }
 
@@ -176,7 +188,6 @@ class ChatService extends ChangeNotifier {
     return _firestore
         .collection('groups')
         .where('members', arrayContains: currentUserId)
-        .orderBy('timestamp', descending: true)
         .snapshots();
   }
   
@@ -204,5 +215,50 @@ class ChatService extends ChangeNotifier {
         .collection('messages')
         .orderBy('timestamp', descending: false)
         .snapshots();
+  }
+
+  // REMOVE MEMBER FROM GROUP
+  Future<void> removeMemberFromGroup(String groupId, String userId) async {
+    try {
+      await _firestore.collection('groups').doc(groupId).update({
+        'members': FieldValue.arrayRemove([userId]),
+        'adminIds': FieldValue.arrayRemove([userId]), // Also remove from admins if they were one
+      });
+      print('✅ User $userId removed from group $groupId');
+    } catch (e) {
+      print('❌ Error removing member: $e');
+      rethrow;
+    }
+  }
+
+  // ADD MEMBER TO GROUP
+  Future<void> addMemberToGroup(String groupId, String userId) async {
+    try {
+      await _firestore.collection('groups').doc(groupId).update({
+        'members': FieldValue.arrayUnion([userId]),
+      });
+      print('✅ User $userId added to group $groupId');
+    } catch (e) {
+      print('❌ Error adding member: $e');
+      rethrow;
+    }
+  }
+
+  // UPDATE GROUP PHOTO
+  Future<void> updateGroupPhoto(String groupId, String photoUrl) async {
+    try {
+      await _firestore.collection('groups').doc(groupId).update({
+        'groupIconUrl': photoUrl,
+      });
+      print('✅ Group $groupId photo updated');
+    } catch (e) {
+      print('❌ Error updating group photo: $e');
+      rethrow;
+    }
+  }
+
+  // GET INDIVIDUAL USER STREAM (for online status/last seen)
+  Stream<DocumentSnapshot> getUserStream(String userId) {
+    return _firestore.collection('Usersstore').doc(userId).snapshots();
   }
 }

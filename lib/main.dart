@@ -7,10 +7,40 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:echat/Game/models/game_state.dart';
 
+import 'package:echat/Services/local_storage_service.dart';
+import 'package:echat/Services/wifi_share_service.dart';
+import 'package:echat/Services/sync_service.dart';
+import 'package:echat/Farmers%20View/FireStore_Config.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  
+  // Initialize Offline Services
+  await LocalStorageService.init();
+  final localStorage = LocalStorageService();
+  final firestoreService = FirestoreService();
+  final wifiService = WifiShareService(localStorage);
+  final syncService = SyncService(localStorage, firestoreService);
+
+  // Start P2P server in background
+  wifiService.startServer();
+  
+  // Start monitoring internet for sync
+  syncService.startMonitoring();
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => GameState()),
+        Provider<LocalStorageService>.value(value: localStorage),
+        Provider<WifiShareService>.value(value: wifiService),
+        Provider<FirestoreService>.value(value: firestoreService),
+        Provider<SyncService>.value(value: syncService),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -95,17 +125,14 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => GameState(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Agrilead',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
-      ), 
-      home: LogInOrRegister(),
       ),
+      home: const LogInOrRegister(),
     );
   }
 }

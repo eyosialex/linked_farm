@@ -10,8 +10,10 @@ import 'package:echat/Chat/image_preview_page.dart';
 import 'package:echat/Chat/video_player_page.dart';
 import 'package:echat/Chat/widgets/chat_input_field.dart';
 import 'package:echat/Chat/widgets/message_bubble.dart';
+import 'package:echat/User%20Credential/usermodel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ChatPage extends StatefulWidget {
   final String receiverUserEmail;
@@ -103,12 +105,33 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(widget.receiverUserEmail, style: const TextStyle(fontSize: 16)),
-            // const Text("Online", style: TextStyle(fontSize: 12, color: Colors.greenAccent)), // Presence placeholder
-          ],
+        title: StreamBuilder<DocumentSnapshot>(
+          stream: _chatService.getUserStream(widget.receiverUserID),
+          builder: (context, snapshot) {
+            String status = "Offline";
+            Color statusColor = Colors.white70;
+
+            if (snapshot.hasData && snapshot.data!.data() != null) {
+              UserModel user = UserModel.fromMap(snapshot.data!.data() as Map<String, dynamic>);
+              if (user.isOnline) {
+                status = "Online";
+                statusColor = Colors.tealAccent[100]!;
+              } else if (user.lastseen != null) {
+                status = _formatLastSeen(user.lastseen!);
+              }
+            }
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(widget.receiverUserEmail, style: const TextStyle(fontSize: 16)),
+                Text(
+                  status, 
+                  style: TextStyle(fontSize: 11, color: statusColor, fontWeight: FontWeight.normal)
+                ),
+              ],
+            );
+          }
         ),
         backgroundColor: Colors.teal[700],
         foregroundColor: Colors.white,
@@ -193,6 +216,23 @@ class _ChatPageState extends State<ChatPage> {
   String _formatTimestamp(Timestamp timestamp) {
     DateTime date = timestamp.toDate();
     return "${date.hour}:${date.minute.toString().padLeft(2, '0')}";
+  }
+
+  String _formatLastSeen(DateTime lastSeen) {
+    final now = DateTime.now();
+    final difference = now.difference(lastSeen);
+
+    if (difference.inMinutes < 1) {
+      return "last seen just now";
+    } else if (difference.inMinutes < 60) {
+      return "last seen ${difference.inMinutes}m ago";
+    } else if (difference.inHours < 24) {
+      return "last seen ${difference.inHours}h ago";
+    } else if (difference.inDays < 7) {
+      return "last seen ${DateFormat('E hh:mm a').format(lastSeen)}";
+    } else {
+      return "last seen ${DateFormat('MMM d, yyyy').format(lastSeen)}";
+    }
   }
 
   Widget _buildMessageInput() {

@@ -5,6 +5,9 @@ import 'package:echat/User%20Credential/userfirestore.dart';
 import 'package:flutter/material.dart';
 import 'package:echat/Chat/create_group_screen.dart';
 import 'package:echat/Chat/group_chat_page.dart';
+import 'package:echat/User%20Credential/profile_page.dart';
+import 'package:echat/User%20Credential/usermodel.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
 class ChatListScreen extends StatefulWidget {
@@ -38,6 +41,42 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: _isSearching 
+          ? null 
+          : Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FutureBuilder<UserModel?>(
+                future: _userRepo.getUser(FirebaseAuth.instance.currentUser!.uid),
+                builder: (context, snapshot) {
+                  final user = snapshot.data;
+                  String? photoUrl = user?.photoUrl;
+                  String initial = (user?.fullName != null && user!.fullName.isNotEmpty) 
+                    ? user.fullName[0].toUpperCase() 
+                    : "?";
+
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProfilePage(
+                            userId: FirebaseAuth.instance.currentUser!.uid,
+                            isMe: true,
+                          ),
+                        ),
+                      );
+                    },
+                    child: CircleAvatar(
+                      backgroundColor: Colors.teal[100],
+                      backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
+                      child: photoUrl == null 
+                        ? Text(initial, style: TextStyle(color: Colors.teal[800], fontWeight: FontWeight.bold))
+                        : null,
+                    ),
+                  );
+                },
+              ),
+            ),
         title: _isSearching
             ? TextField(
                 controller: _searchController,
@@ -102,6 +141,17 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
               leading: const CircleAvatar(child: Icon(Icons.person)),
               title: Text(user['fullName']),
               subtitle: Text(user['userType']),
+              onLongPress: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfilePage(
+                      userId: user.id,
+                      isMe: user.id == FirebaseAuth.instance.currentUser!.uid,
+                    ),
+                  ),
+                );
+              },
               onTap: () {
                 Navigator.push(
                   context,
@@ -157,13 +207,32 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
           itemCount: snapshot.data!.docs.length,
           itemBuilder: (context, index) {
             final doc = snapshot.data!.docs[index];
+            final data = doc.data() as Map<String, dynamic>;
+            final isChannel = data['type'] == 'channel';
+
             return Card(
               margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               child: ListTile(
-                leading: const CircleAvatar(child: Icon(Icons.group)),
-                title: Text(doc['name']),
-                subtitle: Text(doc['lastMessage']),
-                trailing: Text(_formatDate(doc['timestamp'])),
+                leading: CircleAvatar(
+                  backgroundColor: isChannel ? Colors.blue[100] : Colors.teal[100],
+                  child: Icon(
+                    isChannel ? Icons.campaign : Icons.group,
+                    color: isChannel ? Colors.blue[800] : Colors.teal[800],
+                  ),
+                ),
+                title: Text(
+                  doc['name'],
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text(
+                  doc['lastMessage'],
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                trailing: Text(
+                  _formatDate(doc['timestamp']),
+                  style: const TextStyle(fontSize: 12),
+                ),
                 onTap: () {
                   Navigator.push(
                     context,

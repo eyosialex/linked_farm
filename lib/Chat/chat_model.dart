@@ -12,6 +12,7 @@ class Message {
   final MessageType messageType;
   final String? mediaUrl;
   final String? fileName;
+  final String? parentMessageId; // For threading/comments
 
   Message({
     required this.senderId,
@@ -23,6 +24,7 @@ class Message {
     this.messageType = MessageType.text,
     this.mediaUrl,
     this.fileName,
+    this.parentMessageId,
   });
 
   Map<String, dynamic> toMap() {
@@ -36,6 +38,7 @@ class Message {
       'messageType': messageType.name,
       'mediaUrl': mediaUrl,
       'fileName': fileName,
+      'parentMessageId': parentMessageId,
     };
   }
 
@@ -50,6 +53,7 @@ class Message {
       messageType: MessageType.values.byName(map['messageType'] ?? 'text'),
       mediaUrl: map['mediaUrl'],
       fileName: map['fileName'],
+      parentMessageId: map['parentMessageId'],
     );
   }
 }

@@ -14,12 +14,13 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   final TextEditingController _groupNameController = TextEditingController();
   final List<String> _selectedMemberIds = [];
   String _searchQuery = "";
+  bool _isChannel = false; // Choose between group or channel
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("New Group"),
+        title: Text(_isChannel ? "New Channel" : "New Group"),
         backgroundColor: Colors.teal[700],
         foregroundColor: Colors.white,
         actions: [
@@ -33,12 +34,24 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              controller: _groupNameController,
-              decoration: const InputDecoration(
-                labelText: "Group Name",
-                border: OutlineInputBorder(),
-              ),
+            child: Column(
+              children: [
+                TextField(
+                  controller: _groupNameController,
+                  decoration: InputDecoration(
+                    labelText: _isChannel ? "Channel Name" : "Group Name",
+                    border: const OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                SwitchListTile(
+                  title: const Text("Create as Channel"),
+                  subtitle: const Text("Only admins can post in channels"),
+                  value: _isChannel,
+                  activeColor: Colors.teal,
+                  onChanged: (val) => setState(() => _isChannel = val),
+                ),
+              ],
             ),
           ),
           Padding(
@@ -89,15 +102,15 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
   void _createGroup() async {
     if (_groupNameController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please enter a group name")));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please enter a ${_isChannel ? 'channel' : 'group'} name")));
       return;
     }
-    if (_selectedMemberIds.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please select at least one member")));
-      return;
-    }
-
-    await _chatService.createGroup(_groupNameController.text, _selectedMemberIds);
+    
+    await _chatService.createGroup(
+      _groupNameController.text, 
+      _selectedMemberIds,
+      type: _isChannel ? 'channel' : 'group',
+    );
     Navigator.pop(context);
   }
 }

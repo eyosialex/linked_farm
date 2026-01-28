@@ -6,11 +6,21 @@ class FirestoreService {
   final String _collectionName = 'agricultural_items';
   Future<String?> addAgriculturalItem(AgriculturalItem item) async {
     try {
-      DocumentReference docRef = await _firestore
-          .collection(_collectionName)
-          .add(item.toJson());
-      print('Item saved to Firestore with ID: ${docRef.id}');
-      return docRef.id;
+      if (item.id != null) {
+        // Use the existing ID to prevent duplicates
+        await _firestore
+            .collection(_collectionName)
+            .doc(item.id)
+            .set(item.toJson(), SetOptions(merge: true));
+        return item.id;
+      } else {
+        // Create a new ID
+        DocumentReference docRef = await _firestore
+            .collection(_collectionName)
+            .add(item.toJson());
+        print('Item saved to Firestore with ID: ${docRef.id}');
+        return docRef.id;
+      }
     } catch (e) {
       print('Firestore error: $e');
       return null;

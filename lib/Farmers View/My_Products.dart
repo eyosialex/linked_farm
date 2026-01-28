@@ -1,9 +1,11 @@
-
 import 'package:echat/Farmers%20View/Enter_Sell_Item.dart';
 import 'package:echat/Farmers%20View/FireStore_Config.dart';
 import 'package:echat/Farmers%20View/Sell_Item_Model.dart';
+import 'package:echat/Services/local_storage_service.dart';
+import 'package:echat/Services/wifi_share_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MyProductsScreen extends StatefulWidget {
   const MyProductsScreen({super.key});
@@ -62,25 +64,19 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
         body: Center(child: Text("Please login to view your products")),
       );
     }
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("My Products"),
         backgroundColor: Colors.green[700],
         foregroundColor: Colors.white,
       ),
-      body: StreamBuilder<List<AgriculturalItem>>(
-        stream: _firestoreService.getAgriculturalItemsBySeller(currentUser.uid),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: Consumer<LocalStorageService>(
+        builder: (context, localStorage, child) {
+          final products = localStorage.getAllProducts()
+              .where((p) => p.sellerId == currentUser.uid)
+              .toList();
 
-          if (snapshot.hasError) {
-            return Center(child: Text("Error: ${snapshot.error}"));
-          }
-
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          if (products.isEmpty) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -96,7 +92,7 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SellItem()),
+                        MaterialPageRoute(builder: (context) => const SellItem()),
                       );
                     },
                     icon: const Icon(Icons.add),
@@ -110,8 +106,6 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
               ),
             );
           }
-
-          final products = snapshot.data!;
 
           return ListView.builder(
             padding: const EdgeInsets.all(12),
@@ -178,6 +172,8 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                             _navigateToEdit(product);
                           } else if (value == 'delete') {
                             _deleteProduct(product);
+                          } else if (value == 'propagate') {
+                            _showPropagateDialog(product);
                           }
                         },
                         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
@@ -192,9 +188,19 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                             ),
                           ),
                           const PopupMenuItem<String>(
-                            value: 'delete',
+                            value: 'propagate',
                             child: Row(
                               children: [
+                                Icon(Icons.wifi_tethering, color: Colors.orange),
+                                SizedBox(width: 8),
+                                Text('Share with Nearby'),
+                              ],
+                            ),
+                          ),
+                          const PopupMenuItem<String>(
+                            value: 'delete',
+                            child: Row(
+                                                     children: [
                                 Icon(Icons.delete, color: Colors.red),
                                 SizedBox(width: 8),
                                 Text('Delete'),
@@ -241,6 +247,12 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                       _buildStatChip(Icons.remove_red_eye_outlined, '${product.views} Views', Colors.blue),
                       const SizedBox(width: 8),
                       _buildStatChip(Icons.favorite_outline, '${product.likes} Likes', Colors.red),
+                      const Spacer(),
+                      _buildStatChip(
+                        product.isSynced ? Icons.cloud_done : Icons.cloud_off, 
+                        product.isSynced ? 'Synced' : 'Offline', 
+                        product.isSynced ? Colors.green : Colors.orange
+                      ),
                     ],
                   ),
                 ],
@@ -249,6 +261,59 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showPropagateDialog(AgriculturalItem product) {
+    final ipController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Share via Wi-Fi"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text("Enter the nearby farmer's IP address:"),
+            const SizedBox(height: 8),
+            TextField(
+              controller: ipController,
+              decoration: const InputDecoration(
+                hintText: "e.g. 192.168.1.15",
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.number,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
+          ElevatedButton(
+            onPressed: () async {
+              final ip = ipController.text.trim();
+              if (ip.isEmpty) return;
+              
+              Navigator.pop(context);
+              _showSnackBar("Propagating to $ip...");
+              
+              final wifiService = Provider.of<WifiShareService>(context, listen: false);
+              final success = await wifiService.sendProduct(product, ip);
+              
+              if (success) {
+                _showSnackBar("✅ Propagated successfully!");
+              } else {
+                _showSnackBar("❌ Failed to connect to $ip");
+              }
+            }, 
+            child: const Text("Send"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
     );
   }
 

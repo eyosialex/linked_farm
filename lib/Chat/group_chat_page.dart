@@ -6,6 +6,9 @@ import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:echat/Services/chat_service.dart';
 import 'package:echat/Chat/chat_model.dart';
+import 'package:echat/Chat/group_model.dart';
+import 'package:echat/Chat/group_info_page.dart';
+import 'package:echat/Chat/comments_page.dart';
 import 'package:echat/Chat/image_preview_page.dart';
 import 'package:echat/Chat/video_player_page.dart';
 import 'package:echat/Chat/widgets/chat_input_field.dart';
@@ -31,8 +34,24 @@ class _GroupChatPageState extends State<GroupChatPage> {
   final TextEditingController _messageController = TextEditingController();
   final ChatService _chatService = ChatService();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  bool _showEmoji = false;
   bool _isUploading = false;
+  GroupModel? _group;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadGroupDetails();
+  }
+
+  void _loadGroupDetails() {
+    FirebaseFirestore.instance.collection('groups').doc(widget.groupId).snapshots().listen((doc) {
+      if (doc.exists && mounted) {
+        setState(() {
+          _group = GroupModel.fromMap(doc.data() as Map<String, dynamic>);
+        });
+      }
+    });
+  }
 
   void sendMessage() async {
     if (_messageController.text.isNotEmpty) {
@@ -82,18 +101,71 @@ class _GroupChatPageState extends State<GroupChatPage> {
     }
   }
 
+  void _openGroupInfo() {
+    if (_group == null) return;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GroupInfoPage(
+          groupId: _group!.groupId,
+          groupName: _group!.name,
+          memberIds: _group!.members,
+          adminIds: _group!.adminIds,
+          groupIconUrl: _group!.groupIconUrl,
+          type: _group!.type,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    bool canSend = true;
+    if (_group != null && _group!.isChannel) {
+      canSend = _group!.isAdmin(_auth.currentUser!.uid);
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.groupName),
+        title: GestureDetector(
+          onTap: _openGroupInfo,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(widget.groupName),
+              if (_group != null)
+                Text(
+                  "${_group!.members.length} ${_group!.isChannel ? 'subscribers' : 'members'}",
+                  style: const TextStyle(fontSize: 12, color: Colors.white70),
+                ),
+            ],
+          ),
+        ),
         backgroundColor: Colors.teal[700],
         foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            onPressed: _openGroupInfo,
+            icon: const Icon(Icons.info_outline),
+          ),
+        ],
       ),
       body: Column(
         children: [
           Expanded(child: _buildMessageList()),
-          _buildMessageInput(),
+          if (canSend)
+            _buildMessageInput()
+          else
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              color: Colors.grey[200],
+              child: const Text(
+                "Muted Channel (Only admins can post)",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+              ),
+            ),
         ],
       ),
     );
@@ -110,9 +182,17 @@ class _GroupChatPageState extends State<GroupChatPage> {
           return const Center(child: Text('No messages yet.'));
         }
 
+        // Sort messages in memory to avoid Firestore index requirement
+        final docs = snapshot.data!.docs;
+        docs.sort((a, b) {
+          Timestamp t1 = a['timestamp'];
+          Timestamp t2 = b['timestamp'];
+          return t1.compareTo(t2);
+        });
+
         return ListView(
           padding: const EdgeInsets.all(10),
-          children: snapshot.data!.docs
+          children: docs
               .map((document) => _buildMessageItem(document))
               .toList(),
         );
@@ -126,32 +206,63 @@ class _GroupChatPageState extends State<GroupChatPage> {
     String? mediaUrl = data['mediaUrl'];
     String? typeStr = data['messageType'];
 
-    return GestureDetector(
-      onTap: () {
-        if (typeStr == MessageType.image.name && mediaUrl != null) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ImagePreviewPage(imageUrl: mediaUrl),
-            ),
-          );
-        } else if (typeStr == MessageType.video.name && mediaUrl != null) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => VideoPlayerPage(
-                videoUrl: mediaUrl,
-                title: data['fileName'] ?? "Video",
+    return Column(
+      crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      children: [
+        GestureDetector(
+          onTap: () {
+            if (typeStr == MessageType.image.name && mediaUrl != null) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ImagePreviewPage(imageUrl: mediaUrl),
+                ),
+              );
+            } else if (typeStr == MessageType.video.name && mediaUrl != null) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => VideoPlayerPage(
+                    videoUrl: mediaUrl,
+                    title: data['fileName'] ?? "Video",
+                  ),
+                ),
+              );
+            }
+          },
+          child: MessageBubble(
+            data: data,
+            isMe: isMe,
+            senderName: data['senderEmail'],
+          ),
+        ),
+        if (_group != null && _group!.isChannel)
+          Padding(
+            padding: EdgeInsets.only(left: isMe ? 0 : 50, right: isMe ? 50 : 0, bottom: 10),
+            child: TextButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CommentsPage(
+                      groupId: widget.groupId,
+                      parentMessageId: document.id,
+                      originalMessage: data['message'],
+                      originalSenderName: data['senderEmail'],
+                    ),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.comment_outlined, size: 14, color: Colors.blue),
+              label: const Text("Leave a comment", style: TextStyle(fontSize: 12, color: Colors.blue)),
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.zero,
+                minimumSize: const Size(0, 0),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
             ),
-          );
-        }
-      },
-      child: MessageBubble(
-        data: data,
-        isMe: isMe,
-        senderName: data['senderEmail'],
-      ),
+          ),
+      ],
     );
   }
 

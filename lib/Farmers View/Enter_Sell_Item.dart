@@ -9,6 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:echat/Services/farm_persistence_service.dart';
+import 'package:echat/Services/local_storage_service.dart';
+import 'package:echat/Services/wifi_share_service.dart';
+import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 import 'Position_Sell_Item.dart';
 class SellItem extends StatefulWidget {
   final AgriculturalItem? productToEdit;
@@ -328,45 +332,21 @@ class _SellItemState extends State<SellItem> {
     );
 
     try {
-      print('=== STARTING UPLOAD PROCESS ===');
+      print('=== STARTING OFFLINE-FIRST UPLOAD PROCESS ===');
       
-      List<String> imageUrls = [];
-      if (_selectedImages.isNotEmpty) {
-        // Upload images to Cloudinary
-        print('📸 Starting image upload...');
-        imageUrls = await _cloudinaryService.uploadMultipleImages(_selectedImages);
-        
-        print('📊 Upload results: ${imageUrls.length} successful, ${_selectedImages.length - imageUrls.length} failed');
-        
-        if (imageUrls.isEmpty) {
-          Navigator.pop(context);
-          _showDetailedErrorDialog(
-            "All image uploads failed",
-            "This could be due to:\n• No internet connection\n• Large file sizes\n• Cloudinary service issue\n• Incorrect upload preset\n\nPlease check your connection and try again with smaller images.",
-          );
-          return;
-        }
-
-        if (imageUrls.length < _selectedImages.length) {
-          // Some images failed, but some succeeded
-          _showSnackBar("⚠️ ${imageUrls.length}/${_selectedImages.length} images uploaded successfully. Continuing with available images.");
-        }
-      }
-
-      print('✅ Images uploaded! Saving to Firestore...');
-      
-      // Get current user ID for sellerId
       final currentUser = _auth.currentUser;
-      if (currentUser == null) {
-        throw Exception("User not authenticated");
-      }
+      if (currentUser == null) throw Exception("User not authenticated");
 
-      // Combine existing and new image URLs
-      List<String> finalImageUrls = [..._existingImageUrls, ...imageUrls];
-      
-      // Create agricultural item with combined URLs
+      // 1. Generate unique ID for deduplication
+      final String itemId = widget.productToEdit?.id ?? 
+                           "${currentUser.uid}_${DateTime.now().millisecondsSinceEpoch}";
+
+      // 2. Prepare local image paths
+      List<String> localPaths = _selectedImages.map((f) => f.path).toList();
+
+      // 3. Create Item (Mark as unsynced initially)
       AgriculturalItem item = AgriculturalItem(
-        id: widget.productToEdit?.id, // Keep existing ID if editing
+        id: itemId,
         name: _nameController.text,
         category: _selectedCategory,
         subcategory: _subcategoryController.text.isNotEmpty ? _subcategoryController.text : null,
@@ -375,7 +355,8 @@ class _SellItemState extends State<SellItem> {
         quantity: int.tryParse(_quantityController.text) ?? 0,
         unit: _selectedUnit,
         condition: _selectedCondition,
-        imageUrls: finalImageUrls,
+        imageUrls: _existingImageUrls,
+        localImagePaths: localPaths,
         location: _selectedLocation,
         address: _selectedAddress,
         sellerName: _sellerNameController.text,
@@ -384,60 +365,55 @@ class _SellItemState extends State<SellItem> {
         availableFrom: _availableFrom,
         deliveryAvailable: _deliveryAvailable,
         tags: _tags.isNotEmpty ? _tags : null,
-        likes: widget.productToEdit?.likes ?? 0,
-        views: widget.productToEdit?.views ?? 0,
-        createdAt: widget.productToEdit?.createdAt,
+        isSynced: false,
       );
 
-      if (widget.productToEdit != null) {
-        // Update existing item
-        bool success = await _firestoreService.updateAgriculturalItem(widget.productToEdit!.id!, item);
-        Navigator.pop(context); // Close loading dialog
-        
-        if (success) {
-           await _persistence.checkAndNotifyMatches(item);
-           ScaffoldMessenger.of(context).showSnackBar(
-             const SnackBar(content: Text("Product updated successfully!")),
-           );
-           Navigator.pop(context); // Go back to previous screen
-        } else {
-           _showSnackBar("❌ Failed to update item.");
-        }
-      } else {
-        // Save new item to Firestore
-        String? itemId = await _firestoreService.addAgriculturalItem(item);
-        
-        Navigator.pop(context); // Close loading dialog
+      // 4. Save to Local Hive BOX first (Safety)
+      final localStorage = Provider.of<LocalStorageService>(context, listen: false);
+      await localStorage.saveProduct(item);
+      print('📦 Saved locally to Hive: $itemId');
 
-        if (itemId != null) {
-          print('🎉 SUCCESS! Item saved with ID: $itemId');
-          await _persistence.checkAndNotifyMatches(item);
-          _showSuccessMessage(item, imageUrls.length);
-        } else {
-          _showSnackBar("❌ Failed to save item to database.");
+      // 5. Attempt Cloud Upload (Images + Firestore) if possible
+      List<String> imageUrls = [];
+      bool cloudSuccess = false;
+      
+      try {
+        if (_selectedImages.isNotEmpty) {
+          print('📸 Attempting image upload to Cloudinary...');
+          imageUrls = await _cloudinaryService.uploadMultipleImages(_selectedImages);
         }
+        
+        if (imageUrls.isNotEmpty || _selectedImages.isEmpty) {
+          final finalItem = item.copyWith(
+            imageUrls: [..._existingImageUrls, ...imageUrls],
+            isSynced: true,
+          );
+          
+          final String? firestoreId = await _firestoreService.addAgriculturalItem(finalItem);
+          if (firestoreId != null) {
+            await localStorage.markAsSynced(itemId);
+            cloudSuccess = true;
+            print('✅ Successfully synced to cloud');
+          }
+        }
+      } catch (e) {
+        print('📶 Offline or Cloud error (saved locally): $e');
       }
-    } on SocketException catch (e) {
-      Navigator.pop(context);
-      print('❌ Network error: $e');
-      _showDetailedErrorDialog(
-        "No Internet Connection",
-        "Please check your internet connection and try again. Image upload requires an active internet connection.",
-      );
-    } on TimeoutException catch (e) {
-      Navigator.pop(context);
-      print('❌ Timeout error: $e');
-      _showDetailedErrorDialog(
-        "Upload Timeout",
-        "The upload is taking too long. This could be due to:\n• Slow internet connection\n• Large image files\n• Cloudinary service delay\n\nPlease try again with smaller images or better internet.",
-      );
+
+      Navigator.pop(context); // Close loading dialog
+
+      if (cloudSuccess) {
+        _showSuccessMessage(item, imageUrls.length);
+      } else {
+        _showSnackBar("Saved locally! Will sync when internet is back.");
+        _clearForm();
+        Navigator.pop(context);
+      }
+
     } catch (e) {
       Navigator.pop(context);
-      print('❌ Unexpected error: $e');
-      _showDetailedErrorDialog(
-        "Upload Failed",
-        "An unexpected error occurred:\n\n$e\n\nPlease try again or contact support if the problem continues.",
-      );
+      print('❌ Error: $e');
+      _showDetailedErrorDialog("Error", e.toString());
     } finally {
       setState(() {
         _isUploading = false;

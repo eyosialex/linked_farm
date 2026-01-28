@@ -1,31 +1,87 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hive/hive.dart';
 
-class AgriculturalItem {
+part 'Sell_Item_Model.g.dart';
+
+@HiveType(typeId: 0)
+class AgriculturalItem extends HiveObject {
+  @HiveField(0)
   String? id;
+
+  @HiveField(1)
   String name;
+
+  @HiveField(2)
   String category;
+
+  @HiveField(3)
   String? subcategory;
+
+  @HiveField(4)
   String description;
+
+  @HiveField(5)
   double price;
+
+  @HiveField(6)
   int quantity;
+
+  @HiveField(7)
   String unit;
+
+  @HiveField(8)
   String condition;
+
+  @HiveField(9)
   List<String>? imageUrls;
+
+  @HiveField(10)
   Map<String, double>? location;
+
+  @HiveField(11)
   String? address;
+
+  @HiveField(12)
   String sellerName;
+
+  @HiveField(13)
   String sellerId;
+
+  @HiveField(14)
   String contactInfo;
+
+  @HiveField(15)
   DateTime? availableFrom;
+
+  @HiveField(16)
   bool deliveryAvailable;
+
+  @HiveField(17)
   List<String>? tags;
+
+  @HiveField(18)
   DateTime createdAt;
+
+  @HiveField(19)
   DateTime updatedAt;
 
+  @HiveField(20)
   int likes;
+
+  @HiveField(21)
   int views;
+
+  @HiveField(22)
   List<String> likedBy;
+
+  @HiveField(23)
   List<String> viewedBy;
+
+  @HiveField(24)
+  bool isSynced;
+
+  @HiveField(25)
+  List<String>? localImagePaths;
 
   AgriculturalItem({
     this.id,
@@ -38,6 +94,7 @@ class AgriculturalItem {
     required this.unit,
     required this.condition,
     this.imageUrls,
+    this.localImagePaths,
     required this.location,
     this.address,
     required this.sellerName,
@@ -50,6 +107,7 @@ class AgriculturalItem {
     this.views = 0,
     this.likedBy = const [],
     this.viewedBy = const [],
+    this.isSynced = false,
     DateTime? createdAt,
     DateTime? updatedAt,
   })  : createdAt = createdAt ?? DateTime.now(),
@@ -57,6 +115,7 @@ class AgriculturalItem {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'name': name,
       'category': category,
       'subcategory': subcategory,
@@ -66,6 +125,7 @@ class AgriculturalItem {
       'unit': unit,
       'condition': condition,
       'imageUrls': imageUrls,
+      'localImagePaths': localImagePaths,
       'location': location,
       'address': address,
       'sellerName': sellerName,
@@ -78,6 +138,7 @@ class AgriculturalItem {
       'views': views,
       'likedBy': likedBy,
       'viewedBy': viewedBy,
+      'isSynced': isSynced,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
     };
@@ -97,6 +158,7 @@ class AgriculturalItem {
       unit: data['unit'] ?? 'kg',
       condition: data['condition'] ?? 'Fresh',
       imageUrls: List<String>.from(data['imageUrls'] ?? []),
+      localImagePaths: data['localImagePaths'] != null ? List<String>.from(data['localImagePaths']) : null,
       location: {
         'lat': (locData['lat'] ?? 0.0).toDouble(),
         'lng': (locData['lng'] ?? 0.0).toDouble(),
@@ -114,12 +176,14 @@ class AgriculturalItem {
       views: (data['views'] ?? 0).toInt(),
       likedBy: List<String>.from(data['likedBy'] ?? []),
       viewedBy: List<String>.from(data['viewedBy'] ?? []),
+      isSynced: data['isSynced'] ?? true,
       createdAt: DateTime.parse(data['createdAt']),
       updatedAt: DateTime.parse(data['updatedAt']),
     );
   }
 
   AgriculturalItem copyWith({
+    String? id,
     String? name,
     String? category,
     String? subcategory,
@@ -141,9 +205,10 @@ class AgriculturalItem {
     int? views,
     List<String>? likedBy,
     List<String>? viewedBy,
+    bool? isSynced,
   }) {
     return AgriculturalItem(
-      id: id,
+      id: id ?? this.id,
       name: name ?? this.name,
       category: category ?? this.category,
       subcategory: subcategory ?? this.subcategory,
@@ -165,6 +230,7 @@ class AgriculturalItem {
       views: views ?? this.views,
       likedBy: likedBy ?? this.likedBy,
       viewedBy: viewedBy ?? this.viewedBy,
+      isSynced: isSynced ?? this.isSynced,
       createdAt: createdAt,
       updatedAt: DateTime.now(),
     );
