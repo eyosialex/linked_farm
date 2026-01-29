@@ -125,7 +125,13 @@ final TextEditingController _qualificationController = TextEditingController();
           'qualification': _qualificationController.text.trim(),
           'profileCompleted': true,
         };
-
+      } else if (_userData!['userType'] == 'shopper') {
+        profileData = {
+          'shopName': _shopNameController.text.trim(),
+          'shopAddress': _shopAddressController.text.trim(),
+          'inputCategories': _inputCategoriesController.text.trim(),
+          'profileCompleted': true,
+        };
       }
       
       await _userRepository.completeUserProfile(user.uid, profileData);
