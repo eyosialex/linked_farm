@@ -13,7 +13,7 @@ import 'package:echat/Services/sync_service.dart';
 import 'package:echat/Farmers%20View/FireStore_Config.dart';
 import 'package:echat/Services/locale_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:echat/l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

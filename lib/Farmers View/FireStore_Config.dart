@@ -156,4 +156,20 @@ class FirestoreService {
       print('Error updating like: $e');
     }
   }
+
+  Future<bool> updateProductStock(String productId, int newQuantity) async {
+    try {
+      await _firestore
+          .collection(_collectionName)
+          .doc(productId)
+          .update({
+            'quantity': newQuantity,
+            'updatedAt': DateTime.now().toIso8601String(),
+          });
+      return true;
+    } catch (e) {
+      print('Firestore stock update error: $e');
+      return false;
+    }
+  }
 }

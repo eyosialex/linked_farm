@@ -21,6 +21,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get myProducts => 'My Products';
 
   @override
+  String get sellInputs => 'Sell Agricultural Inputs';
+
+  @override
+  String stockLevel(int count, String unit) {
+    return 'Stock Level: $count $unit';
+  }
+
+  @override
+  String get outOfStock => 'Out of Stock';
+
+  @override
+  String get lowStock => 'Low Stock!';
+
+  @override
+  String get updateStock => 'Update Stock';
+
+  @override
+  String get quantityUpdated => 'Quantity updated successfully';
+
+  @override
+  String get stock => 'Stock';
+
+  @override
   String get buyInputs => 'Buy Agricultural Inputs';
 
   @override
@@ -631,9 +654,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get catFertilizer => 'Fertilizer';
-
-  @override
-  String get sellInputs => 'Sell Agricultural Inputs';
 
   @override
   String get offline => 'Offline';

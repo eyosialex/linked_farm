@@ -4,6 +4,23 @@
   "home": "መነሻ",
   "sellProduce": "ምርት ይሽጡ",
   "myProducts": "የእኔ ምርቶች",
+  "sellInputs": "ግብዓቶችን ይሽጡ",
+  "stockLevel": "ክምችት መጠን፡ {count} {unit}",
+  "@stockLevel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "outOfStock": "ያለቀ",
+  "lowStock": "አነስተኛ ክምችት!",
+  "updateStock": "ክምችት አዘምን",
+  "quantityUpdated": "መጠኑ በትክክል ተዘምኗል",
+  "stock": "ክምችት",
   "buyInputs": "ግብዓቶችን ይግዙ",
   "marketPrices": "የገበያ ዋጋ",
   "messages": "መልዕክቶች",

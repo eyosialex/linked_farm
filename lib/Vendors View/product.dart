@@ -13,6 +13,7 @@ import 'package:echat/Chat/chat_screen.dart';
 import 'package:location/location.dart';
 import 'package:echat/Services/local_storage_service.dart';
 import 'package:provider/provider.dart';
+import 'package:echat/l10n/app_localizations.dart';
 import 'dart:io';
 
 // Product List Screen - Shows all products
@@ -436,6 +437,56 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       ),
                     ),
                   ),
+                  // Stock Status Badge
+                  if (product.isOutOfStock)
+                    Positioned.fill(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.4),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(16),
+                            topRight: Radius.circular(16),
+                          ),
+                        ),
+                        child: Center(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              AppLocalizations.of(context)!.outOfStock.toUpperCase(),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  else if (product.isLowStock)
+                    Positioned(
+                      top: 8,
+                      left: 8,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.orange,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          AppLocalizations.of(context)!.lowStock,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ),
+                    ),
                 ],
               ),
               // Product Info Section
@@ -569,6 +620,14 @@ class _ProductListScreenState extends State<ProductListScreen> {
                         _buildInfoItem(Icons.verified, product.condition),
                       ],
                     ),
+                    if (product.isOutOfStock)
+                      const Padding(
+                        padding: EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          'Wait for restock',
+                          style: TextStyle(color: Colors.red, fontSize: 11, fontWeight: FontWeight.bold),
+                        ),
+                      ),
                   ],
                 ),
               ),
@@ -1062,17 +1121,23 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        'Available',
+                        AppLocalizations.of(context)!.stock,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.grey[600],
+                              color: item.isOutOfStock ? Colors.red : Colors.grey[600],
                             ),
                       ),
                       Text(
                         '${item.quantity} ${item.unit}',
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.bold,
+                              color: item.isOutOfStock ? Colors.red : Colors.black87,
                             ),
                       ),
+                      if (item.isLowStock)
+                        Text(
+                          AppLocalizations.of(context)!.lowStock,
+                          style: const TextStyle(color: Colors.orange, fontSize: 10, fontWeight: FontWeight.bold),
+                        ),
                     ],
                   ),
                 ],
@@ -1701,10 +1766,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     )
                   : ElevatedButton.icon(
                       onPressed: _navigateToChat,
-                      icon: const Icon(Icons.chat),
-                      label: const Text(
-                        'Chat with Seller',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                      icon: Icon(item.isOutOfStock ? Icons.notification_add : Icons.chat),
+                      label: Text(
+                        item.isOutOfStock ? 'Ask for Restock' : 'Chat with Seller',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.primary,

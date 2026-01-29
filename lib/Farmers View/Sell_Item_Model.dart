@@ -241,6 +241,10 @@ class AgriculturalItem extends HiveObject {
     return DateTime.now().isAfter(availableFrom!);
   }
 
+  bool get isOutOfStock => quantity == 0;
+  
+  bool get isLowStock => quantity > 0 && quantity <= 5;
+
   String get formattedPrice {
     return 'ETB $price per $unit';
   }

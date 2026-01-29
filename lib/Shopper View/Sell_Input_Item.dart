@@ -11,7 +11,7 @@ import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:echat/Services/farm_persistence_service.dart';
 import 'package:echat/Services/local_storage_service.dart';
 import 'package:echat/Services/wifi_share_service.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:echat/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'Position_Sell_Item.dart';

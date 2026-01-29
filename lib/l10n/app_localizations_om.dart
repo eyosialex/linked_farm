@@ -21,6 +21,29 @@ class AppLocalizationsOm extends AppLocalizations {
   String get myProducts => 'Omiishawwan koo';
 
   @override
+  String get sellInputs => 'Meeshaalee Qonnaa Gurguri';
+
+  @override
+  String stockLevel(int count, String unit) {
+    return 'Sadarkaa Gufuu: $count $unit';
+  }
+
+  @override
+  String get outOfStock => 'Dhumateera';
+
+  @override
+  String get lowStock => 'Gufuu Diqqaa!';
+
+  @override
+  String get updateStock => 'Gufuu Haaromsi';
+
+  @override
+  String get quantityUpdated => 'Baay\'inni sirriitti haaromfameera';
+
+  @override
+  String get stock => 'Gufuu';
+
+  @override
   String get buyInputs => 'Meeshaalee Qonnaa Bitadhu';
 
   @override
@@ -639,10 +662,7 @@ class AppLocalizationsOm extends AppLocalizations {
   String get catFertilizer => 'Xaa\'oo';
 
   @override
-  String get sellInputs => 'Meeshaalee Qonnaa Gurguri';
-
-  @override
-  String get offline => 'Siriin ala';
+  String get offline => 'Offline';
 
   @override
   String get synced => 'Synced';

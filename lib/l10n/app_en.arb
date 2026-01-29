@@ -4,6 +4,23 @@
   "home": "Home",
   "sellProduce": "Sell Produce",
   "myProducts": "My Products",
+  "sellInputs": "Sell Inputs",
+  "stockLevel": "Stock Level: {count} {unit}",
+  "@stockLevel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "outOfStock": "Out of Stock",
+  "lowStock": "Low Stock!",
+  "updateStock": "Update Stock",
+  "quantityUpdated": "Quantity updated successfully",
+  "stock": "Stock",
   "buyInputs": "Buy Inputs",
   "marketPrices": "Market Prices",
   "messages": "Messages",

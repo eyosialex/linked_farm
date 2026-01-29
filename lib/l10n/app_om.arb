@@ -271,6 +271,20 @@
   "catFertilizer": "Xaa'oo",
   "buyInputs": "Meeshaalee Qonnaa Bitadhu",
   "sellInputs": "Meeshaalee Qonnaa Gurguri",
-  "offline": "Siriin ala",
-  "synced": "Synced"
+  "stockLevel": "Sadarkaa Gufuu: {count} {unit}",
+  "@stockLevel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "outOfStock": "Dhumateera",
+  "lowStock": "Gufuu Diqqaa!",
+  "updateStock": "Gufuu Haaromsi",
+  "quantityUpdated": "Baay'inni sirriitti haaromfameera",
+  "stock": "Gufuu"
 }

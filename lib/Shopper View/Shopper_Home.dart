@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:echat/User%20Credential/log_in_page.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:echat/l10n/app_localizations.dart';
 import 'package:echat/Farmers%20View/Enter_Sell_Item.dart'; // Reusing for now, will specialize later
 
 class ShopperHomePage extends StatefulWidget {

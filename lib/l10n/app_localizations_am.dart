@@ -21,6 +21,29 @@ class AppLocalizationsAm extends AppLocalizations {
   String get myProducts => 'የእኔ ምርቶች';
 
   @override
+  String get sellInputs => 'የግብርና ግብዓቶችን ይሽጡ';
+
+  @override
+  String stockLevel(int count, String unit) {
+    return 'ክምችት መጠን፡ $count $unit';
+  }
+
+  @override
+  String get outOfStock => 'ያለቀ';
+
+  @override
+  String get lowStock => 'አነስተኛ ክምችት!';
+
+  @override
+  String get updateStock => 'ክምችት አዘምን';
+
+  @override
+  String get quantityUpdated => 'መጠኑ በትክክል ተዘምኗል';
+
+  @override
+  String get stock => 'ክምችት';
+
+  @override
   String get buyInputs => 'የግብርና ግብዓቶችን ይግዙ';
 
   @override
@@ -626,9 +649,6 @@ class AppLocalizationsAm extends AppLocalizations {
 
   @override
   String get catFertilizer => 'ማዳበሪያ';
-
-  @override
-  String get sellInputs => 'የግብርና ግብዓቶችን ይሽጡ';
 
   @override
   String get offline => 'ከመስመር ውጭ';

@@ -124,6 +124,48 @@ abstract class AppLocalizations {
   /// **'My Products'**
   String get myProducts;
 
+  /// No description provided for @sellInputs.
+  ///
+  /// In en, this message translates to:
+  /// **'Sell Agricultural Inputs'**
+  String get sellInputs;
+
+  /// No description provided for @stockLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock Level: {count} {unit}'**
+  String stockLevel(int count, String unit);
+
+  /// No description provided for @outOfStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of Stock'**
+  String get outOfStock;
+
+  /// No description provided for @lowStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Low Stock!'**
+  String get lowStock;
+
+  /// No description provided for @updateStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Stock'**
+  String get updateStock;
+
+  /// No description provided for @quantityUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity updated successfully'**
+  String get quantityUpdated;
+
+  /// No description provided for @stock.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock'**
+  String get stock;
+
   /// No description provided for @buyInputs.
   ///
   /// In en, this message translates to:
@@ -1293,12 +1335,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Fertilizer'**
   String get catFertilizer;
-
-  /// No description provided for @sellInputs.
-  ///
-  /// In en, this message translates to:
-  /// **'Sell Agricultural Inputs'**
-  String get sellInputs;
 
   /// No description provided for @offline.
   ///

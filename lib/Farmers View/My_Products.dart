@@ -6,7 +6,7 @@ import 'package:echat/Services/wifi_share_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:echat/l10n/app_localizations.dart';
 
 class MyProductsScreen extends StatefulWidget {
   const MyProductsScreen({super.key});
@@ -241,7 +241,89 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                       color: Colors.green,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
+                  // Stock Management Section
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(
+                                  product.quantity > 0 ? Icons.inventory_2 : Icons.warning_amber_rounded,
+                                  size: 16,
+                                  color: product.isOutOfStock 
+                                      ? Colors.red 
+                                      : product.isLowStock ? Colors.orange : Colors.green,
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  AppLocalizations.of(context)!.stockLevel(product.quantity, product.unit),
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                    color: product.isOutOfStock 
+                                        ? Colors.red 
+                                        : product.isLowStock ? Colors.orange : Colors.black87,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            if (product.isOutOfStock)
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: Colors.red[50],
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(color: Colors.red[200]!),
+                                ),
+                                child: Text(
+                                  AppLocalizations.of(context)!.outOfStock,
+                                  style: const TextStyle(color: Colors.red, fontSize: 10, fontWeight: FontWeight.bold),
+                                ),
+                              )
+                            else if (product.isLowStock)
+                              Text(
+                                AppLocalizations.of(context)!.lowStock,
+                                style: const TextStyle(color: Colors.orange, fontSize: 10, fontWeight: FontWeight.bold),
+                              ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            _buildStockButton(
+                              icon: Icons.remove,
+                              onTap: product.quantity > 0 
+                                  ? () => _updateStock(product, product.quantity - 1)
+                                  : null,
+                              color: Colors.red,
+                            ),
+                            const SizedBox(width: 20),
+                            Text(
+                              '${product.quantity}',
+                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(width: 20),
+                            _buildStockButton(
+                              icon: Icons.add,
+                              onTap: () => _updateStock(product, product.quantity + 1),
+                              color: Colors.green,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
                   // Stats
                   Row(
                     children: [
@@ -338,5 +420,48 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
         ],
       ),
     );
+  }
+
+  Widget _buildStockButton({required IconData icon, required VoidCallback? onTap, required Color color}) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            border: Border.all(color: onTap == null ? Colors.grey : color),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            icon,
+            size: 20,
+            color: onTap == null ? Colors.grey : color,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _updateStock(AgriculturalItem product, int newQuantity) async {
+    if (product.id == null) return;
+    
+    // Optimistic UI update approach would be better but let's do direct for now
+    final success = await _firestoreService.updateProductStock(product.id!, newQuantity);
+    
+    if (success) {
+      // Local sync if using Hive but the Consumer should rebuild if the list comes from Firestore stream
+      // Actually MyProductsScreen uses Consumer<LocalStorageService> which might not see Firestore changes immediately unless synced.
+      // But the seller usually manages their own items which are in localStorage.
+      
+      final localStorage = Provider.of<LocalStorageService>(context, listen: false);
+      final updatedProduct = product.copyWith(quantity: newQuantity);
+      await localStorage.saveProduct(updatedProduct);
+      
+      _showSnackBar(AppLocalizations.of(context)!.quantityUpdated);
+    } else {
+      _showSnackBar("Failed to update stock");
+    }
   }
 }
