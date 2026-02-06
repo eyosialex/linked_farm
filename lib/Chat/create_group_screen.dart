@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:echat/Services/chat_service.dart';
+import 'package:linkedfarm/Services/chat_service.dart';
 import 'package:flutter/material.dart';
 
 class CreateGroupScreen extends StatefulWidget {
@@ -21,7 +21,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_isChannel ? "New Channel" : "New Group"),
-        backgroundColor: Colors.teal[700],
+        backgroundColor: Colors.green[800],
         foregroundColor: Colors.white,
         actions: [
           IconButton(
@@ -48,7 +48,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                   title: const Text("Create as Channel"),
                   subtitle: const Text("Only admins can post in channels"),
                   value: _isChannel,
-                  activeColor: Colors.teal,
+                  activeColor: Colors.green,
                   onChanged: (val) => setState(() => _isChannel = val),
                 ),
               ],

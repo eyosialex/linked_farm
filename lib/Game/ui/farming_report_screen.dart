@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:linkedfarm/l10n/app_localizations.dart';
+import 'package:linkedfarm/Widgets/voice_guide_button.dart';
 import '../models/game_state.dart';
 
 class FarmingReportScreen extends StatelessWidget {
@@ -19,6 +21,16 @@ class FarmingReportScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
+        actions: [
+          VoiceGuideButton(
+            messages: [
+              AppLocalizations.of(context)!.seasonalReportIntro,
+              AppLocalizations.of(context)!.seasonalReportDetail
+            ],
+            isDark: true,
+          ),
+          const SizedBox(width: 16),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(25),
@@ -85,9 +97,9 @@ class FarmingReportScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(25),
       decoration: BoxDecoration(
-        color: Colors.blueAccent.withOpacity(0.05),
+        color: Colors.orange.withOpacity(0.05),
         borderRadius: BorderRadius.circular(25),
-        border: Border.all(color: Colors.blueAccent.withOpacity(0.2)),
+        border: Border.all(color: Colors.orange.withOpacity(0.2)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -95,12 +107,12 @@ class FarmingReportScreen extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("ESTIMATED YIELD SUCCESS", style: TextStyle(color: Colors.blueAccent, fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1)),
+              const Text("ESTIMATED YIELD SUCCESS", style: TextStyle(color: Colors.orange, fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1)),
               const SizedBox(height: 8),
               Text("${(gameState.healthScore * gameState.landSize * 5).toStringAsFixed(1)} Tons", style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
             ],
           ),
-          Icon(Icons.trending_up, color: Colors.blueAccent, size: 32),
+          Icon(Icons.trending_up, color: Colors.orange, size: 32),
         ],
       ),
     );

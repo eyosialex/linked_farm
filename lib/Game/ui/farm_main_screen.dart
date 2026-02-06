@@ -1,11 +1,16 @@
-
+import 'package:linkedfarm/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:linkedfarm/Widgets/voice_guide_button.dart';
 import 'package:provider/provider.dart';
+import '../../Services/locale_provider.dart';
 import '../models/game_state.dart';
 import 'yield_results_screen.dart';
 import '../../Services/gemini_service.dart';
 import 'growth_journal_screen.dart';
 import 'farming_report_screen.dart';
+import 'DailyTrackerScreen.dart';
+import 'PlannerScreen.dart';
+import 'AdvisorScreen.dart';
 import 'dart:math';
 import 'dart:ui';
 class FarmMainScreen extends StatelessWidget {
@@ -43,8 +48,8 @@ class FarmMainScreen extends StatelessWidget {
           SafeArea(
             child: Column(
               children: [
-                _buildWeatherSegment(gameState),
-                _buildRiskDashboard(gameState),
+                _buildWeatherSegment(context, gameState),
+                _buildRiskDashboard(context, gameState),
                 Expanded(child: _buildFieldSegment(gameState)),
                 _buildSoilStatusSegment(context, gameState),
                 _buildUnifiedBottomDock(context, gameState),
@@ -60,7 +65,7 @@ class FarmMainScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildWeatherSegment(GameState gameState) {
+  Widget _buildWeatherSegment(BuildContext context, GameState gameState) {
     final isRainy = gameState.currentWeather == "Rainy";
     return ClipRRect(
       child: BackdropFilter(
@@ -75,44 +80,59 @@ class FarmMainScreen extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  Icon(
-                    isRainy ? Icons.water : Icons.wb_sunny,
-                    color: isRainy ? Colors.blueAccent : Colors.orangeAccent,
-                    size: 32,
-                  ),
-                  const SizedBox(width: 15),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "${gameState.currentTemp.toStringAsFixed(1)}°C",
-                        style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        isRainy ? "PREDICTED: 8mm RAIN" : "CLEAR SKIES",
-                        style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 10, letterSpacing: 1),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                decoration: BoxDecoration(
-                  color: Colors.white10,
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(color: Colors.white10),
-                ),
+              Semantics(
+                label: "${isRainy ? AppLocalizations.of(context)!.predictedRain : AppLocalizations.of(context)!.clearSkies}, ${gameState.currentTemp.toStringAsFixed(1)} degrees Celsius",
                 child: Row(
                   children: [
-                    const Icon(Icons.flash_on, color: Colors.amber, size: 16),
-                    const SizedBox(width: 6),
-                    Text("${gameState.energy.toInt()}%", style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                    Icon(
+                      isRainy ? Icons.water : Icons.wb_sunny,
+                      color: isRainy ? Colors.greenAccent : Colors.orangeAccent,
+                      size: 32,
+                    ),
+                    const SizedBox(width: 15),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "${gameState.currentTemp.toStringAsFixed(1)}°C",
+                          style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          isRainy ? AppLocalizations.of(context)!.predictedRain : AppLocalizations.of(context)!.clearSkies,
+                          style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 10, letterSpacing: 1),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
+              ),
+              Semantics(
+                label: "Energy level ${(gameState.energy.toInt())} percent",
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.white10,
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(color: Colors.white10),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.flash_on, color: Colors.amber, size: 16),
+                      const SizedBox(width: 6),
+                      Text("${gameState.energy.toInt()}%", style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              VoiceGuideButton(
+                messages: [
+                  AppLocalizations.of(context)!.farmMainIntro,
+                  AppLocalizations.of(context)!.tapDeepAnalysis,
+                  AppLocalizations.of(context)!.proceedNextDay
+                ],
+                isDark: true,
               ),
             ],
           ),
@@ -121,7 +141,7 @@ class FarmMainScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRiskDashboard(GameState gameState) {
+  Widget _buildRiskDashboard(BuildContext context, GameState gameState) {
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 15, 20, 0),
       padding: const EdgeInsets.all(15),
@@ -133,32 +153,35 @@ class FarmMainScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _riskMetric("PEST", gameState.pestRisk, Colors.redAccent),
-          _riskMetric("fungal", gameState.diseaseRisk, Colors.orangeAccent),
-          _riskMetric("WEEDS", gameState.weedPressure, Colors.greenAccent),
+          _riskMetric(AppLocalizations.of(context)!.pest, gameState.pestRisk, Colors.redAccent),
+          _riskMetric(AppLocalizations.of(context)!.fungal, gameState.diseaseRisk, Colors.orangeAccent),
+          _riskMetric(AppLocalizations.of(context)!.weeds, gameState.weedPressure, Colors.greenAccent),
         ],
       ),
     );
   }
 
   Widget _riskMetric(String label, double value, Color color) {
-    return Column(
-      children: [
-        Text(label, style: const TextStyle(color: Colors.white38, fontSize: 9, fontWeight: FontWeight.bold, letterSpacing: 1)),
-        const SizedBox(height: 8),
-        Container(
-          width: 60,
-          height: 4,
-          decoration: BoxDecoration(color: Colors.white10, borderRadius: BorderRadius.circular(2)),
-          child: FractionallySizedBox(
-            alignment: Alignment.centerLeft,
-            widthFactor: value.clamp(0.0, 1.0),
-            child: Container(decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(2))),
+    return Semantics(
+      label: "$label risk ${(value * 100).toInt()} percent",
+      child: Column(
+        children: [
+          Text(label, style: const TextStyle(color: Colors.white38, fontSize: 9, fontWeight: FontWeight.bold, letterSpacing: 1)),
+          const SizedBox(height: 8),
+          Container(
+            width: 60,
+            height: 4,
+            decoration: BoxDecoration(color: Colors.white10, borderRadius: BorderRadius.circular(2)),
+            child: FractionallySizedBox(
+              alignment: Alignment.centerLeft,
+              widthFactor: value.clamp(0.0, 1.0),
+              child: Container(decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(2))),
+            ),
           ),
-        ),
-        const SizedBox(height: 4),
-        Text("${(value * 100).toInt()}%", style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold)),
-      ],
+          const SizedBox(height: 4),
+          Text("${(value * 100).toInt()}%", style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold)),
+        ],
+      ),
     );
   }
 
@@ -176,21 +199,17 @@ class FarmMainScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text("SOIL MOISTURE PROFILE", style: TextStyle(color: Colors.cyanAccent, fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
-              Text("${(gameState.soilMoisture * 100).toInt()}%", style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-            ],
-          ),
-          const SizedBox(height: 8),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: LinearProgressIndicator(
-              value: gameState.soilMoisture.clamp(0.0, 1.0),
-              backgroundColor: Colors.white10,
-              color: Colors.blueAccent,
-              minHeight: 12,
+          Semantics(
+            label: "${AppLocalizations.of(context)!.soilMoistureProfile}, ${(gameState.soilMoisture * 100).toInt()} percent",
+            value: "${(gameState.soilMoisture * 100).toInt()}%",
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: LinearProgressIndicator(
+                value: gameState.soilMoisture.clamp(0.0, 1.0),
+                backgroundColor: Colors.white10,
+                color: Colors.greenAccent,
+                minHeight: 12,
+              ),
             ),
           ),
         ],
@@ -215,27 +234,35 @@ class FarmMainScreen extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("DAY ${gameState.currentDay}", style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24)),
-                  const Text("VEGETATIVE CYCLE", style: TextStyle(color: Colors.greenAccent, fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1)),
+                  Text(AppLocalizations.of(context)!.dayLabel(gameState.currentDay), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24)),
+                  Text(AppLocalizations.of(context)!.vegetativeCycle, style: const TextStyle(color: Colors.greenAccent, fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1)),
                 ],
               ),
               Row(
                 children: [
-                  GestureDetector(
-                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const FarmingReportScreen())),
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(color: Colors.amber.withOpacity(0.1), shape: BoxShape.circle),
-                      child: const Icon(Icons.star, color: Colors.amber, size: 20),
+                  Semantics(
+                    button: true,
+                    label: "View Farming Report",
+                    child: GestureDetector(
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const FarmingReportScreen())),
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(color: Colors.amber.withOpacity(0.1), shape: BoxShape.circle),
+                        child: const Icon(Icons.star, color: Colors.amber, size: 20),
+                      ),
                     ),
                   ),
                   const SizedBox(width: 10),
-                  GestureDetector(
-                    onTap: () => _showSeasonalRoadmap(context, gameState),
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(color: Colors.blueAccent.withOpacity(0.1), shape: BoxShape.circle),
-                      child: const Icon(Icons.map, color: Colors.blueAccent, size: 20),
+                  Semantics(
+                    button: true,
+                    label: "View Seasonal Roadmap",
+                    child: GestureDetector(
+                      onTap: () => _showSeasonalRoadmap(context, gameState),
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(color: Colors.greenAccent.withOpacity(0.1), shape: BoxShape.circle),
+                        child: const Icon(Icons.map, color: Colors.greenAccent, size: 20),
+                      ),
                     ),
                   ),
                 ],
@@ -250,51 +277,69 @@ class FarmMainScreen extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
-                color: Colors.purpleAccent.withOpacity(0.05),
+                color: Colors.orangeAccent.withOpacity(0.05),
                 borderRadius: BorderRadius.circular(15),
-                border: Border.all(color: Colors.purpleAccent.withOpacity(0.1)),
+                border: Border.all(color: Colors.orangeAccent.withOpacity(0.1)),
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.auto_awesome, color: Colors.purpleAccent, size: 18),
+                  const Icon(Icons.auto_awesome, color: Colors.orangeAccent, size: 18),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          _getPredictiveAIAdvice(gameState),
+                          _getLocalizedAdvice(context, gameState),
                           style: const TextStyle(color: Colors.white, fontSize: 12, height: 1.4),
                         ),
                         const SizedBox(height: 4),
-                        const Text("Tap for Deep AI Analysis", style: TextStyle(color: Colors.purpleAccent, fontSize: 10, fontWeight: FontWeight.bold)),
+                        Text(AppLocalizations.of(context)!.tapDeepAnalysis, style: const TextStyle(color: Colors.orangeAccent, fontSize: 10, fontWeight: FontWeight.bold)),
                       ],
                     ),
                   ),
-                  const Icon(Icons.chevron_right, color: Colors.purpleAccent, size: 16),
+                  const Icon(Icons.chevron_right, color: Colors.orangeAccent, size: 16),
                 ],
               ),
             ),
           ),
           
-          const SizedBox(height: 25),
+          const SizedBox(height: 20),
           
-          // Action Buttons (Removed WATER, only FERTILIZE and PROCEED remain)
+          // NEW: Predictive Farming Tools
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _toolButton(context, AppLocalizations.of(context)!.dailyLogBtn, Icons.camera_alt, Colors.green[700]!, () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const DailyTrackerScreen()));
+              }),
+              _toolButton(context, AppLocalizations.of(context)!.plannerBtn, Icons.calendar_month, Colors.orange[700]!, () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const PlannerScreen()));
+              }),
+              _toolButton(context, AppLocalizations.of(context)!.advisorBtn, Icons.psychology, Colors.amber, () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const AdvisorScreen()));
+              }),
+            ],
+          ),
+          
+          const SizedBox(height: 20),
+          
+          // Action Buttons
           Row(
             children: [
-              Expanded(child: _actionBtn("FERTILIZE", Icons.science, Colors.orange, gameState.fertilize)),
+              Expanded(child: _actionBtn(AppLocalizations.of(context)!.fertilizeBtn, Icons.science, Colors.orange, gameState.fertilize)),
               const SizedBox(width: 12),
               Expanded(
                 flex: 2,
                 child: ElevatedButton(
                   onPressed: gameState.nextDay,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent,
+                    backgroundColor: Colors.orange[700],
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 18),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                   ),
-                  child: const Text("PROCEED TO NEXT DAY", style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1)),
+                  child: Text(AppLocalizations.of(context)!.proceedNextDay, style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1)),
                 ),
               ),
             ],
@@ -328,18 +373,76 @@ class FarmMainScreen extends StatelessWidget {
     );
   }
 
+  Widget _toolButton(BuildContext context, String label, IconData icon, Color color, VoidCallback onTap) {
+    return Semantics(
+      button: true,
+      label: label,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [color.withOpacity(0.2), color.withOpacity(0.05)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(15),
+            border: Border.all(color: color.withOpacity(0.3), width: 1.5),
+            boxShadow: [
+              BoxShadow(color: color.withOpacity(0.1), blurRadius: 8, offset: const Offset(0, 4)),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: color, size: 28),
+              const SizedBox(height: 6),
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _getLocalizedAdvice(BuildContext context, GameState gameState) {
+    final l10n = AppLocalizations.of(context)!;
+    final key = _getPredictiveAIAdvice(gameState);
+    switch (key) {
+      case "advicePest":
+        return l10n.advicePest;
+      case "adviceMoistureLow":
+        return l10n.adviceMoistureLow;
+      case "adviceRainy":
+        return l10n.adviceRainy;
+      case "adviceStable":
+      default:
+        return l10n.adviceStable;
+    }
+  }
+
   String _getPredictiveAIAdvice(GameState gameState) {
-    if (gameState.pestRisk > 0.4) return "Pest activity is increasing due to temperature and wind conditions.";
-    if (gameState.soilMoisture < 0.4) return "Moisture levels are low. Hope for rain in the forecast soon!";
-    if (gameState.currentWeather == "Rainy") return "Natural rainfall is replenishing the soil moisture profile.";
-    return "Ecosystem is stable. Rain-dependent growth is within parameters.";
+    if (gameState.pestRisk > 0.4) return "advicePest";
+    if (gameState.soilMoisture < 0.4) return "adviceMoistureLow";
+    if (gameState.currentWeather == "Rainy") return "adviceRainy";
+    return "adviceStable";
   }
 
   void _showGeminiAnalysis(BuildContext context, GameState gameState) async {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const Center(child: CircularProgressIndicator(color: Colors.purpleAccent)),
+      builder: (context) => const Center(child: CircularProgressIndicator(color: Colors.orangeAccent)),
     );
 
     final advice = await GeminiService.getFarmingAdvice(
@@ -354,23 +457,24 @@ class FarmMainScreen extends StatelessWidget {
     if (context.mounted) Navigator.pop(context);
 
     if (context.mounted) {
+      final l10n = AppLocalizations.of(context)!;
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           backgroundColor: const Color(0xFF1E293B),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          title: const Row(
+          title: Row(
             children: [
-              Icon(Icons.auto_awesome, color: Colors.purpleAccent),
-              SizedBox(width: 10),
-              Text("AI DEEP ANALYSIS", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+              const Icon(Icons.auto_awesome, color: Colors.orangeAccent),
+              const SizedBox(width: 10),
+              Text(l10n.aiDeepAnalysisTitle, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
             ],
           ),
           content: Text(advice, style: const TextStyle(color: Colors.white, fontSize: 14, height: 1.5)),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context), 
-              child: const Text("GOT IT", style: TextStyle(color: Colors.purpleAccent, fontWeight: FontWeight.bold))
+              child: Text(l10n.gotIt, style: const TextStyle(color: Colors.orangeAccent, fontWeight: FontWeight.bold))
             ),
           ],
         ),
@@ -461,18 +565,19 @@ class FarmMainScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text("MY CUSTOM LAND PLAN", style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold, letterSpacing: 1)),
+                  Text(AppLocalizations.of(context)!.myCustomLandPlan, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold, letterSpacing: 1)),
                   IconButton(
                     onPressed: () => _showAddActivityDialog(context, gameState),
-                    icon: const Icon(Icons.add_circle, color: Colors.blueAccent, size: 28),
+                    icon: const Icon(Icons.add_circle, color: Colors.greenAccent, size: 28),
                   ),
                 ],
               ),
-              const Text("Enter and track your daily/weekly farming tasks.", style: TextStyle(color: Colors.white38, fontSize: 12)),
+              const SizedBox(height: 5),
+              Text(AppLocalizations.of(context)!.plannerDetail, style: const TextStyle(color: Colors.white38, fontSize: 12)),
               const SizedBox(height: 25),
               Expanded(
                 child: gameState.customActivities.isEmpty 
-                  ? _buildEmptyPlanner()
+                  ? _buildEmptyPlanner(context)
                   : ListView.builder(
                       controller: scrollController,
                       itemCount: gameState.customActivities.length,
@@ -493,7 +598,7 @@ class FarmMainScreen extends StatelessWidget {
   Widget _buildCustomActivityCard(BuildContext context, GameState gameState, Map<String, dynamic> activity, int index) {
     final type = activity['type'] as String;
     final isDone = activity['isCompleted'] ?? false;
-    final color = type == 'daily' ? Colors.greenAccent : (type == 'weekly' ? Colors.orangeAccent : Colors.purpleAccent);
+    final color = type == 'daily' ? Colors.greenAccent : (type == 'weekly' ? Colors.orangeAccent : Colors.orangeAccent[100]!);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -521,7 +626,7 @@ class FarmMainScreen extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(color: Colors.greenAccent.withOpacity(0.1), borderRadius: BorderRadius.circular(6)),
-                      child: const Text("COMPLETED", style: TextStyle(color: Colors.greenAccent, fontSize: 10, fontWeight: FontWeight.bold)),
+                      child: Text(AppLocalizations.of(context)!.completed, style: const TextStyle(color: Colors.greenAccent, fontSize: 10, fontWeight: FontWeight.bold)),
                     ),
                   ],
                 ],
@@ -543,7 +648,7 @@ class FarmMainScreen extends StatelessWidget {
           const SizedBox(height: 5),
           Text(activity['description'], style: TextStyle(color: isDone ? Colors.white24 : Colors.white70, fontSize: 13)),
           const SizedBox(height: 10),
-          Text("Entered on Prophetic Day ${activity['day']}", style: TextStyle(color: Colors.white24, fontSize: 10)),
+          Text(AppLocalizations.of(context)!.dayLabel(activity['day']), style: TextStyle(color: Colors.white24, fontSize: 10)),
         ],
       ),
     );
@@ -559,7 +664,7 @@ class FarmMainScreen extends StatelessWidget {
       builder: (context) => StatefulBuilder(
         builder: (context, setModalState) => AlertDialog(
           backgroundColor: const Color(0xFF1E293B),
-          title: const Text("ENTRY FOR MANUAL PLAN", style: TextStyle(color: Colors.white)),
+          title: Text(AppLocalizations.of(context)!.entryManualPlanTitle, style: const TextStyle(color: Colors.white)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -567,22 +672,25 @@ class FarmMainScreen extends StatelessWidget {
                 isExpanded: true,
                 dropdownColor: const Color(0xFF1E293B),
                 value: selectedType,
-                items: ['daily', 'weekly', 'monthly'].map((t) => DropdownMenuItem(value: t, child: Text(t.toUpperCase(), style: const TextStyle(color: Colors.white)))).toList(),
+                items: ['daily', 'weekly', 'monthly'].map((t) {
+                  String label = t == 'daily' ? AppLocalizations.of(context)!.daily : (t == 'weekly' ? AppLocalizations.of(context)!.weekly : AppLocalizations.of(context)!.monthly);
+                  return DropdownMenuItem(value: t, child: Text(label, style: const TextStyle(color: Colors.white)));
+                }).toList(),
                 onChanged: (val) => setModalState(() => selectedType = val!),
               ),
-              TextField(controller: titleController, style: const TextStyle(color: Colors.white), decoration: const InputDecoration(labelText: "Task Title", labelStyle: TextStyle(color: Colors.white70))),
-              TextField(controller: descController, style: const TextStyle(color: Colors.white), decoration: const InputDecoration(labelText: "Activity Detail", labelStyle: TextStyle(color: Colors.white70))),
+              TextField(controller: titleController, style: const TextStyle(color: Colors.white), decoration: InputDecoration(labelText: AppLocalizations.of(context)!.taskTitle, labelStyle: const TextStyle(color: Colors.white70))),
+              TextField(controller: descController, style: const TextStyle(color: Colors.white), decoration: InputDecoration(labelText: AppLocalizations.of(context)!.activityDetail, labelStyle: const TextStyle(color: Colors.white70))),
             ],
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text("CANCEL", style: TextStyle(color: Colors.grey))),
+            TextButton(onPressed: () => Navigator.pop(context), child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: Colors.grey))),
             ElevatedButton(
               onPressed: () {
                 if (titleController.text.isEmpty) return;
                 gameState.addCustomActivity(selectedType, titleController.text, descController.text);
                 Navigator.pop(context);
               },
-              child: const Text("SAVE PLAN"),
+              child: Text(AppLocalizations.of(context)!.savePlan),
             ),
           ],
         ),
@@ -590,15 +698,15 @@ class FarmMainScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyPlanner() {
+  Widget _buildEmptyPlanner(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.edit_note, size: 64, color: Colors.white12),
           const SizedBox(height: 15),
-          const Text("Your Custom Plan is Empty", style: TextStyle(color: Colors.white38)),
-          const Text("Add your own daily/weekly tasks here.", style: TextStyle(color: Colors.white24, fontSize: 12)),
+          Text(AppLocalizations.of(context)!.emptyPlanner, style: const TextStyle(color: Colors.white38)),
+          Text(AppLocalizations.of(context)!.emptyPlannerDetail, style: const TextStyle(color: Colors.white24, fontSize: 12)),
         ],
       ),
     );

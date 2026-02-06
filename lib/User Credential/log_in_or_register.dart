@@ -1,4 +1,4 @@
-import 'package:echat/User%20Credential/create_account.dart';
+import 'package:linkedfarm/User%20Credential/create_account.dart';
 import 'package:flutter/material.dart';
 import 'log_in_page.dart';
 import 'register_page.dart';

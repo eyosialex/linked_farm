@@ -21,7 +21,7 @@ class AppLocalizationsOm extends AppLocalizations {
   String get myProducts => 'Omiishawwan koo';
 
   @override
-  String get sellInputs => 'Meeshaalee Qonnaa Gurguri';
+  String get marketPrices => 'Gatiwwan Gabaa';
 
   @override
   String stockLevel(int count, String unit) {
@@ -42,12 +42,6 @@ class AppLocalizationsOm extends AppLocalizations {
 
   @override
   String get stock => 'Gufuu';
-
-  @override
-  String get buyInputs => 'Meeshaalee Qonnaa Bitadhu';
-
-  @override
-  String get marketPrices => 'Gatiwwan Gabaa';
 
   @override
   String get messages => 'Ergaawwan';
@@ -662,8 +656,425 @@ class AppLocalizationsOm extends AppLocalizations {
   String get catFertilizer => 'Xaa\'oo';
 
   @override
+  String get buyInputs => 'Meeshaalee Qonnaa Bitadhu';
+
+  @override
+  String get sellInputs => 'Meeshaalee Qonnaa Gurguri';
+
+  @override
   String get offline => 'Offline';
 
   @override
   String get synced => 'Synced';
+
+  @override
+  String get readMore => 'Dabalataan dubbisi';
+
+  @override
+  String get noAdvice => 'Hamma amatti gorsi hin jiru.';
+
+  @override
+  String get expertAdviceTitle => 'Gorsa Ekspeertii fi Qajeelfama';
+
+  @override
+  String get playVoiceGuide => 'Qajeelfama sagalee taphachiisi';
+
+  @override
+  String get stopVoiceGuide => 'Qajeelfama sagalee dhaabi';
+
+  @override
+  String byAuthor(Object name) {
+    return 'Kan $name';
+  }
+
+  @override
+  String get smartAdvisory => 'Gorsa Smart';
+
+  @override
+  String get aiAgronomist => 'AI AGRONOMIST';
+
+  @override
+  String get expertPanel => 'Garee Ekspeertotaa';
+
+  @override
+  String get cropHealthAnalysis => 'Xiinxala Fayyaa Callaa';
+
+  @override
+  String get excellentCondition => 'HAALA BAAY\'EE GAARII';
+
+  @override
+  String get attentionNeeded => 'XQIYYEEFFANNOO BARBAADA';
+
+  @override
+  String cropHealthSummary(Object crop, Object status) {
+    return 'Fakkii kee isa dhiyoofii dubbisa saansaraa kee irratti hundaa\'uun, $crop kee $status guddachaa jira.';
+  }
+
+  @override
+  String get optimally => 'haala gaariin';
+
+  @override
+  String get slowerThanExpected => 'isa eegamee gadi';
+
+  @override
+  String get aiRecommendations => 'Gorsa AI';
+
+  @override
+  String get irrigation => 'Obaasuu';
+
+  @override
+  String moistureLow(Object percent) {
+    return 'Jiidhinni biyyoof baay\'ee xiqqaa dha ($percent%). Dafee obaasuu jalqabi.';
+  }
+
+  @override
+  String get moistureOptimal =>
+      'Sadarkaan jiidhaa gaarii dha. Har\'a obaasuu hin barbaachisu.';
+
+  @override
+  String get nutrients => 'Nutrients';
+
+  @override
+  String get nutrientsLow =>
+      'NPK hir\'achaa jira. Guyyaa 2 gidduutti xaa\'oo uumamaa ykn NPK 15-15-15 itti naqi.';
+
+  @override
+  String get nutrientsStable =>
+      'Nutrient balance jabaataa dha. Itti fufi hordofi.';
+
+  @override
+  String get pestDisease => 'Iilaanii fi Dhukkuba';
+
+  @override
+  String get pestHighRisk =>
+      'Jiidhinni guddaan argameera. Dhukkubni fangasii uumamuu danda\'a. Baala hordofi.';
+
+  @override
+  String get pestLowRisk =>
+      'Sodaan iilaanii xiqqaa dha. Qulqullina maasii eeguun gorfama.';
+
+  @override
+  String get urgent => 'ARIIFFACCHII';
+
+  @override
+  String get connectWithExperts => 'Ekspeertota qunnami';
+
+  @override
+  String get getProfessionalGuidance => 'Qonna keetiif gorsa ogummaa argadhu.';
+
+  @override
+  String get requestConsultation => 'Gorsa gaafadhu';
+
+  @override
+  String get online => 'Online';
+
+  @override
+  String get away => 'Fagaateera';
+
+  @override
+  String get crop => 'callaa';
+
+  @override
+  String get predictedRain => 'Rainii eegame: 8mm';
+
+  @override
+  String get clearSkies => 'SAMII QULQULLUU';
+
+  @override
+  String get pest => 'Iilaanii';
+
+  @override
+  String get fungal => 'Fangasii';
+
+  @override
+  String get weeds => 'Aramaa';
+
+  @override
+  String get soilMoistureProfile => 'PROFAAYILA JIIDHINNA BIYYOO';
+
+  @override
+  String dayLabel(Object day) {
+    return 'GUYYAA $day';
+  }
+
+  @override
+  String get vegetativeCycle => 'VEGETATIVE CYCLE';
+
+  @override
+  String get myCustomLandPlan => 'KAROORA LAFAA KOO';
+
+  @override
+  String get plannerDetail =>
+      'Hojiiwwan qonnaa guyyaa/torbee kee galchiif hordofi.';
+
+  @override
+  String get dailyLogBtn => 'Daily\nLog';
+
+  @override
+  String get plannerBtn => 'PLANNER';
+
+  @override
+  String get advisorBtn => 'ADVISOR';
+
+  @override
+  String get fertilizeBtn => 'XAA\'OO';
+
+  @override
+  String get proceedNextDay => 'GARA GUYYAA ITTI ANUUTTI DARBI';
+
+  @override
+  String get tapDeepAnalysis => 'Xiinxala AI bal\'aaf cuqaasi';
+
+  @override
+  String get aiDeepAnalysisTitle => 'XIINXALA AI BAL\'AA';
+
+  @override
+  String get gotIt => 'HUBEEREERA';
+
+  @override
+  String get emptyPlanner => 'Karoorri kee duwwaa dha';
+
+  @override
+  String get emptyPlannerDetail => 'Hojii guyyaa/torbee kee asitti dabali.';
+
+  @override
+  String get entryManualPlanTitle => 'KAROORA HARKAAN GALCHUU';
+
+  @override
+  String get cancel => 'DHISI';
+
+  @override
+  String get savePlan => 'KAROORA OL-KAA\'I';
+
+  @override
+  String get taskTitle => 'Mata duree Hojii';
+
+  @override
+  String get activityDetail => 'Bal\'ina Hojii';
+
+  @override
+  String get daily => 'GUYYAA';
+
+  @override
+  String get weekly => 'TORBEE';
+
+  @override
+  String get monthly => 'JI\'A';
+
+  @override
+  String get completed => 'XUMURAMEERA';
+
+  @override
+  String get advicePest =>
+      'Sababa ho\'aa fi bubbeetiin sochii iilaanii dabalaa jira.';
+
+  @override
+  String get adviceMoistureLow =>
+      'Sadarkaan jiidhaa gad-aanaa dha. Dhiyootti bokkaa ni rooba jennee abdanna!';
+
+  @override
+  String get adviceRainy => 'Bokkaa uumamaa jiidhinna biyyoo dabalaa jira.';
+
+  @override
+  String get adviceStable =>
+      'Ecosystem nagaa dha. Guddinni bokkaa irratti hundaa\'e gaarii dha.';
+
+  @override
+  String get virtualFarmSimulator => 'Simulator Qonnaa Virtual';
+
+  @override
+  String get welcomeVirtualFarm => 'Baga Gara Qonna Keessan Virtual Dhuftan';
+
+  @override
+  String get gameIntro =>
+      'Hojjechuun qonna baradhu. Murtee dabarsi, qabeenya bulchi, akkasumas AI akkaataa oomisha keessan proognoosii godhu ilaali!';
+
+  @override
+  String get startNewFarm => 'Qonna Haaraa Jalqabi';
+
+  @override
+  String continueFarming(Object day) {
+    return 'Qonna Itti Fufi (Guyyaa $day)';
+  }
+
+  @override
+  String get resetStartNew => 'Deebisii Jalqabi';
+
+  @override
+  String get myLandsProfile => 'PROFAAYILII LAFA KOOTII';
+
+  @override
+  String get noLandsRegistered => 'Lafli galmee irra jiru hin jiru.';
+
+  @override
+  String get startAddingPlot =>
+      'Lafa keessan isa jalqabaa galmeessuun jalqabaa.';
+
+  @override
+  String get registerNewLand => 'LAFA HAARAA GALMEESSI';
+
+  @override
+  String get landNameHint => 'Maqaa Lafa (fkn. Maqaa Iddoo)';
+
+  @override
+  String get sizeHectares => 'Guddina (Haktaara)';
+
+  @override
+  String get soilType => 'Gosa Biyyoo';
+
+  @override
+  String get saveLand => 'LAFA OL-KAA\'I';
+
+  @override
+  String get hectares => 'Haktaara';
+
+  @override
+  String get readyPlanting => 'QOPII DHAABII';
+
+  @override
+  String get cycleCompleted => 'MARSAAN XUMURAMEERA';
+
+  @override
+  String dayTrackerTitle(Object day) {
+    return 'Hordoffii Guyyaa $day';
+  }
+
+  @override
+  String get sensorDataCollection => 'Funaansa Data Sensor Irratti Hundaa\'e';
+
+  @override
+  String get connectCableDetail =>
+      'Data biyyoo fi naannoo dubbisuuf keebilii walitti qabsiisi';
+
+  @override
+  String get soilSensorCable => 'Keebilii Sensor Biyyoo';
+
+  @override
+  String get statusConnected => 'Haala: Walitti Qabameera';
+
+  @override
+  String get statusDisconnected => 'Haala: Walitti hin qabamne';
+
+  @override
+  String get connect => 'QABSIISI';
+
+  @override
+  String get observations => 'Ilaalcha';
+
+  @override
+  String get enterNotes => 'Yaada keessan asitti barreessaa...';
+
+  @override
+  String get saveDailyLog => 'GALMEE GUYYAA OL-KAA\'I';
+
+  @override
+  String sensorConnectedMsg(Object type) {
+    return '✅ Sensor Walitti Qabameera! Biyyoo $type argameera';
+  }
+
+  @override
+  String get dailyLogSavedMsg =>
+      '✅ Galmeen guyyaa Firestore irratti ol-kaayamee jira!';
+
+  @override
+  String get moisture => 'Jiidhinna';
+
+  @override
+  String get temp => 'Temp';
+
+  @override
+  String get nitrogen => 'Nitrogen';
+
+  @override
+  String get phosphorus => 'Phosphorus';
+
+  @override
+  String get potassium => 'Potassium';
+
+  @override
+  String get loamy => 'Loamy';
+
+  @override
+  String get silt => 'Silt';
+
+  @override
+  String get clay => 'Clay';
+
+  @override
+  String get sandy => 'Sandy';
+
+  @override
+  String get welcomeToAgrilead => 'Baga nagaan gara Agrilead dhuftan.';
+
+  @override
+  String get tapLoginReady =>
+      'Yommuu qophooftan mallattoo \'Seeni\' jedhu cuqaasaa.';
+
+  @override
+  String get productInventoryIntro =>
+      'Kun tarreeffama oomishawwan keessaniiti.';
+
+  @override
+  String get startSellingIntro =>
+      'Gurguruuf mallattoo \'+\' ykn \'Oomishaa kee isa jalqabaa gabaasi\' kan jedhu cuqaasaa.';
+
+  @override
+  String get registerFieldsIntro => 'Galmaa\'uuf bakka kana guutaa.';
+
+  @override
+  String get registerFinishIntro =>
+      'Yommuu xumurtan \'Galmaa\'i\' kan jedhu cuqaasaa.';
+
+  @override
+  String get dailyTrackerIntro =>
+      'Hojiiwwan qonnaa guyyaa har\'aa asitti ilaalaa.';
+
+  @override
+  String get farmMainIntro => 'Haala qonna keessanii asitti hordofaa.';
+
+  @override
+  String get gameDashboardIntro => 'Oomisha keessaniif gorsa AI argadhaa.';
+
+  @override
+  String get sellItemIntro =>
+      'Oomisha keessan ibsaa, gatii mureessaa, akkasumas fakkii dabaluun gurgurta jalqabaa.';
+
+  @override
+  String get growthJournalIntro => 'Seenaa qonna keessanii asitti hordofaa.';
+
+  @override
+  String get growthJournalDetail =>
+      'Kaardiin hundi haala biyyoo fi fayyaa guyyaa sanaa agarsiisa.';
+
+  @override
+  String get seasonalReportIntro =>
+      'Kun gabaasa milkaa\'ina waqtii keessaniiti.';
+
+  @override
+  String get seasonalReportDetail =>
+      'Sadarkaa dandeettii hojii fi oomisha eegamu asitti ilaalaa.';
+
+  @override
+  String get productListIntro =>
+      'Sanyiiwwan, xaa\'oo fi meeshaalee gurgurtaaf dhiyaatan asitti ilaalaa.';
+
+  @override
+  String get productListSearchInfo =>
+      'Meeshaalee barbaaddan argachuuf saanduqa barbaachaatti fayyadamaa.';
+
+  @override
+  String get productListContactInfo =>
+      'Bal\'ina isaa arguuf ykn gurgurtuuf bilbiluuf meeshaa sana tuqaa.';
+
+  @override
+  String get marketPricesIntro =>
+      'Waliigaltee gatii gabaa omiishannaa keessanii dhiyoo jiru asitti hordofaa.';
+
+  @override
+  String get marketPricesGuidance =>
+      'Yeroo gurgurtaaf mijaawaa ta\'e murteessuuf gatii xiqqaa fi guddaa wal bira qabaa ilaalaa.';
+
+  @override
+  String get adviceFeedIntro =>
+      'Gorsawwan fi qajeelfamoota ogeeyyii qonnaa asitti dhiyaatan dubbisaa.';
 }

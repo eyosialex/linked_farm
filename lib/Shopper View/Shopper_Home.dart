@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:echat/User%20Credential/log_in_page.dart';
-import 'package:echat/l10n/app_localizations.dart';
-import 'package:echat/Farmers%20View/Enter_Sell_Item.dart'; // Reusing for now, will specialize later
+import 'package:linkedfarm/User%20Credential/log_in_page.dart';
+import 'package:linkedfarm/l10n/app_localizations.dart';
+import 'package:linkedfarm/Shopper%20View/Sell_Input_Item.dart';
 
 class ShopperHomePage extends StatefulWidget {
   const ShopperHomePage({super.key});
@@ -30,8 +30,9 @@ class _ShopperHomePageState extends State<ShopperHomePage> {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Shopper Dashboard"), // TODO: Localize "Shopper Dashboard"
-        backgroundColor: Colors.green[700],
+        title: const Text("LinkedFarm Inputs"),
+        backgroundColor: Colors.green[800],
+        foregroundColor: Colors.white,
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -44,7 +45,7 @@ class _ShopperHomePageState extends State<ShopperHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               "Welcome, Input Supplier!",
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
@@ -60,15 +61,15 @@ class _ShopperHomePageState extends State<ShopperHomePage> {
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
                 children: [
-                  _buildMenuCard(
+                   _buildMenuCard(
                     context,
                     title: l10n.sellInputs,
                     icon: Icons.add_shopping_cart,
-                    color: Colors.blue,
+                    color: Colors.green[700]!,
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const SellInputItem()),
+                        MaterialPageRoute(builder: (context) => SellInputItem()),
                       );
                     },
                   ),
@@ -76,7 +77,7 @@ class _ShopperHomePageState extends State<ShopperHomePage> {
                     context,
                     title: l10n.myProducts,
                     icon: Icons.inventory,
-                    color: Colors.orange,
+                    color: Colors.orange[700]!,
                     onTap: () {
                       // Navigate to my input products
                     },

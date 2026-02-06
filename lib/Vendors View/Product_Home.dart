@@ -1,18 +1,22 @@
 
-import 'package:echat/Farmers%20View/Enter_Sell_Item.dart';
-import 'package:echat/Vendors%20View/WantedProductsScreen.dart';
-import 'package:echat/Vendors%20View/product.dart';
-import 'package:echat/Chat/chat_list.dart';
-import 'package:echat/Farmers%20View/advice_feed.dart';
+import 'package:linkedfarm/Farmers%20View/Enter_Sell_Item.dart';
+import 'package:linkedfarm/Vendors%20View/WantedProductsScreen.dart';
+import 'package:linkedfarm/Vendors%20View/product.dart';
+import 'package:linkedfarm/Chat/chat_list.dart';
+import 'package:linkedfarm/Farmers%20View/advice_feed.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:echat/User%20Credential/log_in_page.dart';
+import 'package:linkedfarm/User%20Credential/log_in_page.dart';
 
-import 'package:echat/Vendors%20View/NotificationCenterScreen.dart';
-import 'package:echat/Services/farm_persistence_service.dart';
-import 'package:echat/Models/notification_model.dart';
+import 'package:linkedfarm/Vendors%20View/NotificationCenterScreen.dart';
+import 'package:linkedfarm/Services/farm_persistence_service.dart';
+import 'package:linkedfarm/Models/notification_model.dart';
+import 'package:linkedfarm/Vendors%20View/Vendor_Price_Prediction.dart';
+import 'package:linkedfarm/Vendors%20View/Trusted_Farmers_Screen.dart';
+import 'package:linkedfarm/Vendors View/Shared_Delivery_Screen.dart';
+import 'package:linkedfarm/Vendors View/Vendor_Advisory_Screen.dart';
 
-import 'package:echat/Services/notification_service.dart';
+import 'package:linkedfarm/Services/notification_service.dart';
 import 'dart:async';
 
 class vendors_page extends StatefulWidget {
@@ -43,28 +47,6 @@ class _vendors_pageState extends State<vendors_page> {
       ),
     },
     {
-      'title': 'Sell Inputs',
-      'icon': Icons.store,
-      'image': 'assets/sell_item.jpg',
-      'page': SellItem(), // Vendors selling fertilizers etc.
-      'gradient': const LinearGradient(
-        colors: [Color(0xFFFF9800), Color(0xFFF57C00)],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
-    },
-    {
-      'title': 'My Shop',
-      'icon': Icons.dashboard,
-      'image': 'assets/agrilead.png', 
-      'page': const WantedProductsScreen(), // Manage listed requirements
-      'gradient': const LinearGradient(
-        colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
-    },
-    {
       'title': 'Orders',
       'icon': Icons.shopping_cart,
       'image': 'assets/delivery.png',
@@ -76,23 +58,56 @@ class _vendors_pageState extends State<vendors_page> {
       ),
     },
     {
+      'title': 'Market Trends',
+      'icon': Icons.trending_up,
+      'image': 'assets/prices.png',
+      'page': const VendorPricePredictionScreen(),
+      'gradient': const LinearGradient(
+        colors: [Color(0xFF3F51B5), Color(0xFF303F9F)],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+    },
+    {
+      'title': 'Trusted Farmers',
+      'icon': Icons.verified_user,
+      'image': 'assets/profile.jpg',
+      'page': const TrustedFarmersScreen(),
+      'gradient': const LinearGradient(
+        colors: [Color(0xFF009688), Color(0xFF00796B)],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+    },
+    {
+      'title': 'Delivery Pool',
+      'icon': Icons.local_shipping,
+      'image': 'assets/delivery.png',
+      'page': const SharedDeliveryScreen(),
+      'gradient': const LinearGradient(
+        colors: [Color(0xFF607D8B), Color(0xFF455A64)],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+    },
+    {
+      'title': 'Vendor Advisor',
+      'icon': Icons.psychology,
+      'image': 'assets/advice.png',
+      'page': const VendorAdvisoryScreen(),
+      'gradient': const LinearGradient(
+        colors: [Color(0xFF795548), Color(0xFF5D4037)],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+    },
+    {
       'title': 'Messages',
       'icon': Icons.chat_bubble,
       'image': 'assets/chat.png',
       'page': const ChatListScreen(),
       'gradient': const LinearGradient(
         colors: [Color(0xFF00BCD4), Color(0xFF0097A7)],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
-    },
-    {
-      'title': 'Expert Advice',
-      'icon': Icons.school,
-      'image': 'assets/advice.png',
-      'page': const AdviceFeedScreen(),
-      'gradient': const LinearGradient(
-        colors: [Color(0xFFE91E63), Color(0xFFC2185B)],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       ),
@@ -147,14 +162,27 @@ class _vendors_pageState extends State<vendors_page> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
-      body: CustomScrollView(
+      body: Stack(
+        children: [
+          // Background Texture/Image for the section
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.2, // Increased visibility
+              child: Image.asset(
+                'assets/farm_header.png',
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(color: Colors.white),
+              ),
+            ),
+          ),
+          CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
           SliverAppBar(
             expandedHeight: 180,
             floating: false,
             pinned: true,
-            backgroundColor: Colors.blue[800],
+            backgroundColor: Colors.green[800],
             flexibleSpace: FlexibleSpaceBar(
               background: Stack(
                 fit: StackFit.expand,
@@ -163,7 +191,7 @@ class _vendors_pageState extends State<vendors_page> {
                     'assets/farm_header.png', // Reuse or add vendor specific image
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
-                      return Container(color: Colors.blue[900]);
+                      return Container(color: Colors.green[900]);
                     },
                   ),
                   Container(
@@ -181,7 +209,7 @@ class _vendors_pageState extends State<vendors_page> {
                 ],
               ),
               title: const Text(
-                "Vendor Dashboard",
+                "LinkedFarm",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
@@ -214,7 +242,7 @@ class _vendors_pageState extends State<vendors_page> {
                           top: 8,
                           child: Container(
                             padding: const EdgeInsets.all(4),
-                            decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                            decoration: const BoxDecoration(color: Colors.orange, shape: BoxShape.circle),
                             constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
                             child: Text(
                               unreadCount > 9 ? '9+' : '$unreadCount',
@@ -281,8 +309,10 @@ class _vendors_pageState extends State<vendors_page> {
           ),
         ],
       ),
-    );
-  }
+    ],
+  ),
+);
+}
 
   Widget _buildMenuCard(Map<String, dynamic> item, BuildContext context) {
     return Card(
@@ -305,28 +335,74 @@ class _vendors_pageState extends State<vendors_page> {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            gradient: item['gradient'],
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Stack(
+            fit: StackFit.expand,
             children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  shape: BoxShape.circle,
+              // Background Image
+              ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Image.asset(
+                  item['image'],
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    // Fallback to gradient if image not found
+                    return Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        gradient: item['gradient'],
+                      ),
+                    );
+                  },
                 ),
-                child: Icon(item['icon'], size: 32, color: Colors.white),
               ),
-              const SizedBox(height: 12),
-              Text(
-                item['title'],
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
+              // Dark overlay for better text visibility
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withOpacity(0.1),
+                      Colors.black.withOpacity(0.3),
+                    ],
+                  ),
                 ),
+              ),
+              // Content
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.3),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(item['icon'], size: 32, color: Colors.white),
+                  ),
+                  const SizedBox(height: 12),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(
+                      item['title'],
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        shadows: [
+                          Shadow(
+                            offset: Offset(0, 1),
+                            blurRadius: 3,
+                            color: Colors.black54,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

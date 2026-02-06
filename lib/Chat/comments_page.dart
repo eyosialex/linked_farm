@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:echat/Chat/chat_model.dart';
-import 'package:echat/Services/chat_service.dart';
+import 'package:linkedfarm/Chat/chat_model.dart';
+import 'package:linkedfarm/Services/chat_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -57,7 +57,7 @@ class _CommentsPageState extends State<CommentsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Comments"),
-        backgroundColor: Colors.teal[700],
+        backgroundColor: Colors.green[800],
         foregroundColor: Colors.white,
       ),
       body: Column(
@@ -69,7 +69,7 @@ class _CommentsPageState extends State<CommentsPage> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.reply, color: Colors.teal, size: 20),
+                const Icon(Icons.reply, color: Colors.green, size: 20),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Column(
@@ -77,7 +77,7 @@ class _CommentsPageState extends State<CommentsPage> {
                     children: [
                       Text(
                         widget.originalSenderName,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.teal),
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.green),
                       ),
                       Text(
                         widget.originalMessage,
@@ -140,7 +140,7 @@ class _CommentsPageState extends State<CommentsPage> {
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isMe ? Colors.teal[50] : Colors.white,
+          color: isMe ? Colors.green[50] : Colors.white,
           borderRadius: BorderRadius.circular(15),
           boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 2)],
         ),
@@ -151,7 +151,7 @@ class _CommentsPageState extends State<CommentsPage> {
             if (!isMe)
               Text(
                 data['senderEmail'].split('@')[0],
-                style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.teal),
+                style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.green),
               ),
             Text(data['message']),
             const SizedBox(height: 4),
@@ -189,7 +189,7 @@ class _CommentsPageState extends State<CommentsPage> {
             ),
             const SizedBox(width: 8),
             CircleAvatar(
-              backgroundColor: Colors.teal,
+              backgroundColor: Colors.green,
               child: IconButton(
                 icon: const Icon(Icons.send, color: Colors.white),
                 onPressed: _sendComment,

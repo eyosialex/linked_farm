@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../models/game_state.dart';
 import '../../Services/gemini_service.dart';
 import 'rating_report_screen.dart';
+import 'package:linkedfarm/Widgets/voice_guide_button.dart';
 
 class YieldResultsScreen extends StatefulWidget {
   const YieldResultsScreen({super.key});
@@ -55,13 +56,21 @@ class _YieldResultsScreenState extends State<YieldResultsScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.analytics_outlined, size: 80, color: Colors.blueAccent),
+                const Icon(Icons.analytics_outlined, size: 80, color: Colors.orangeAccent),
                 const SizedBox(height: 20),
                 const Text(
                   "PREDICTIVE ANALYSIS COMPLETE",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 1.5),
                 ),
+                VoiceGuideButton(
+                  messages: [
+                    "Predictive Analysis is complete.",
+                    localAnalysis
+                  ],
+                  isDark: true,
+                ),
+                const SizedBox(height: 10),
                 const SizedBox(height: 40),
                 
                 Container(
@@ -77,7 +86,7 @@ class _YieldResultsScreenState extends State<YieldResultsScreen> {
                       const SizedBox(height: 10),
                       Text(
                         "$finalYield%",
-                        style: const TextStyle(fontSize: 64, fontWeight: FontWeight.bold, color: Colors.blueAccent),
+                        style: const TextStyle(fontSize: 64, fontWeight: FontWeight.bold, color: Colors.orangeAccent),
                       ),
                       const SizedBox(height: 20),
                       Text(
@@ -87,7 +96,7 @@ class _YieldResultsScreenState extends State<YieldResultsScreen> {
                       const Divider(color: Colors.white10, height: 40),
                       const Row(
                         children: [
-                          Icon(Icons.auto_awesome, color: Colors.blueAccent, size: 18),
+                           Icon(Icons.auto_awesome, color: Colors.orangeAccent, size: 18),
                           SizedBox(width: 8),
                           Text("LOCAL AI REPORT", style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold, fontSize: 12)),
                         ],
@@ -106,7 +115,7 @@ class _YieldResultsScreenState extends State<YieldResultsScreen> {
                 ElevatedButton(
                   onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent,
+                    backgroundColor: Colors.green[700],
                     foregroundColor: Colors.white,
                     minimumSize: const Size(double.infinity, 60),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),

@@ -21,7 +21,7 @@ class AppLocalizationsAm extends AppLocalizations {
   String get myProducts => 'የእኔ ምርቶች';
 
   @override
-  String get sellInputs => 'የግብርና ግብዓቶችን ይሽጡ';
+  String get marketPrices => 'የገበያ ዋጋ';
 
   @override
   String stockLevel(int count, String unit) {
@@ -42,12 +42,6 @@ class AppLocalizationsAm extends AppLocalizations {
 
   @override
   String get stock => 'ክምችት';
-
-  @override
-  String get buyInputs => 'የግብርና ግብዓቶችን ይግዙ';
-
-  @override
-  String get marketPrices => 'የገበያ ዋጋ';
 
   @override
   String get messages => 'መልዕክቶች';
@@ -651,8 +645,408 @@ class AppLocalizationsAm extends AppLocalizations {
   String get catFertilizer => 'ማዳበሪያ';
 
   @override
+  String get buyInputs => 'የግብርና ግብዓቶችን ይግዙ';
+
+  @override
+  String get sellInputs => 'የግብርና ግብዓቶችን ይሽጡ';
+
+  @override
   String get offline => 'ከመስመር ውጭ';
 
   @override
   String get synced => 'ተ синхሮናይዝድ';
+
+  @override
+  String get readMore => 'ተጨማሪ ያንብቡ';
+
+  @override
+  String get noAdvice => 'እስካሁን ምንም ምክሮች የሉም።';
+
+  @override
+  String get expertAdviceTitle => 'የባለሙያ ምክሮች እና መረጃዎች';
+
+  @override
+  String get playVoiceGuide => 'የድምፅ መመሪያውን ያጫውቱ';
+
+  @override
+  String get stopVoiceGuide => 'የድምፅ መመሪያውን ያቁሙ';
+
+  @override
+  String byAuthor(Object name) {
+    return 'በ $name';
+  }
+
+  @override
+  String get smartAdvisory => 'ብልህ ምክር';
+
+  @override
+  String get aiAgronomist => 'AI የግብርና ባለሙያ';
+
+  @override
+  String get expertPanel => 'የባለሙያዎች ቡድን';
+
+  @override
+  String get cropHealthAnalysis => 'የሰብል ጤና ትንተና';
+
+  @override
+  String get excellentCondition => 'በጣም ጥሩ ሁኔታ';
+
+  @override
+  String get attentionNeeded => 'ትኩረት ያስፈልጋል';
+
+  @override
+  String cropHealthSummary(Object crop, Object status) {
+    return 'ባለፉት ፎቶዎችዎ እና በሴንሰር ንባቦችዎ መሰረት፣ የእርስዎ $crop $status እያደገ ነው።';
+  }
+
+  @override
+  String get optimally => 'በጥሩ ሁኔታ';
+
+  @override
+  String get slowerThanExpected => 'ከተጠበቀው በላይ በዝግታ';
+
+  @override
+  String get aiRecommendations => 'AI ምክሮች';
+
+  @override
+  String get irrigation => 'መስኖ';
+
+  @override
+  String moistureLow(Object percent) {
+    return 'የአፈር እርጥበት በጣም ዝቅተኛ ነው ($percent%)። መድረቅን ለመከላከል ወዲያውኑ መስኖ ይጀምሩ።';
+  }
+
+  @override
+  String get moistureOptimal => 'የእርጥበት መጠን ጥሩ ነው። ዛሬ መስኖ አያስፈልግም::';
+
+  @override
+  String get nutrients => 'ማዕድናት';
+
+  @override
+  String get nutrientsLow =>
+      'የNPK መጠን እየቀነሰ ነው። በሚቀጥሉት 2 ቀናት ውስጥ የተፈጥሮ ማዳበሪያ ወይም NPK 15-15-15 ይጠቀሙ።';
+
+  @override
+  String get nutrientsStable => 'የማዕድን ሚዛን የተረጋጋ ነው። ክትትልዎን ይቀጥሉ::';
+
+  @override
+  String get pestDisease => 'ተባዮች እና በሽታዎች';
+
+  @override
+  String get pestHighRisk =>
+      'ከፍተኛ እርጥበት ተገኝቷል። የፈንገስ መኖር እድሉ ከፍተኛ ነው። ቅጠሎቹን ለነጠብጣቦች ይፈትሹ::';
+
+  @override
+  String get pestLowRisk => 'ዝቅተኛ የተባይ ስጋት ተገኝቷል። የእርሻ ንፅህናን መጠበቅ ይመከራል።';
+
+  @override
+  String get urgent => 'አስቸኳይ';
+
+  @override
+  String get connectWithExperts => 'ከባለሙያዎች ጋር ይገናኙ';
+
+  @override
+  String get getProfessionalGuidance => 'ለእርሻዎ ሙያዊ መመሪያ ያግኙ።';
+
+  @override
+  String get requestConsultation => 'ምክር ይጠይቁ';
+
+  @override
+  String get online => 'በመስመር ላይ';
+
+  @override
+  String get away => 'ተለይቷል';
+
+  @override
+  String get crop => 'ሰብል';
+
+  @override
+  String get predictedRain => 'የተገመተው፡ 8ሚሜ ዝናብ';
+
+  @override
+  String get clearSkies => 'ጥርት ያለ ሰማይ';
+
+  @override
+  String get pest => 'ተባይ';
+
+  @override
+  String get fungal => 'ፈንገስ';
+
+  @override
+  String get weeds => 'አረም';
+
+  @override
+  String get soilMoistureProfile => 'የአፈር እርጥበት መገለጫ';
+
+  @override
+  String dayLabel(Object day) {
+    return 'ቀን $day';
+  }
+
+  @override
+  String get vegetativeCycle => 'የእድገት ዑደት';
+
+  @override
+  String get myCustomLandPlan => 'የእኔ መሬት እቅድ';
+
+  @override
+  String get plannerDetail => 'የዕለት ተዕለት/ሳምንታዊ የእርሻ ስራዎችዎን ያስገቡ እና ይከታተሉ።';
+
+  @override
+  String get dailyLogBtn => 'ዕለታዊ\nመዝገብ';
+
+  @override
+  String get plannerBtn => 'እቅድ አውጪ';
+
+  @override
+  String get advisorBtn => 'አማካሪ';
+
+  @override
+  String get fertilizeBtn => 'ማዳበሪያ';
+
+  @override
+  String get proceedNextDay => 'ወደ ቀጣዩ ቀን ቀጥል';
+
+  @override
+  String get tapDeepAnalysis => 'ለጥልቅ AI ትንተና ይጫኑ';
+
+  @override
+  String get aiDeepAnalysisTitle => 'ጥልቅ የAI ትንተና';
+
+  @override
+  String get gotIt => 'ገባኝ';
+
+  @override
+  String get emptyPlanner => 'የእርስዎ እቅድ ባዶ ነው';
+
+  @override
+  String get emptyPlannerDetail => 'የራስዎን ዕለታዊ/ሳምንታዊ ተግባራት እዚህ ያክሉ።';
+
+  @override
+  String get entryManualPlanTitle => 'ለእጅ እቅድ ግቤት';
+
+  @override
+  String get cancel => 'ሰርዝ';
+
+  @override
+  String get savePlan => 'እቅድ አስቀምጥ';
+
+  @override
+  String get taskTitle => 'የተግባር ርዕስ';
+
+  @override
+  String get activityDetail => 'የተግባር ዝርዝር';
+
+  @override
+  String get daily => 'ዕለታዊ';
+
+  @override
+  String get weekly => 'ሳምንታዊ';
+
+  @override
+  String get monthly => 'ወርሃዊ';
+
+  @override
+  String get completed => 'ተጠናቋል';
+
+  @override
+  String get advicePest => 'በትኩሳት እና በንፋስ ሁኔታዎች ምክንያት የተባይ እንቅስቃሴ እየጨመረ ነው።';
+
+  @override
+  String get adviceMoistureLow =>
+      'የእርጥበት መጠን ዝቅተኛ ነው። በቅርቡ ዝናብ እንዲዘንብ ተስፋ እናደርጋለን!';
+
+  @override
+  String get adviceRainy => 'ተፈጥሯዊ ዝናብ የአፈርን እርጥበት እየሞላው ነው።';
+
+  @override
+  String get adviceStable =>
+      'ሥነ ምህዳሩ የተረጋጋ ነው። በዝናብ ላይ የተመሰረተ እድገት በጥሩ ሁኔታ ላይ ነው።';
+
+  @override
+  String get virtualFarmSimulator => 'ምናባዊ የእርሻ ሲሙሌተር';
+
+  @override
+  String get welcomeVirtualFarm => 'ወደ ምናባዊ እርሻዎ እንኳን ደህና መጡ';
+
+  @override
+  String get gameIntro =>
+      'በመስራት ግብርናን ይማሩ። ውሳኔዎችን ይወስኑ፣ ሀብቶችን ያስተዳድሩ እና AI ምርትዎን እንዴት እንደሚተነብይ ይመልቱ!';
+
+  @override
+  String get startNewFarm => 'አዲስ እርሻ ጀምር';
+
+  @override
+  String continueFarming(Object day) {
+    return 'እርሻውን ይቀጥሉ (ቀን $day)';
+  }
+
+  @override
+  String get resetStartNew => 'ዳግም አስጀምር እና አዲስ ጀምር';
+
+  @override
+  String get myLandsProfile => 'የእኔ መሬቶች መገለጫ';
+
+  @override
+  String get noLandsRegistered => 'እስካሁን የተመዘገበ መሬት የለም።';
+
+  @override
+  String get startAddingPlot => 'የመጀመሪያውን መሬት በመጨመር ይጀምሩ።';
+
+  @override
+  String get registerNewLand => 'አዲስ መሬት ይመዝግቡ';
+
+  @override
+  String get landNameHint => 'የመሬት ስም (ለምሳሌ የቤት ውስጥ አትክልት)';
+
+  @override
+  String get sizeHectares => 'መጠን (ሄክታር)';
+
+  @override
+  String get soilType => 'የአፈር ዓይነት';
+
+  @override
+  String get saveLand => 'መሬቱን አስቀምጥ';
+
+  @override
+  String get hectares => 'ሄክታር';
+
+  @override
+  String get readyPlanting => 'ለመትከል ዝግጁ';
+
+  @override
+  String get cycleCompleted => 'ዑደት ተጠናቅቋል';
+
+  @override
+  String dayTrackerTitle(Object day) {
+    return 'የቀን $day መከታተያ';
+  }
+
+  @override
+  String get sensorDataCollection => 'በሴንሰር ላይ የተመሰረተ መረጃ መሰብሰብ';
+
+  @override
+  String get connectCableDetail => 'የአፈር እና የአካባቢ መረጃን ለማንበብ ገመዱን ያገናኙ';
+
+  @override
+  String get soilSensorCable => 'የአፈር ዳሳሽ ገመድ';
+
+  @override
+  String get statusConnected => 'ሁኔታ፡ ተገናኝቷል';
+
+  @override
+  String get statusDisconnected => 'ሁኔታ፡ አልተገናኘም';
+
+  @override
+  String get connect => 'አገናኝ';
+
+  @override
+  String get observations => 'ምልከታዎች';
+
+  @override
+  String get enterNotes => 'ማስታወሻዎን እዚህ ያስገቡ...';
+
+  @override
+  String get saveDailyLog => 'የቀን ምዝግብ ማስታወሻውን አስቀምጥ';
+
+  @override
+  String sensorConnectedMsg(Object type) {
+    return '✅ ሴንሰር ተገናኝቷል! $type አፈር ተገኝቷል';
+  }
+
+  @override
+  String get dailyLogSavedMsg => '✅ የቀን ምዝግብ ማስታወሻ በFirestore ውስጥ ተቀምጧል!';
+
+  @override
+  String get moisture => 'እርጥበት';
+
+  @override
+  String get temp => 'ሙቀት';
+
+  @override
+  String get nitrogen => 'ናይትሮጅን';
+
+  @override
+  String get phosphorus => 'ፎስፈረስ';
+
+  @override
+  String get potassium => 'ፖታሲየም';
+
+  @override
+  String get loamy => 'ሎሚ';
+
+  @override
+  String get silt => 'ሲልት';
+
+  @override
+  String get clay => 'ሸክላ';
+
+  @override
+  String get sandy => 'አሸዋማ';
+
+  @override
+  String get welcomeToAgrilead => 'እንኳን ወደ አግሪሊድ በደህና መጡ።';
+
+  @override
+  String get tapLoginReady => 'ሲዘጋጁ \'ግባ\' የሚለውን ቁልፍ ይጫኑ።';
+
+  @override
+  String get productInventoryIntro => 'ይህ የእርስዎ ምርቶች ዝርዝር ነው።';
+
+  @override
+  String get startSellingIntro =>
+      'ለመሸጥ \'+\' ምልክቱን ወይም \'የመጀመሪያ ምርትዎን ያቅርቡ\' የሚለውን ይጫኑ።';
+
+  @override
+  String get registerFieldsIntro => 'ለመመዝገብ እነዚህን መስኮች ይሙሉ::';
+
+  @override
+  String get registerFinishIntro => 'ሲጨርሱ \'ይመዝገቡ\' የሚለውን ይጫኑ::';
+
+  @override
+  String get dailyTrackerIntro => 'የዛሬውን የእርሻ ስራዎች እዚህ ይመልከቱ::';
+
+  @override
+  String get farmMainIntro => 'እርሻዎ እንዴት እየሄደ እንደሆነ ይመልከቱ::';
+
+  @override
+  String get gameDashboardIntro => 'ለሰብሎችዎ የ AI ምክር ያግኙ::';
+
+  @override
+  String get sellItemIntro => 'ምርትዎን ይግለጹ፣ ዋጋ ይፈርጁ፣ እና ምስሎችን በመጨመር መሸጥ ይጀምሩ::';
+
+  @override
+  String get growthJournalIntro => 'የእርሻዎን ታሪክ እዚህ ይገምግሙ::';
+
+  @override
+  String get growthJournalDetail => 'እያንዳንዱ ካርድ የእለቱን የአፈር እና የጤና ሁኔታ ያሳያል::';
+
+  @override
+  String get seasonalReportIntro => 'ይህ የእርስዎ ወቅታዊ የውጤት ሪፖርት ነው::';
+
+  @override
+  String get seasonalReportDetail =>
+      'የስራ አፈጻጸምዎን እና የሚጠበቀውን የጥራት ደረጃ እዚህ ይመልከቱ::';
+
+  @override
+  String get productListIntro =>
+      'ለመግዛት የሚገኙ ዘሮችን፣ ማዳበሪያዎችን እና መሳሪያዎችን እዚህ ይፈልጉ::';
+
+  @override
+  String get productListSearchInfo =>
+      'የፍለጋ አሞሌውን ወይም ምድቦችን በመጠቀም የሚፈልጉትን ምርት ያግኙ::';
+
+  @override
+  String get productListContactInfo => 'ዝርዝሩን ለማየት ወይም ሻጩን ለማነጋገር ምርቱን ይንኩ::';
+
+  @override
+  String get marketPricesIntro => 'እዚህ ለሰብሎችዎ የቅርብ የገበያ ዋጋዎችን ማረጋገጥ ይችላሉ።';
+
+  @override
+  String get marketPricesGuidance =>
+      'ለመሸጥ ምርጥ ጊዜን ለመወሰን ዝቅተኛ እና ከፍተኛ ዋጋዎችን ያወዳድሩ።';
+
+  @override
+  String get adviceFeedIntro =>
+      'ከግብርና ባለሙያዎች የሚመጡ የቅርብ ጊዜ ምክሮችን እና መረጃዎችን ይቃኙ።';
 }

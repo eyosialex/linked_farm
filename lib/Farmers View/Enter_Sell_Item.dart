@@ -1,20 +1,24 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:linkedfarm/Widgets/voice_guide_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:echat/Farmers%20View/Cloudnary_Store.dart';
-import 'package:echat/Farmers%20View/FireStore_Config.dart';
-import 'package:echat/Farmers%20View/Sell_Item_Model.dart';
+import 'package:linkedfarm/Farmers%20View/Cloudnary_Store.dart';
+import 'package:linkedfarm/Farmers%20View/FireStore_Config.dart';
+import 'package:linkedfarm/Farmers%20View/Sell_Item_Model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
-import 'package:echat/Services/farm_persistence_service.dart';
-import 'package:echat/Services/local_storage_service.dart';
-import 'package:echat/Services/wifi_share_service.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:linkedfarm/Services/farm_persistence_service.dart';
+import 'package:linkedfarm/Services/local_storage_service.dart';
+import 'package:linkedfarm/Services/wifi_share_service.dart';
+import 'package:linkedfarm/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:linkedfarm/User%20Credential/TextField.dart';
+import 'package:linkedfarm/Services/voice_guide_service.dart';
 import 'Position_Sell_Item.dart';
+
 class SellItem extends StatefulWidget {
   final AgriculturalItem? productToEdit;
 
@@ -78,10 +82,10 @@ class _SellItemState extends State<SellItem> {
       case 'Oil Seeds': return l10n.catOilSeeds;
       case 'Tubers': return l10n.catTubers;
       case 'Livestock': return l10n.catLivestock;
-      case 'Fertilizers': return l10n.catFertilizers;
-      case 'Pesticides': return l10n.catPesticides;
-      case 'Herbicides': return l10n.catHerbicides;
-      case 'Fungicides': return l10n.catFungicides;
+      case 'Fertilizers': return l10n.catFertilizer;
+      case 'Pesticides': return l10n.catPesticide;
+      case 'Herbicides': return l10n.catHerbicide;
+      case 'Fungicides': return l10n.catFungicide;
       default: return l10n.catOthers;
     }
   }
@@ -179,7 +183,7 @@ class _SellItemState extends State<SellItem> {
         setState(() {
           _selectedImages.add(File(pickedFile.path));
         });
-        _showSnackBar(AppLocalizations.of(context)!.photoAddedSuccess);
+        _showSnackBar (AppLocalizations.of(context)!.photoAddedSuccess);
       }
     } catch (e) {
       _showSnackBar("${AppLocalizations.of(context)!.errorTakingPhoto}: $e");
@@ -567,6 +571,7 @@ class _SellItemState extends State<SellItem> {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -577,6 +582,18 @@ class _SellItemState extends State<SellItem> {
         centerTitle: true,
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
+        actions: [
+          VoiceGuideButton(
+            messages: [
+              AppLocalizations.of(context)!.sellItemIntro,
+              AppLocalizations.of(context)!.addPhotosTitle,
+              AppLocalizations.of(context)!.productInformation,
+              AppLocalizations.of(context)!.doneAction
+            ],
+            isDark: true,
+          ),
+          const SizedBox(width: 16),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -736,44 +753,17 @@ class _SellItemState extends State<SellItem> {
             _buildTextField(_subcategoryController, AppLocalizations.of(context)!.subcategoryOptional, Icons.subtitles),
             const SizedBox(height: 12),
 
-            TextField(
-              controller: _descriptionController,
-              maxLines: 4,
-              decoration: InputDecoration(
-                labelText: AppLocalizations.of(context)!.descriptionLabel,
-                border: const OutlineInputBorder(),
-                hintText: AppLocalizations.of(context)!.describeProductDetail,
-                alignLabelWithHint: true,
-              ),
-            ),
+            _buildDescriptionField(context),
             const SizedBox(height: 12),
 
             Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    controller: _priceController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)!.priceEtbLabel,
-                      border: const OutlineInputBorder(),
-                      prefixIcon: const Icon(Icons.attach_money),
-                      hintText: "0.00",
-                    ),
-                  ),
+                  child: _buildTextField(_priceController, AppLocalizations.of(context)!.priceEtbLabel, Icons.attach_money),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: TextField(
-                    controller: _quantityController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)!.quantityLabel,
-                      border: const OutlineInputBorder(),
-                      prefixIcon: const Icon(Icons.scale),
-                      hintText: "0",
-                    ),
-                  ),
+                  child: _buildTextField(_quantityController, AppLocalizations.of(context)!.quantityLabel, Icons.scale),
                 ),
               ],
             ),
@@ -905,15 +895,7 @@ class _SellItemState extends State<SellItem> {
             Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    controller: _tagsController,
-                    decoration: const InputDecoration(
-                      labelText: "Add Tags",
-                      border: OutlineInputBorder(),
-                      hintText: "e.g., organic, premium, local",
-                    ),
-                    onSubmitted: (_) => _addTag(),
-                  ),
+                  child: _buildTextField(_tagsController, "Add Tags", Icons.tag),
                 ),
                 IconButton(
                   icon: const Icon(Icons.add),
@@ -939,6 +921,23 @@ class _SellItemState extends State<SellItem> {
               ),
 
             const SizedBox(height: 30),
+
+            // Read Summary Button
+            Container(
+              width: double.infinity,
+              margin: const EdgeInsets.only(bottom: 12),
+              child: OutlinedButton.icon(
+                onPressed: _readSummary,
+                icon: const Icon(Icons.record_voice_over),
+                label: const Text("Read Summary (Line by Line)"),
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ),
 
             // Submit Button
             Container(
@@ -983,6 +982,47 @@ class _SellItemState extends State<SellItem> {
     );
   }
 
+  void _readSummary() {
+    final l10n = AppLocalizations.of(context)!;
+    List<String> summaryLines = [];
+    
+    if (_nameController.text.isNotEmpty) summaryLines.add("${l10n.productNameLabel}: ${_nameController.text}");
+    if (_selectedCategory.isNotEmpty) summaryLines.add("${l10n.categoryLabel}: ${_getLocalizedCategory(context, _selectedCategory)}");
+    if (_priceController.text.isNotEmpty) summaryLines.add("${l10n.priceEtbLabel}: ${_priceController.text}");
+    if (_quantityController.text.isNotEmpty) summaryLines.add("${l10n.quantityLabel}: ${_quantityController.text} $_selectedUnit");
+    if (_descriptionController.text.isNotEmpty) summaryLines.add("${l10n.descriptionLabel}: ${_descriptionController.text}");
+    
+    if (summaryLines.isEmpty) {
+      summaryLines.add("No information entered yet.");
+    }
+
+    final service = Provider.of<VoiceGuideService>(context, listen: false);
+    service.speakQueue(summaryLines, Localizations.localeOf(context));
+  }
+
+  Widget _buildDescriptionField(BuildContext context) {
+    return Focus(
+      onFocusChange: (hasFocus) {
+        if (hasFocus) {
+          final service = Provider.of<VoiceGuideService>(context, listen: false);
+          if (service.isAccessibilityModeEnabled) {
+            service.speakQueue([AppLocalizations.of(context)!.descriptionLabel], Localizations.localeOf(context));
+          }
+        }
+      },
+      child: TextField(
+        controller: _descriptionController,
+        maxLines: 4,
+        decoration: InputDecoration(
+          labelText: AppLocalizations.of(context)!.descriptionLabel,
+          border: const OutlineInputBorder(),
+          hintText: AppLocalizations.of(context)!.describeProductDetail,
+          alignLabelWithHint: true,
+        ),
+      ),
+    );
+  }
+
   Widget _buildSectionHeader(String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -991,20 +1031,19 @@ class _SellItemState extends State<SellItem> {
         style: const TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
-          color: Colors.blueGrey,
+          color: Colors.green,
         ),
       ),
     );
   }
 
   Widget _buildTextField(TextEditingController controller, String label, IconData icon) {
-    return TextField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        border: const OutlineInputBorder(),
-        prefixIcon: Icon(icon),
-      ),
+    return Mytextfield(
+      con: controller,
+      HintText: label,
+      valid: false,
+      voiceLabel: label,
+      icon: icon,
     );
   }
 

@@ -3,10 +3,10 @@ import 'package:path/path.dart' as path;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:echat/Services/websocket_service.dart';
-import 'package:echat/Chat/chat_model.dart';
-import 'package:echat/Chat/group_model.dart';
-import 'package:echat/Farmers View/Cloudnary_Store.dart';
+import 'package:linkedfarm/Services/websocket_service.dart';
+import 'package:linkedfarm/Chat/chat_model.dart';
+import 'package:linkedfarm/Chat/group_model.dart';
+import 'package:linkedfarm/Farmers%20View/Cloudnary_Store.dart';
 import 'dart:convert'; // Added for json.decode
 import 'package:http/http.dart' as http; // Added for http requests
 

@@ -23,6 +23,8 @@ class UserModel {
   final bool isOnline;
   final DateTime? lastseen;
   final String? photoUrl; // Add photoUrl field
+  final double rating;    // Average rating
+  final int ratingCount;  // Number of reviews
 
   UserModel({
     required this.uid,
@@ -44,7 +46,9 @@ class UserModel {
     required this.updatedAt,
     this.isOnline = false,
     this.lastseen,
-    this.photoUrl, // Initialize photoUrl
+    this.photoUrl,
+    this.rating = 0.0,
+    this.ratingCount = 0,
   });
 
   Map<String, dynamic> toMap() {
@@ -67,6 +71,8 @@ class UserModel {
       'isOnline': isOnline,
       'lastseen': lastseen != null ? Timestamp.fromDate(lastseen!) : FieldValue.serverTimestamp(),
       'photoUrl': photoUrl,
+      'rating': rating,
+      'ratingCount': ratingCount,
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
     };
@@ -92,9 +98,18 @@ class UserModel {
       isOnline: map['isOnline'] ?? false,
       lastseen: map['lastseen'] != null ? (map['lastseen'] as Timestamp).toDate() : null,
       photoUrl: map['photoUrl'],
-      createdAt: (map['createdAt'] as Timestamp).toDate(),
-      updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+      rating: (map['rating'] ?? 0.0).toDouble(),
+      ratingCount: map['ratingCount'] ?? 0,
+      createdAt: _dateFromMap(map['createdAt']),
+      updatedAt: _dateFromMap(map['updatedAt']),
     );
+  }
+
+  static DateTime _dateFromMap(dynamic value) {
+    if (value == null) return DateTime.now();
+    if (value is Timestamp) return value.toDate();
+    if (value is DateTime) return value;
+    return DateTime.now();
   }
 
   UserModel copyWith({
@@ -134,6 +149,8 @@ class UserModel {
       isOnline: isOnline ?? this.isOnline,
       lastseen: lastseen ?? this.lastseen,
       photoUrl: photoUrl ?? this.photoUrl,
+      rating: this.rating,
+      ratingCount: this.ratingCount,
       createdAt: createdAt,
       updatedAt: DateTime.now(),
     );

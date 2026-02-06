@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:echat/Chat/chat_screen.dart';
-import 'package:echat/Services/chat_service.dart';
-import 'package:echat/User%20Credential/userfirestore.dart';
+import 'package:linkedfarm/Chat/chat_screen.dart';
+import 'package:linkedfarm/Services/chat_service.dart';
+import 'package:linkedfarm/User%20Credential/userfirestore.dart';
 import 'package:flutter/material.dart';
-import 'package:echat/Chat/create_group_screen.dart';
-import 'package:echat/Chat/group_chat_page.dart';
-import 'package:echat/User%20Credential/profile_page.dart';
-import 'package:echat/User%20Credential/usermodel.dart';
+import 'package:linkedfarm/Chat/create_group_screen.dart';
+import 'package:linkedfarm/Chat/group_chat_page.dart';
+import 'package:linkedfarm/User%20Credential/profile_page.dart';
+import 'package:linkedfarm/User%20Credential/usermodel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
@@ -67,10 +67,10 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
                       );
                     },
                     child: CircleAvatar(
-                      backgroundColor: Colors.teal[100],
+                      backgroundColor: Colors.green[100],
                       backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
                       child: photoUrl == null 
-                        ? Text(initial, style: TextStyle(color: Colors.teal[800], fontWeight: FontWeight.bold))
+                        ? Text(initial, style: TextStyle(color: Colors.green[800], fontWeight: FontWeight.bold))
                         : null,
                     ),
                   );
@@ -90,7 +90,7 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
                 onChanged: (val) => setState(() {}),
               )
             : const Text("Chat"),
-        backgroundColor: Colors.teal[700],
+        backgroundColor: Colors.green[800],
         foregroundColor: Colors.white,
         actions: [
           IconButton(
@@ -114,7 +114,9 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
             Tab(text: "MESSAGES"),
             Tab(text: "GROUPS"),
           ],
-          indicatorColor: Colors.white,
+          indicatorColor: Colors.orange[400],
+          labelColor: Colors.white,
+          unselectedLabelColor: Colors.white70,
         ),
       ),
       body: _isSearching ? _buildSearchResults() : TabBarView(
@@ -214,10 +216,10 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
               margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               child: ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: isChannel ? Colors.blue[100] : Colors.teal[100],
+                  backgroundColor: isChannel ? Colors.orange[100] : Colors.green[100],
                   child: Icon(
                     isChannel ? Icons.campaign : Icons.group,
-                    color: isChannel ? Colors.blue[800] : Colors.teal[800],
+                    color: isChannel ? Colors.orange[800] : Colors.green[800],
                   ),
                 ),
                 title: Text(
@@ -284,10 +286,10 @@ class _ChatListScreenState extends State<ChatListScreen> with SingleTickerProvid
           margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           child: ListTile(
             leading: CircleAvatar(
-              backgroundColor: Colors.teal[100],
+              backgroundColor: Colors.green[100],
               child: Text(
                 user.fullName.isNotEmpty ? user.fullName[0].toUpperCase() : "?",
-                style: TextStyle(color: Colors.teal[800]),
+                style: TextStyle(color: Colors.green[800]),
               ),
             ),
             title: Text(

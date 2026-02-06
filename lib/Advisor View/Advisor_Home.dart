@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:echat/User%20Credential/log_in_page.dart';
-import 'package:echat/Advisor%20View/my_articles.dart';
-import 'package:echat/Advisor%20View/post_advice_screen.dart';
-import 'package:echat/Chat/chat_list.dart';
+import 'package:linkedfarm/User%20Credential/log_in_page.dart';
+import 'package:linkedfarm/Advisor%20View/my_articles.dart';
+import 'package:linkedfarm/Advisor%20View/post_advice_screen.dart';
+import 'package:linkedfarm/Chat/chat_list.dart';
 
 class AdvisorHomePage extends StatefulWidget {
   const AdvisorHomePage({super.key});
@@ -30,8 +30,8 @@ class _AdvisorHomePageState extends State<AdvisorHomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Advisor Dashboard"),
-        backgroundColor: Colors.teal[700],
+        title: const Text("LinkedFarm Advisor"),
+        backgroundColor: Colors.green[800],
         foregroundColor: Colors.white,
         actions: [
           IconButton(
@@ -47,14 +47,14 @@ class _AdvisorHomePageState extends State<AdvisorHomePage> {
           children: [
             // Welcome Card
             Card(
-              color: Colors.teal[50],
+              color: Colors.green[50],
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Row(
                   children: [
                     CircleAvatar(
                       radius: 30,
-                      backgroundColor: Colors.teal[200],
+                      backgroundColor: Colors.green[200],
                       child: const Icon(Icons.person, size: 40, color: Colors.white),
                     ),
                     const SizedBox(width: 20),
@@ -67,7 +67,7 @@ class _AdvisorHomePageState extends State<AdvisorHomePage> {
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: Colors.teal,
+                              color: Colors.green,
                             ),
                           ),
                           Text(
@@ -94,7 +94,7 @@ class _AdvisorHomePageState extends State<AdvisorHomePage> {
                 _buildDashboardItem(
                   icon: Icons.article_outlined,
                   label: "Post Advice",
-                  color: Colors.orange,
+                  color: Colors.orange[700]!,
                   onTap: () {
                     // Navigate to Post Advice
                     Navigator.push(context, MaterialPageRoute(builder: (_) => const PostAdviceScreen()));
@@ -103,7 +103,7 @@ class _AdvisorHomePageState extends State<AdvisorHomePage> {
                 _buildDashboardItem(
                   icon: Icons.chat_bubble_outline,
                   label: "Farmer Chats",
-                  color: Colors.blue,
+                  color: Colors.green[700]!,
                   onTap: () {
                     // Navigate to Chats
                     Navigator.push(context, MaterialPageRoute(builder: (_) => const ChatListScreen()));
@@ -112,7 +112,7 @@ class _AdvisorHomePageState extends State<AdvisorHomePage> {
                 _buildDashboardItem(
                   icon: Icons.library_books_outlined,
                   label: "My Articles",
-                  color: Colors.purple,
+                  color: Colors.orange[800]!,
                   onTap: () {
                      Navigator.push(context, MaterialPageRoute(builder: (_) => const MyArticlesScreen()));
                   },
@@ -120,7 +120,7 @@ class _AdvisorHomePageState extends State<AdvisorHomePage> {
                 _buildDashboardItem(
                   icon: Icons.settings_outlined,
                   label: "Settings",
-                  color: Colors.grey,
+                  color: Colors.green[600]!,
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Settings")));
                   },

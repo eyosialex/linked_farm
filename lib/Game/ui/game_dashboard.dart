@@ -1,22 +1,34 @@
-
+import 'package:linkedfarm/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/game_state.dart';
 import 'land_selection_screen.dart';
 import 'farm_main_screen.dart';
 
+import 'package:linkedfarm/Widgets/voice_guide_button.dart';
+
 class GameDashboard extends StatelessWidget {
   const GameDashboard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final gameState = Provider.of<GameState>(context);
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Virtual Farm Simulator"),
+        title: Text(l10n.virtualFarmSimulator),
         backgroundColor: Colors.green[800],
         foregroundColor: Colors.white,
+        actions: [
+          VoiceGuideButton(
+            messages: [
+              l10n.welcomeVirtualFarm,
+              "${l10n.startNewFarm}",
+              "${l10n.continueFarming(gameState.currentDay)}"
+            ],
+            isDark: true,
+          ),
+        ],
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -33,19 +45,19 @@ class GameDashboard extends StatelessWidget {
               Icon(Icons.agriculture, size: 100, color: Colors.green[800]),
               const SizedBox(height: 20),
               Text(
-                "Welcome to Your Virtual Farm",
+                l10n.welcomeVirtualFarm,
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: Colors.green[900],
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.all(20.0),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
                 child: Text(
-                  "Learn farming by doing. Make decisions, manage resources, and see how AI predicts your harvest!",
+                  l10n.gameIntro,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                  style: const TextStyle(fontSize: 16, color: Colors.grey),
                 ),
               ),
               const SizedBox(height: 40),
@@ -58,7 +70,7 @@ class GameDashboard extends StatelessWidget {
                     );
                   },
                   icon: const Icon(Icons.play_arrow),
-                  label: const Text("Start New Farm"),
+                  label: Text(l10n.startNewFarm),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                     backgroundColor: Colors.green[700],
@@ -76,10 +88,10 @@ class GameDashboard extends StatelessWidget {
                         );
                       },
                       icon: const Icon(Icons.play_circle_fill),
-                      label: Text("Continue Farming (Day ${gameState.currentDay})"),
+                      label: Text(l10n.continueFarming(gameState.currentDay)),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                        backgroundColor: Colors.blue[700],
+                        backgroundColor: Colors.orange[700],
                         foregroundColor: Colors.white,
                       ),
                     ),
@@ -91,7 +103,7 @@ class GameDashboard extends StatelessWidget {
                           MaterialPageRoute(builder: (context) => const MyLandsScreen()),
                         );
                       },
-                      child: const Text("Reset and Start New"),
+                      child: Text(l10n.resetStartNew),
                     ),
                   ],
                 ),

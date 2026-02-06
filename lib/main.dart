@@ -1,19 +1,22 @@
 
-import 'package:echat/User%20Credential/log_in_or_register.dart';
+import 'package:linkedfarm/User%20Credential/auth_gate.dart';
+import 'package:linkedfarm/User%20Credential/log_in_or_register.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
-import 'package:echat/Game/models/game_state.dart';
+import 'package:linkedfarm/Game/models/game_state.dart';
 
-import 'package:echat/Services/local_storage_service.dart';
-import 'package:echat/Services/wifi_share_service.dart';
-import 'package:echat/Services/sync_service.dart';
-import 'package:echat/Farmers%20View/FireStore_Config.dart';
-import 'package:echat/Services/locale_provider.dart';
+import 'package:linkedfarm/Services/local_storage_service.dart';
+import 'package:linkedfarm/Services/wifi_share_service.dart';
+import 'package:linkedfarm/Services/sync_service.dart';
+import 'package:linkedfarm/Farmers%20View/FireStore_Config.dart';
+import 'package:linkedfarm/Services/locale_provider.dart';
+import 'package:linkedfarm/Services/voice_guide_service.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:echat/l10n/app_localizations.dart';
+import 'package:linkedfarm/l10n/app_localizations.dart';
+import 'package:linkedfarm/l10n/fallback_localization.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,11 +39,12 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => GameState()),
-        Provider<LocalStorageService>.value(value: localStorage),
+        ChangeNotifierProvider<LocalStorageService>.value(value: localStorage),
         Provider<WifiShareService>.value(value: wifiService),
         Provider<FirestoreService>.value(value: firestoreService),
         Provider<SyncService>.value(value: syncService),
         ChangeNotifierProvider(create: (_) => LocaleProvider()),
+        ChangeNotifierProvider(create: (_) => VoiceGuideService(localStorage)),
       ],
       child: const MyApp(),
     ),
@@ -133,12 +137,25 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Agrilead',
+      title: 'LinkedFarm',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.green,
+          primary: Colors.green[700],
+          secondary: Colors.orange[700],
+          surface: Colors.white,
+        ),
         useMaterial3: true,
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.green[700],
+          foregroundColor: Colors.white,
+          centerTitle: true,
+          elevation: 0,
+        ),
       ),
       localizationsDelegates: const [
+        FallbackMaterialLocalizationsDelegate(),
+        FallbackCupertinoLocalizationsDelegate(),
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -150,7 +167,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         Locale('om'),
       ],
       locale: localeProvider.locale,
-      home: const LogInOrRegister(),
+      home: const AuthGate(),
     );
   }
 }

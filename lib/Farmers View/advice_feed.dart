@@ -1,18 +1,31 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:echat/Advisor%20View/advice_model.dart';
+import 'package:linkedfarm/Advisor%20View/advice_model.dart';
+import 'package:linkedfarm/Services/voice_guide_service.dart';
+import 'package:linkedfarm/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+import 'package:linkedfarm/Widgets/voice_guide_button.dart';
 
 class AdviceFeedScreen extends StatelessWidget {
   const AdviceFeedScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Expert Advice & Tips"),
+        title: Text(l10n.expertAdviceTitle),
         backgroundColor: Colors.green[700],
         foregroundColor: Colors.white,
+        actions: [
+          VoiceGuideButton(
+            messages: [l10n.adviceFeedIntro],
+            isDark: true,
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
@@ -21,7 +34,7 @@ class AdviceFeedScreen extends StatelessWidget {
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Center(child: Text("Error: ${snapshot.error}"));
+            return Center(child: Text("${l10n.errorTitle}: ${snapshot.error}"));
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -29,13 +42,13 @@ class AdviceFeedScreen extends StatelessWidget {
           }
 
           if (snapshot.data!.docs.isEmpty) {
-            return const Center(
+            return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.article_outlined, size: 60, color: Colors.grey),
-                  SizedBox(height: 10),
-                  Text("No advice posts yet.", style: TextStyle(color: Colors.grey)),
+                  const Icon(Icons.article_outlined, size: 60, color: Colors.grey),
+                  const SizedBox(height: 10),
+                  Text(l10n.noAdvice, style: const TextStyle(color: Colors.grey)),
                 ],
               ),
             );
@@ -56,6 +69,7 @@ class AdviceFeedScreen extends StatelessWidget {
   }
 
   Widget _buildAdviceCard(BuildContext context, AdviceModel advice) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       elevation: 3,
       margin: const EdgeInsets.only(bottom: 16),
@@ -80,7 +94,7 @@ class AdviceFeedScreen extends StatelessWidget {
                   visualDensity: VisualDensity.compact,
                 ),
                 Text(
-                  "By ${advice.authorName}",
+                  l10n.byAuthor(advice.authorName),
                   style: TextStyle(color: Colors.grey[700], fontSize: 12, fontStyle: FontStyle.italic),
                 ),
               ],
@@ -117,14 +131,26 @@ class AdviceFeedScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      DateFormat('MMM dd, yyyy').format(advice.timestamp),
+                      DateFormat.yMMMd(Localizations.localeOf(context).toString()).format(advice.timestamp),
                       style: TextStyle(color: Colors.grey[500], fontSize: 12),
                     ),
-                    TextButton(
-                      onPressed: () {
-                         _showAdviceDetails(context, advice);
-                      },
-                      child: const Text("Read More"),
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.volume_up, color: Colors.green),
+                          onPressed: () {
+                            final voiceService = Provider.of<VoiceGuideService>(context, listen: false);
+                            voiceService.speak("${advice.title}. ${advice.content}", Localizations.localeOf(context));
+                          },
+                          tooltip: l10n.playVoiceGuide,
+                        ),
+                        TextButton(
+                          onPressed: () {
+                             _showAdviceDetails(context, advice);
+                          },
+                          child: Text(l10n.readMore),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -146,7 +172,9 @@ class AdviceFeedScreen extends StatelessWidget {
         minChildSize: 0.5,
         maxChildSize: 0.95,
         expand: false,
-        builder: (context, scrollController) {
+        builder: (modalContext, scrollController) {
+          final l10n = AppLocalizations.of(modalContext)!;
+          final locale = Localizations.localeOf(modalContext);
           return SingleChildScrollView(
             controller: scrollController,
             padding: const EdgeInsets.all(24),
@@ -181,7 +209,7 @@ class AdviceFeedScreen extends StatelessWidget {
                     Text("•", style: TextStyle(color: Colors.grey[400])),
                     const SizedBox(width: 8),
                     Text(
-                      DateFormat('MMM dd, yyyy').format(advice.timestamp),
+                      DateFormat.yMMMd(locale.toString()).format(advice.timestamp),
                       style: TextStyle(color: Colors.grey[600]),
                     ),
                   ],
@@ -193,6 +221,22 @@ class AdviceFeedScreen extends StatelessWidget {
                 Text(
                   advice.content,
                   style: const TextStyle(fontSize: 16, height: 1.6),
+                ),
+                const SizedBox(height: 32),
+                Center(
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      final voiceService = Provider.of<VoiceGuideService>(modalContext, listen: false);
+                      voiceService.speak("${advice.title}. ${advice.content}", locale);
+                    },
+                    icon: const Icon(Icons.volume_up),
+                    label: Text(l10n.playVoiceGuide),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    ),
+                  ),
                 ),
               ],
             ),

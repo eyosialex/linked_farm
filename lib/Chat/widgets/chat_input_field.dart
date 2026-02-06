@@ -69,7 +69,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
               ),
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.teal[700],
+                  color: Colors.orange[700],
                   shape: BoxShape.circle,
                 ),
                 child: IconButton(

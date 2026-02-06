@@ -1,9 +1,75 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'soil_model.dart';
 import 'crop_model.dart';
 import '../logic/game_engine.dart';
 import '../../Services/weather_service.dart';
 import '../../Services/farm_persistence_service.dart';
+
+class DailyLog {
+  final String id;
+  final int day;
+  final String? photoUrl;
+  final String? notes;
+  
+  // Sensor Data
+  final double moisture;
+  final double pH;
+  final double nitrogen;
+  final double phosphorus;
+  final double potassium;
+  final double temperature; // from Weather
+  final String? detectedSoilType; // NEW: Auto-detected or manually entered
+  final bool isManualSoilEntry; // NEW: Track if user manually entered soil type
+
+  DailyLog({
+    required this.id,
+    required this.day,
+    this.photoUrl,
+    this.notes,
+    required this.moisture,
+    required this.pH,
+    required this.nitrogen,
+    required this.phosphorus,
+    required this.potassium,
+    required this.temperature,
+    this.detectedSoilType,
+    this.isManualSoilEntry = false,
+  });
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'day': day,
+    'photoUrl': photoUrl,
+    'notes': notes,
+    'moisture': moisture,
+    'pH': pH,
+    'nitrogen': nitrogen,
+    'phosphorus': phosphorus,
+    'potassium': potassium,
+    'temperature': temperature,
+    'detectedSoilType': detectedSoilType,
+    'isManualSoilEntry': isManualSoilEntry,
+  };
+
+  factory DailyLog.fromJson(Map<String, dynamic> json) {
+    return DailyLog(
+      id: json['id'],
+      day: json['day'],
+      photoUrl: json['photoUrl'],
+      notes: json['notes'],
+      moisture: (json['moisture'] as num).toDouble(),
+      pH: (json['pH'] as num).toDouble(),
+      nitrogen: (json['nitrogen'] as num).toDouble(),
+      phosphorus: (json['phosphorus'] as num).toDouble(),
+      potassium: (json['potassium'] as num).toDouble(),
+      temperature: (json['temperature'] as num).toDouble(),
+      detectedSoilType: json['detectedSoilType'],
+      isManualSoilEntry: json['isManualSoilEntry'] ?? false,
+    );
+  }
+}
 
 class GameState extends ChangeNotifier {
   final FarmPersistenceService _persistence = FarmPersistenceService();
@@ -97,6 +163,124 @@ class GameState extends ChangeNotifier {
     if (visualStage == 2) return Icons.eco; // Vegetative
     if (visualStage == 3) return Icons.local_florist; // Flowering
     return Icons.agriculture; // Mature
+  }
+
+  List<DailyLog> _dailyLogs = [];
+  List<DailyLog> get dailyLogs => _dailyLogs;
+
+  Future<void> addDailyLog(DailyLog log) async {
+    _dailyLogs.add(log);
+    
+    // Impact of "Sensor Check" / "Analysis"
+    _energy = (_energy - 5.0).clamp(0.0, 100.0); // Cost of detailed analysis
+    _gameLog.insert(0, "Day $_currentDay: Logged sensor data & crop photo.");
+    
+    notifyListeners();
+    
+    // Save to Firestore
+    await _saveDailyLogToFirestore(log);
+    _syncToFirestore();
+  }
+  
+  // Firestore: Save daily log
+  Future<void> _saveDailyLogToFirestore(DailyLog log) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+      
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('farmGame')
+          .doc('dailyLogs')
+          .collection('logs')
+          .doc(log.id)
+          .set(log.toJson());
+      
+      print('✅ Daily log saved to Firestore: ${log.id}');
+    } catch (e) {
+      print('❌ Error saving daily log to Firestore: $e');
+    }
+  }
+  
+  // Firestore: Load all daily logs
+  Future<void> loadDailyLogsFromFirestore() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+      
+      final snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('farmGame')
+          .doc('dailyLogs')
+          .collection('logs')
+          .orderBy('day', descending: false)
+          .get();
+      
+      _dailyLogs = snapshot.docs
+          .map((doc) => DailyLog.fromJson(doc.data()))
+          .toList();
+      
+      notifyListeners();
+      print('✅ Loaded ${_dailyLogs.length} daily logs from Firestore');
+    } catch (e) {
+      print('❌ Error loading daily logs from Firestore: $e');
+    }
+  }
+
+
+  // Simulates reading from a "Connect Cable" sensor
+  DailyLog simulateSensorReading() {
+    // Base values from current soil state
+    double baseMoisture = _soilMoisture * 100; // Display as %
+    double baseN = _soilNutrients * 100;
+    double baseP = _soilNutrients * 80;
+    double baseK = _soilNutrients * 90;
+    double currentPH = _selectedSoil?.phLevel ?? 6.5;
+    
+    // INTELLIGENT SOIL TYPE DETECTION
+    // Analyzes pH, moisture retention, and nutrient levels to suggest soil type
+    String detectedType = _detectSoilType(currentPH, baseMoisture, baseN);
+    
+    return DailyLog(
+      id: DateTime.now().toIso8601String(), 
+      day: _currentDay,
+      moisture: baseMoisture,
+      pH: currentPH,
+      nitrogen: baseN,
+      phosphorus: baseP,
+      potassium: baseK,
+      temperature: _currentTemp,
+      detectedSoilType: detectedType,
+      isManualSoilEntry: false, // This is auto-detected
+    );
+  }
+  
+  // AI-based soil type detection algorithm
+  String _detectSoilType(double pH, double moisture, double nitrogen) {
+    // Clay: High moisture retention (>70%), slightly acidic to neutral pH (6.0-7.0), high nutrients
+    if (moisture > 70 && pH >= 6.0 && pH <= 7.0 && nitrogen > 60) {
+      return "Clay";
+    }
+    
+    // Sandy: Low moisture retention (<40%), acidic pH (5.5-6.5), low nutrients
+    if (moisture < 40 && pH >= 5.5 && pH < 6.5 && nitrogen < 50) {
+      return "Sandy";
+    }
+    
+    // Loamy: Balanced moisture (50-70%), neutral pH (6.5-7.5), high nutrients
+    if (moisture >= 50 && moisture <= 70 && pH >= 6.5 && pH <= 7.5 && nitrogen > 70) {
+      return "Loamy";
+    }
+    
+    // Silt: Moderate-high moisture (60-80%), slightly acidic pH (6.0-6.8), moderate nutrients
+    if (moisture >= 60 && moisture <= 80 && pH >= 6.0 && pH < 6.8) {
+      return "Silt";
+    }
+    
+    // Default: Use current soil type if detection is uncertain
+    return _selectedSoil?.name ?? "Unknown";
   }
 
   void startNewGame(String landId, String landName, Soil soil, Crop crop, double size, DateTime date) {

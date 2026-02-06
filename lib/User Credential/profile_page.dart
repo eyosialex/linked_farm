@@ -1,11 +1,14 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:echat/User%20Credential/usermodel.dart';
-import 'package:echat/User%20Credential/userfirestore.dart';
-import 'package:echat/Farmers%20View/Cloudnary_Store.dart';
+import 'package:linkedfarm/User%20Credential/usermodel.dart';
+import 'package:linkedfarm/User%20Credential/userfirestore.dart';
+import 'package:linkedfarm/Farmers%20View/Cloudnary_Store.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:linkedfarm/Services/locale_provider.dart';
+import 'package:linkedfarm/Services/voice_guide_service.dart';
 
 class ProfilePage extends StatefulWidget {
   final String userId;
@@ -150,7 +153,7 @@ class _ProfilePageState extends State<ProfilePage> {
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: Text(widget.isMe ? "My Profile" : "User Profile"),
-        backgroundColor: Colors.teal[700],
+        backgroundColor: Colors.green[800],
         foregroundColor: Colors.white,
         actions: [
           if (widget.isMe && !_isEditing)
@@ -182,10 +185,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                       CircleAvatar(
                         radius: 60,
-                        backgroundColor: Colors.teal[100],
+                        backgroundColor: Colors.green[100],
                         backgroundImage: _user!.photoUrl != null ? NetworkImage(_user!.photoUrl!) : null,
                         child: _user!.photoUrl == null 
-                          ? Text(_user!.fullName[0].toUpperCase(), style: const TextStyle(fontSize: 40, color: Colors.teal))
+                          ? Text(_user!.fullName[0].toUpperCase(), style: const TextStyle(fontSize: 40, color: Colors.green))
                           : null,
                       ),
                       if (widget.isMe)
@@ -196,9 +199,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             onTap: _changePhoto,
                             child: Container(
                               padding: const EdgeInsets.all(8),
-                              decoration: const BoxDecoration(color: Colors.teal, shape: BoxShape.circle),
-                              child: const Icon(Icons.camera_alt, color: Colors.white, size: 20),
-                            ),
+                                decoration: const BoxDecoration(color: Colors.green, shape: BoxShape.circle),
+                                child: const Icon(Icons.camera_alt, color: Colors.white, size: 20),
+                              ),
                           ),
                         ),
                     ],
@@ -223,12 +226,12 @@ class _ProfilePageState extends State<ProfilePage> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                     decoration: BoxDecoration(
-                      color: Colors.teal.withOpacity(0.1),
+                      color: Colors.green.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
                       _user!.userType.toUpperCase(),
-                      style: TextStyle(color: Colors.teal[800], fontWeight: FontWeight.bold, fontSize: 12),
+                      style: TextStyle(color: Colors.green[800], fontWeight: FontWeight.bold, fontSize: 12),
                     ),
                   ),
                 ],
@@ -298,6 +301,42 @@ class _ProfilePageState extends State<ProfilePage> {
                 _buildInfoTile(Icons.calendar_today, "Member Since", _user!.createdAt.toString().split(' ')[0]),
               ],
             ),
+
+            // Accessibility Section
+            Consumer<VoiceGuideService>(
+              builder: (context, voiceService, child) {
+                return _buildInfoCard(
+                  title: "Accessibility & Language",
+                  children: [
+                    SwitchListTile(
+                      title: const Text("Voice Accessibility Mode", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                      subtitle: const Text("Automatically play voice guides on screen entry", style: TextStyle(fontSize: 12)),
+                      secondary: Icon(Icons.record_voice_over, color: Colors.green[300]),
+                      activeColor: Colors.orange,
+                      value: voiceService.isAccessibilityModeEnabled,
+                      onChanged: (bool value) {
+                        voiceService.setAccessibilityMode(value);
+                      },
+                    ),
+                    const Divider(height: 1),
+                    ListTile(
+                      title: const Text("App Language", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                      subtitle: const Text("Select your preferred language", style: TextStyle(fontSize: 12)),
+                      leading: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.volume_up, color: Colors.green[300], size: 20),
+                          const SizedBox(width: 4),
+                          Icon(Icons.language, color: Colors.green[300], size: 20),
+                        ],
+                      ),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () => _showLanguageDialog(context),
+                    ),
+                  ],
+                );
+              },
+            ),
             const SizedBox(height: 40),
             if (widget.isMe)
               Padding(
@@ -333,7 +372,7 @@ class _ProfilePageState extends State<ProfilePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.teal[700])),
+          Text(title, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.green[700])),
           const Divider(),
           ...children,
         ],
@@ -362,12 +401,47 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  void _showLanguageDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            children: const [
+              Icon(Icons.language, color: Colors.green),
+              SizedBox(width: 10),
+              Text('Select Language'),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildLanguageOption(context, 'English', 'en'),
+              _buildLanguageOption(context, 'አማርኛ (Amharic)', 'am'),
+              _buildLanguageOption(context, 'Oromiffa (Oromo)', 'om'),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildLanguageOption(BuildContext context, String name, String code) {
+    return ListTile(
+      title: Text(name),
+      onTap: () {
+        Provider.of<LocaleProvider>(context, listen: false).setLocale(Locale(code));
+        Navigator.pop(context);
+      },
+    );
+  }
+
   Widget _buildEditTile(IconData icon, String label, TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: Row(
         children: [
-          Icon(icon, size: 24, color: Colors.teal[300]),
+          Icon(icon, size: 24, color: Colors.green[300]),
           const SizedBox(width: 20),
           Expanded(
             child: TextField(

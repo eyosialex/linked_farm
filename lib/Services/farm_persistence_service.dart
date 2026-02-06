@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../User Credential/usermodel.dart';
 import '../Vendors View/WantedProductModel.dart';
 import '../Models/notification_model.dart';
 import '../Farmers View/Sell_Item_Model.dart';
@@ -228,6 +229,59 @@ class FarmPersistenceService {
       }
     } catch (e) {
       print("❌ Error in checkAndNotifyFarmers: $e");
+    }
+  }
+
+  // --- Trusted Farmers & Nearby Vendors ---
+
+  Future<List<UserModel>> getTrustedFarmers() async {
+    try {
+      final snapshot = await _firestore
+          .collection('Usersstore')
+          .where('userType', isEqualTo: 'farmer')
+          .get();
+
+      final farmers = <UserModel>[];
+      for (final doc in snapshot.docs) {
+        try {
+          final data = doc.data();
+          if (data == null) continue;
+          final map = Map<String, dynamic>.from(data);
+          final user = UserModel.fromMap(map);
+          if (user.rating >= 4.0) farmers.add(user);
+        } catch (_) {
+          // Skip docs that don't match UserModel shape (e.g. missing dates)
+        }
+      }
+      farmers.sort((a, b) => b.rating.compareTo(a.rating));
+      return farmers;
+    } catch (e) {
+      print("❌ Error fetching trusted farmers: $e");
+      return [];
+    }
+  }
+
+  Future<List<UserModel>> getNearbyVendors() async {
+    try {
+      final snapshot = await _firestore
+          .collection('Usersstore')
+          .where('userType', isEqualTo: 'vendor')
+          .get();
+
+      final list = <UserModel>[];
+      for (final doc in snapshot.docs) {
+        try {
+          final data = doc.data();
+          if (data == null) continue;
+          list.add(UserModel.fromMap(Map<String, dynamic>.from(data)));
+        } catch (_) {
+          // Skip docs that don't match UserModel shape
+        }
+      }
+      return list;
+    } catch (e) {
+      print("❌ Error fetching nearby vendors: $e");
+      return [];
     }
   }
 }

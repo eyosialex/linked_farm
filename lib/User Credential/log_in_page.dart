@@ -1,16 +1,18 @@
-import 'package:echat/Dlivery%20View/Delivery_Home_Page.dart';
-import 'package:echat/Farmers%20View/Farmers_Home.dart';
-import 'package:echat/Vendors%20View/Product_Home.dart';
-import 'package:echat/Advisor%20View/Advisor_Home.dart';
-import 'package:echat/Shopper%20View/Shopper_Home.dart';
-import 'package:echat/User%20Credential/create_account.dart';
-import 'package:echat/User%20Credential/forget_password.dart';
+import 'package:linkedfarm/Dlivery%20View/Delivery_Home_Page.dart';
+import 'package:linkedfarm/Farmers%20View/Farmers_Home.dart';
+import 'package:linkedfarm/Vendors%20View/Product_Home.dart';
+import 'package:linkedfarm/Advisor%20View/Advisor_Home.dart';
+import 'package:linkedfarm/Shopper%20View/Shopper_Home.dart';
+import 'package:linkedfarm/User%20Credential/create_account.dart';
+import 'package:linkedfarm/User%20Credential/forget_password.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:linkedfarm/l10n/app_localizations.dart';
 import 'TextField.dart';
 import 'firebaseauthservice.dart';
+
+import 'package:linkedfarm/Widgets/voice_guide_button.dart';
 
 class LogInPage extends StatefulWidget {
   final void Function()? onTap;
@@ -26,102 +28,80 @@ class _LogInPageState extends State<LogInPage> {
   final FirebaseAuthService signin = FirebaseAuthService();
   bool _isLoading = false;
 
-  Future<void> login() async {
+  void login() async {
     final _email = email.text.trim();
     final _password = password.text.trim();
-
+    
     if (_email.isEmpty || _password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(AppLocalizations.of(context)!.fillAllFields)),
       );
       return;
     }
-    
+
     setState(() => _isLoading = true);
     
     try {
-      // Sign in with Firebase Auth
       final userCredential = await signin.signIn(_email, _password);
       final user = userCredential.user;
-
-      if (user == null) {
-        throw FirebaseAuthException(
-          code: "user-not-found",
-          message: "User not found",
-        );
-      }
-
-      print("✅ Firebase Auth successful, checking user profile...");
-
-      // Check if user profile is completed
-      final userDoc = await FirebaseFirestore.instance
-          .collection('Usersstore')
-          .doc(user.uid)
-          .get();
-
-      if (!userDoc.exists) {
-        // User doesn't exist in Usersstore - redirect to create account
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.completeProfileSetup),
-          ),
-        );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const CreateAccount()),
-        );
-        return;
-      }
-
-      final userData = userDoc.data() as Map<String, dynamic>;
-      final profileCompleted = userData['profileCompleted'] ?? false;
-
-      print("📊 User profile status: $profileCompleted");
-
-      if (!profileCompleted) {
-        // Profile not completed - redirect to create account
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.completeProfile),
-          ),
-        );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const CreateAccount()),
-        );
-      } else {
       
-      final userType = userData['userType'];
+      if (user != null) {
+        // Fetch user data to check user type and if profile is completed
+        final userDoc = await FirebaseFirestore.instance
+            .collection('Usersstore')
+            .doc(user.uid)
+            .get();
         
-        Widget targetPage;
-        if (userType == 'farmer') {
-          targetPage = const FarmersHomePage();
-        } else if (userType == 'vendor') {
-          targetPage = const vendors_page();
-        } else if (userType == 'delivery') {
-          targetPage = const Delivery_Home_Page();
-        } else if (userType == 'advisor') {
-          targetPage = const AdvisorHomePage();
-        } else if (userType == 'shopper') {
-          targetPage = const ShopperHomePage();
-        } else {
-          // Default
-          targetPage = const FarmersHomePage();
+        if (userDoc.exists) {
+          final userData = userDoc.data()!;
+          final userType = userData['userType'] as String;
+          final profileCompleted = userData['profileCompleted'] as bool? ?? false;
+          
+          if (!profileCompleted && userType != 'shopper') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const CreateAccount()),
+            );
+          } else {
+            // Navigate based on user type
+            Widget homePage;
+            switch (userType) {
+              case 'farmer':
+                homePage = const FarmersHomePage();
+                break;
+              case 'vendor':
+                homePage = const vendors_page();
+                break;
+              case 'advisor':
+                homePage = const AdvisorHomePage();
+                break;
+              case 'delivery':
+                homePage = const Delivery_Home_Page();
+                break;
+              case 'shopper':
+                homePage = const ShopperHomePage();
+                break;
+              default:
+                homePage = const FarmersHomePage();
+            }
+            
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => homePage),
+            );
+          }
         }
-
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => targetPage),
-        );
       }
-
     } on FirebaseAuthException catch (e) {
       final l10n = AppLocalizations.of(context)!;
       String message = l10n.somethingWentWrong;
-      if (e.code == 'user-not-found') message = l10n.userNotFound;
-      else if (e.code == 'wrong-password') message = l10n.wrongPassword;
-      else if (e.code == 'invalid-email') message = l10n.invalidEmail;
-      else if (e.code == 'user-disabled') message = l10n.userDisabled;
+      if (e.code == 'user-not-found') {
+        message = l10n.userNotFound;
+      } else if (e.code == 'wrong-password') {
+        message = l10n.wrongPassword;
+      } else if (e.code == 'invalid-email') {
+        message = l10n.invalidEmailAddress;
+      }
       
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(message)),
@@ -137,8 +117,25 @@ class _LogInPageState extends State<LogInPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.grey[100],
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: [
+          VoiceGuideListener(
+            messages: [
+              l10n.welcomeToAgrilead,
+              l10n.loginSubTitle,
+              l10n.emailHint, 
+              l10n.passwordHint,
+              l10n.tapLoginReady
+            ],
+          ),
+          const SizedBox(width: 16),
+        ],
+      ),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -146,14 +143,14 @@ class _LogInPageState extends State<LogInPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.agriculture, size: 80, color: Colors.green[700]),
+                Icon(Icons.agriculture, size: 80, color: Colors.green[800]),
                 const SizedBox(height: 20),
                 Text(
                   AppLocalizations.of(context)!.appTitle,
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
-                    color: Colors.green[700],
+                    color: Colors.green[800],
                   ),
                 ),
 
@@ -161,9 +158,9 @@ class _LogInPageState extends State<LogInPage> {
                 const SizedBox(height: 10),
                 Text(
                   AppLocalizations.of(context)!.loginSubTitle,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
-                    color: Colors.grey,
+                    color: Colors.grey[600],
                   ),
                 ),
                 const SizedBox(height: 40),
@@ -183,14 +180,14 @@ class _LogInPageState extends State<LogInPage> {
                 const SizedBox(height: 25),
 
                 _isLoading
-                    ? const CircularProgressIndicator()
+                    ? const CircularProgressIndicator(color: Colors.green)
                     : GestureDetector(
                         onTap: login,
                         child: Container(
                           height: 50,
                           width: double.infinity,
                           decoration: BoxDecoration(
-                            color: Colors.green[700],
+                            color: Colors.green[800],
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
@@ -200,10 +197,10 @@ class _LogInPageState extends State<LogInPage> {
                               ),
                             ],
                           ),
-                          child: Center(
+                          child: const Center(
                             child: Text(
-                              AppLocalizations.of(context)!.loginButton,
-                              style: const TextStyle(
+                              "Login",
+                              style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -223,7 +220,7 @@ class _LogInPageState extends State<LogInPage> {
                       child: Text(
                         AppLocalizations.of(context)!.registerAction,
                         style: TextStyle(
-                          color: Colors.green[700],
+                          color: Colors.orange[800],
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),

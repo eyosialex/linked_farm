@@ -1,11 +1,14 @@
 
 import 'package:flutter/material.dart';
+import 'package:linkedfarm/l10n/app_localizations.dart';
+import 'package:linkedfarm/Widgets/voice_guide_button.dart';
 
 class MarketPricesPage extends StatelessWidget {
   const MarketPricesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     // Dummy data for now - could be fetched from API later
     final List<Map<String, dynamic>> prices = [
       {"commodity": "Maize", "unit": "Quintal", "min": "2800", "max": "3200", "avg": "3000", "trend": "up"},
@@ -19,9 +22,19 @@ class MarketPricesPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Daily Market Prices"),
-        backgroundColor: Colors.purple[700],
+        title: Text(l10n.marketPrices),
+        backgroundColor: Colors.green[700],
         foregroundColor: Colors.white,
+        actions: [
+          VoiceGuideButton(
+            messages: [
+              l10n.marketPricesIntro,
+              l10n.marketPricesGuidance
+            ],
+            isDark: true,
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -35,7 +48,7 @@ class MarketPricesPage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             DataTable(
-              headingRowColor: MaterialStateProperty.all(Colors.purple[50]),
+              headingRowColor: MaterialStateProperty.all(Colors.green[50]),
               columns: const [
                 DataColumn(label: Text('Item', style: TextStyle(fontWeight: FontWeight.bold))),
                 DataColumn(label: Text('Unit', style: TextStyle(fontWeight: FontWeight.bold))),

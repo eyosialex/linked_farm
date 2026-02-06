@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:echat/Advisor%20View/advice_model.dart';
+import 'package:linkedfarm/Advisor%20View/advice_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -14,7 +14,7 @@ class MyArticlesScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("My Articles"),
-        backgroundColor: Colors.teal[700],
+        backgroundColor: Colors.green[800],
         foregroundColor: Colors.white,
       ),
       body: StreamBuilder<QuerySnapshot>(

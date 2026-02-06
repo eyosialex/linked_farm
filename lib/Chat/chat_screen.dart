@@ -4,13 +4,13 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:echat/Services/chat_service.dart';
-import 'package:echat/Chat/chat_model.dart';
-import 'package:echat/Chat/image_preview_page.dart';
-import 'package:echat/Chat/video_player_page.dart';
-import 'package:echat/Chat/widgets/chat_input_field.dart';
-import 'package:echat/Chat/widgets/message_bubble.dart';
-import 'package:echat/User%20Credential/usermodel.dart';
+import 'package:linkedfarm/Services/chat_service.dart';
+import 'package:linkedfarm/Chat/chat_model.dart';
+import 'package:linkedfarm/Chat/image_preview_page.dart';
+import 'package:linkedfarm/Chat/video_player_page.dart';
+import 'package:linkedfarm/Chat/widgets/chat_input_field.dart';
+import 'package:linkedfarm/Chat/widgets/message_bubble.dart';
+import 'package:linkedfarm/User%20Credential/usermodel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -115,7 +115,7 @@ class _ChatPageState extends State<ChatPage> {
               UserModel user = UserModel.fromMap(snapshot.data!.data() as Map<String, dynamic>);
               if (user.isOnline) {
                 status = "Online";
-                statusColor = Colors.tealAccent[100]!;
+                statusColor = Colors.orangeAccent[100]!;
               } else if (user.lastseen != null) {
                 status = _formatLastSeen(user.lastseen!);
               }
@@ -133,7 +133,7 @@ class _ChatPageState extends State<ChatPage> {
             );
           }
         ),
-        backgroundColor: Colors.teal[700],
+        backgroundColor: Colors.green[800],
         foregroundColor: Colors.white,
       ),
       body: Column(

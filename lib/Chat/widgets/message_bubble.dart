@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:echat/Chat/chat_model.dart';
-import 'package:echat/Chat/widgets/media_preview.dart';
+import 'package:linkedfarm/Chat/chat_model.dart';
+import 'package:linkedfarm/Chat/widgets/media_preview.dart';
 import 'package:intl/intl.dart';
 
 class MessageBubble extends StatelessWidget {
@@ -19,7 +19,7 @@ class MessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var bubbleColor = isMe ? Colors.teal[500] : Colors.grey[200];
+    var bubbleColor = isMe ? Colors.green[600] : Colors.grey[200];
     var textColor = isMe ? Colors.white : Colors.black87;
     var alignment = isMe ? Alignment.centerRight : Alignment.centerLeft;
 
@@ -62,7 +62,7 @@ class MessageBubble extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
-                    color: Colors.teal,
+                    color: Colors.green,
                   ),
                 ),
               ),

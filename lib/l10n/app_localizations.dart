@@ -103,7 +103,7 @@ abstract class AppLocalizations {
   /// No description provided for @appTitle.
   ///
   /// In en, this message translates to:
-  /// **'Agrilead'**
+  /// **'LinkedFarm'**
   String get appTitle;
 
   /// No description provided for @home.
@@ -124,11 +124,11 @@ abstract class AppLocalizations {
   /// **'My Products'**
   String get myProducts;
 
-  /// No description provided for @sellInputs.
+  /// No description provided for @marketPrices.
   ///
   /// In en, this message translates to:
-  /// **'Sell Agricultural Inputs'**
-  String get sellInputs;
+  /// **'Market Prices'**
+  String get marketPrices;
 
   /// No description provided for @stockLevel.
   ///
@@ -165,18 +165,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Stock'**
   String get stock;
-
-  /// No description provided for @buyInputs.
-  ///
-  /// In en, this message translates to:
-  /// **'Buy Agricultural Inputs'**
-  String get buyInputs;
-
-  /// No description provided for @marketPrices.
-  ///
-  /// In en, this message translates to:
-  /// **'Market Prices'**
-  String get marketPrices;
 
   /// No description provided for @messages.
   ///
@@ -1336,6 +1324,18 @@ abstract class AppLocalizations {
   /// **'Fertilizer'**
   String get catFertilizer;
 
+  /// No description provided for @buyInputs.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy Agricultural Inputs'**
+  String get buyInputs;
+
+  /// No description provided for @sellInputs.
+  ///
+  /// In en, this message translates to:
+  /// **'Sell Agricultural Inputs'**
+  String get sellInputs;
+
   /// No description provided for @offline.
   ///
   /// In en, this message translates to:
@@ -1347,6 +1347,744 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Synced'**
   String get synced;
+
+  /// No description provided for @readMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Read More'**
+  String get readMore;
+
+  /// No description provided for @noAdvice.
+  ///
+  /// In en, this message translates to:
+  /// **'No advice posts yet.'**
+  String get noAdvice;
+
+  /// No description provided for @expertAdviceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Expert Advice & Tips'**
+  String get expertAdviceTitle;
+
+  /// No description provided for @playVoiceGuide.
+  ///
+  /// In en, this message translates to:
+  /// **'Play Voice Guide'**
+  String get playVoiceGuide;
+
+  /// No description provided for @stopVoiceGuide.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop Voice Guide'**
+  String get stopVoiceGuide;
+
+  /// No description provided for @byAuthor.
+  ///
+  /// In en, this message translates to:
+  /// **'By {name}'**
+  String byAuthor(Object name);
+
+  /// No description provided for @smartAdvisory.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Advisory'**
+  String get smartAdvisory;
+
+  /// No description provided for @aiAgronomist.
+  ///
+  /// In en, this message translates to:
+  /// **'AI AGRONOMIST'**
+  String get aiAgronomist;
+
+  /// No description provided for @expertPanel.
+  ///
+  /// In en, this message translates to:
+  /// **'EXPERT PANEL'**
+  String get expertPanel;
+
+  /// No description provided for @cropHealthAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Crop Health Analysis'**
+  String get cropHealthAnalysis;
+
+  /// No description provided for @excellentCondition.
+  ///
+  /// In en, this message translates to:
+  /// **'EXCELLENT CONDITION'**
+  String get excellentCondition;
+
+  /// No description provided for @attentionNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'ATTENTION NEEDED'**
+  String get attentionNeeded;
+
+  /// No description provided for @cropHealthSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Based on your latest photo and sensor readings, your {crop} is developing {status}.'**
+  String cropHealthSummary(Object crop, Object status);
+
+  /// No description provided for @optimally.
+  ///
+  /// In en, this message translates to:
+  /// **'optimally'**
+  String get optimally;
+
+  /// No description provided for @slowerThanExpected.
+  ///
+  /// In en, this message translates to:
+  /// **'slower than expected'**
+  String get slowerThanExpected;
+
+  /// No description provided for @aiRecommendations.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Recommendations'**
+  String get aiRecommendations;
+
+  /// No description provided for @irrigation.
+  ///
+  /// In en, this message translates to:
+  /// **'Irrigation'**
+  String get irrigation;
+
+  /// No description provided for @moistureLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Soil moisture is critically low ({percent}%). Initiate irrigation immediately to prevent wilting.'**
+  String moistureLow(Object percent);
+
+  /// No description provided for @moistureOptimal.
+  ///
+  /// In en, this message translates to:
+  /// **'Moisture levels are optimal. No irrigation needed today.'**
+  String get moistureOptimal;
+
+  /// No description provided for @nutrients.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrients'**
+  String get nutrients;
+
+  /// No description provided for @nutrientsLow.
+  ///
+  /// In en, this message translates to:
+  /// **'NPK levels are depleting. Apply organic compost or NPK 15-15-15 within the next 2 days.'**
+  String get nutrientsLow;
+
+  /// No description provided for @nutrientsStable.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrient balance is stable. Continue monitoring.'**
+  String get nutrientsStable;
+
+  /// No description provided for @pestDisease.
+  ///
+  /// In en, this message translates to:
+  /// **'Pest & Disease'**
+  String get pestDisease;
+
+  /// No description provided for @pestHighRisk.
+  ///
+  /// In en, this message translates to:
+  /// **'High humidity detected. Risk of fungal infection is elevated. Inspect leaves for spots.'**
+  String get pestHighRisk;
+
+  /// No description provided for @pestLowRisk.
+  ///
+  /// In en, this message translates to:
+  /// **'Low pest risk detected. Maintaining field hygiene is recommended.'**
+  String get pestLowRisk;
+
+  /// No description provided for @urgent.
+  ///
+  /// In en, this message translates to:
+  /// **'URGENT'**
+  String get urgent;
+
+  /// No description provided for @connectWithExperts.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect with Experts'**
+  String get connectWithExperts;
+
+  /// No description provided for @getProfessionalGuidance.
+  ///
+  /// In en, this message translates to:
+  /// **'Get professional guidance for your farm.'**
+  String get getProfessionalGuidance;
+
+  /// No description provided for @requestConsultation.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Consultation'**
+  String get requestConsultation;
+
+  /// No description provided for @online.
+  ///
+  /// In en, this message translates to:
+  /// **'Online'**
+  String get online;
+
+  /// No description provided for @away.
+  ///
+  /// In en, this message translates to:
+  /// **'Away'**
+  String get away;
+
+  /// No description provided for @crop.
+  ///
+  /// In en, this message translates to:
+  /// **'crop'**
+  String get crop;
+
+  /// No description provided for @predictedRain.
+  ///
+  /// In en, this message translates to:
+  /// **'PREDICTED: 8mm RAIN'**
+  String get predictedRain;
+
+  /// No description provided for @clearSkies.
+  ///
+  /// In en, this message translates to:
+  /// **'CLEAR SKIES'**
+  String get clearSkies;
+
+  /// No description provided for @pest.
+  ///
+  /// In en, this message translates to:
+  /// **'PEST'**
+  String get pest;
+
+  /// No description provided for @fungal.
+  ///
+  /// In en, this message translates to:
+  /// **'FUNGAL'**
+  String get fungal;
+
+  /// No description provided for @weeds.
+  ///
+  /// In en, this message translates to:
+  /// **'WEEDS'**
+  String get weeds;
+
+  /// No description provided for @soilMoistureProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'SOIL MOISTURE PROFILE'**
+  String get soilMoistureProfile;
+
+  /// No description provided for @dayLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'DAY {day}'**
+  String dayLabel(Object day);
+
+  /// No description provided for @vegetativeCycle.
+  ///
+  /// In en, this message translates to:
+  /// **'VEGETATIVE CYCLE'**
+  String get vegetativeCycle;
+
+  /// No description provided for @myCustomLandPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'MY CUSTOM LAND PLAN'**
+  String get myCustomLandPlan;
+
+  /// No description provided for @plannerDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter and track your daily/weekly farming tasks.'**
+  String get plannerDetail;
+
+  /// No description provided for @dailyLogBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'DAILY\nLOG'**
+  String get dailyLogBtn;
+
+  /// No description provided for @plannerBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'PLANNER'**
+  String get plannerBtn;
+
+  /// No description provided for @advisorBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'ADVISOR'**
+  String get advisorBtn;
+
+  /// No description provided for @fertilizeBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'FERTILIZE'**
+  String get fertilizeBtn;
+
+  /// No description provided for @proceedNextDay.
+  ///
+  /// In en, this message translates to:
+  /// **'PROCEED TO NEXT DAY'**
+  String get proceedNextDay;
+
+  /// No description provided for @tapDeepAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap for Deep AI Analysis'**
+  String get tapDeepAnalysis;
+
+  /// No description provided for @aiDeepAnalysisTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'AI DEEP ANALYSIS'**
+  String get aiDeepAnalysisTitle;
+
+  /// No description provided for @gotIt.
+  ///
+  /// In en, this message translates to:
+  /// **'GOT IT'**
+  String get gotIt;
+
+  /// No description provided for @emptyPlanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Custom Plan is Empty'**
+  String get emptyPlanner;
+
+  /// No description provided for @emptyPlannerDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your own daily/weekly tasks here.'**
+  String get emptyPlannerDetail;
+
+  /// No description provided for @entryManualPlanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'ENTRY FOR MANUAL PLAN'**
+  String get entryManualPlanTitle;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'CANCEL'**
+  String get cancel;
+
+  /// No description provided for @savePlan.
+  ///
+  /// In en, this message translates to:
+  /// **'SAVE PLAN'**
+  String get savePlan;
+
+  /// No description provided for @taskTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Task Title'**
+  String get taskTitle;
+
+  /// No description provided for @activityDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity Detail'**
+  String get activityDetail;
+
+  /// No description provided for @daily.
+  ///
+  /// In en, this message translates to:
+  /// **'DAILY'**
+  String get daily;
+
+  /// No description provided for @weekly.
+  ///
+  /// In en, this message translates to:
+  /// **'WEEKLY'**
+  String get weekly;
+
+  /// No description provided for @monthly.
+  ///
+  /// In en, this message translates to:
+  /// **'MONTHLY'**
+  String get monthly;
+
+  /// No description provided for @completed.
+  ///
+  /// In en, this message translates to:
+  /// **'COMPLETED'**
+  String get completed;
+
+  /// No description provided for @advicePest.
+  ///
+  /// In en, this message translates to:
+  /// **'Pest activity is increasing due to temperature and wind conditions.'**
+  String get advicePest;
+
+  /// No description provided for @adviceMoistureLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Moisture levels are low. Hope for rain in the forecast soon!'**
+  String get adviceMoistureLow;
+
+  /// No description provided for @adviceRainy.
+  ///
+  /// In en, this message translates to:
+  /// **'Natural rainfall is replenishing the soil moisture profile.'**
+  String get adviceRainy;
+
+  /// No description provided for @adviceStable.
+  ///
+  /// In en, this message translates to:
+  /// **'Ecosystem is stable. Rain-dependent growth is within parameters.'**
+  String get adviceStable;
+
+  /// No description provided for @virtualFarmSimulator.
+  ///
+  /// In en, this message translates to:
+  /// **'Virtual Farm Simulator'**
+  String get virtualFarmSimulator;
+
+  /// No description provided for @welcomeVirtualFarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Your Virtual Farm'**
+  String get welcomeVirtualFarm;
+
+  /// No description provided for @gameIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn farming by doing. Make decisions, manage resources, and see how AI predicts your harvest!'**
+  String get gameIntro;
+
+  /// No description provided for @startNewFarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Start New Farm'**
+  String get startNewFarm;
+
+  /// No description provided for @continueFarming.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue Farming (Day {day})'**
+  String continueFarming(Object day);
+
+  /// No description provided for @resetStartNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset and Start New'**
+  String get resetStartNew;
+
+  /// No description provided for @myLandsProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'MY LANDS PROFILE'**
+  String get myLandsProfile;
+
+  /// No description provided for @noLandsRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'No lands registered yet.'**
+  String get noLandsRegistered;
+
+  /// No description provided for @startAddingPlot.
+  ///
+  /// In en, this message translates to:
+  /// **'Start by adding your first plot of land.'**
+  String get startAddingPlot;
+
+  /// No description provided for @registerNewLand.
+  ///
+  /// In en, this message translates to:
+  /// **'REGISTER NEW LAND'**
+  String get registerNewLand;
+
+  /// No description provided for @landNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Land Name (e.g. Home Garden)'**
+  String get landNameHint;
+
+  /// No description provided for @sizeHectares.
+  ///
+  /// In en, this message translates to:
+  /// **'Size (Hectares)'**
+  String get sizeHectares;
+
+  /// No description provided for @soilType.
+  ///
+  /// In en, this message translates to:
+  /// **'Soil Type'**
+  String get soilType;
+
+  /// No description provided for @saveLand.
+  ///
+  /// In en, this message translates to:
+  /// **'SAVE LAND'**
+  String get saveLand;
+
+  /// No description provided for @hectares.
+  ///
+  /// In en, this message translates to:
+  /// **'Hectares'**
+  String get hectares;
+
+  /// No description provided for @readyPlanting.
+  ///
+  /// In en, this message translates to:
+  /// **'READY FOR PLANTING'**
+  String get readyPlanting;
+
+  /// No description provided for @cycleCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'CYCLE COMPLETED'**
+  String get cycleCompleted;
+
+  /// No description provided for @dayTrackerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Day {day} Tracker'**
+  String dayTrackerTitle(Object day);
+
+  /// No description provided for @sensorDataCollection.
+  ///
+  /// In en, this message translates to:
+  /// **'Sensor-Based Data Collection'**
+  String get sensorDataCollection;
+
+  /// No description provided for @connectCableDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect cable to read soil & environmental data'**
+  String get connectCableDetail;
+
+  /// No description provided for @soilSensorCable.
+  ///
+  /// In en, this message translates to:
+  /// **'Soil Sensor Cable'**
+  String get soilSensorCable;
+
+  /// No description provided for @statusConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Status: Connected'**
+  String get statusConnected;
+
+  /// No description provided for @statusDisconnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Status: Disconnected'**
+  String get statusDisconnected;
+
+  /// No description provided for @connect.
+  ///
+  /// In en, this message translates to:
+  /// **'CONNECT'**
+  String get connect;
+
+  /// No description provided for @observations.
+  ///
+  /// In en, this message translates to:
+  /// **'Observations'**
+  String get observations;
+
+  /// No description provided for @enterNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your notes here...'**
+  String get enterNotes;
+
+  /// No description provided for @saveDailyLog.
+  ///
+  /// In en, this message translates to:
+  /// **'SAVE DAILY LOG'**
+  String get saveDailyLog;
+
+  /// No description provided for @sensorConnectedMsg.
+  ///
+  /// In en, this message translates to:
+  /// **'✅ Sensor Connected! Detected: {type} soil'**
+  String sensorConnectedMsg(Object type);
+
+  /// No description provided for @dailyLogSavedMsg.
+  ///
+  /// In en, this message translates to:
+  /// **'✅ Daily log saved to Firestore!'**
+  String get dailyLogSavedMsg;
+
+  /// No description provided for @moisture.
+  ///
+  /// In en, this message translates to:
+  /// **'Moisture'**
+  String get moisture;
+
+  /// No description provided for @temp.
+  ///
+  /// In en, this message translates to:
+  /// **'Temp'**
+  String get temp;
+
+  /// No description provided for @nitrogen.
+  ///
+  /// In en, this message translates to:
+  /// **'Nitrogen'**
+  String get nitrogen;
+
+  /// No description provided for @phosphorus.
+  ///
+  /// In en, this message translates to:
+  /// **'Phosphorus'**
+  String get phosphorus;
+
+  /// No description provided for @potassium.
+  ///
+  /// In en, this message translates to:
+  /// **'Potassium'**
+  String get potassium;
+
+  /// No description provided for @loamy.
+  ///
+  /// In en, this message translates to:
+  /// **'Loamy'**
+  String get loamy;
+
+  /// No description provided for @silt.
+  ///
+  /// In en, this message translates to:
+  /// **'Silt'**
+  String get silt;
+
+  /// No description provided for @clay.
+  ///
+  /// In en, this message translates to:
+  /// **'Clay'**
+  String get clay;
+
+  /// No description provided for @sandy.
+  ///
+  /// In en, this message translates to:
+  /// **'Sandy'**
+  String get sandy;
+
+  /// No description provided for @welcomeToAgrilead.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to LinkedFarm.'**
+  String get welcomeToAgrilead;
+
+  /// No description provided for @tapLoginReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the Login button when ready.'**
+  String get tapLoginReady;
+
+  /// No description provided for @productInventoryIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'This is your product inventory.'**
+  String get productInventoryIntro;
+
+  /// No description provided for @startSellingIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap \'List Your First Product\' or the + button to start selling.'**
+  String get startSellingIntro;
+
+  /// No description provided for @registerFieldsIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete these fields to register.'**
+  String get registerFieldsIntro;
+
+  /// No description provided for @registerFinishIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap Register when finished.'**
+  String get registerFinishIntro;
+
+  /// No description provided for @dailyTrackerIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Check today\'s farming tasks here.'**
+  String get dailyTrackerIntro;
+
+  /// No description provided for @farmMainIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'See how your farm is progressing.'**
+  String get farmMainIntro;
+
+  /// No description provided for @gameDashboardIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Get AI advice for your crops.'**
+  String get gameDashboardIntro;
+
+  /// No description provided for @sellItemIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe your item, set a price, and add photos to start selling.'**
+  String get sellItemIntro;
+
+  /// No description provided for @growthJournalIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Review your farm\'s history here.'**
+  String get growthJournalIntro;
+
+  /// No description provided for @growthJournalDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Each card shows your soil and health status for that day.'**
+  String get growthJournalDetail;
+
+  /// No description provided for @seasonalReportIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'This is your seasonal success report.'**
+  String get seasonalReportIntro;
+
+  /// No description provided for @seasonalReportDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Review your activity completion rate and estimated yield success.'**
+  String get seasonalReportDetail;
+
+  /// No description provided for @productListIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse seeds, fertilizers, and tools available for purchase.'**
+  String get productListIntro;
+
+  /// No description provided for @productListSearchInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the search bar or category chips to find specific items.'**
+  String get productListSearchInfo;
+
+  /// No description provided for @productListContactInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap on an item to see details or contact the seller.'**
+  String get productListContactInfo;
+
+  /// No description provided for @marketPricesIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the latest market prices for your crops here.'**
+  String get marketPricesIntro;
+
+  /// No description provided for @marketPricesGuidance.
+  ///
+  /// In en, this message translates to:
+  /// **'Compare minimum and maximum prices to decide the best time to sell.'**
+  String get marketPricesGuidance;
+
+  /// No description provided for @adviceFeedIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse the latest tips and advice from agricultural experts.'**
+  String get adviceFeedIntro;
 }
 
 class _AppLocalizationsDelegate

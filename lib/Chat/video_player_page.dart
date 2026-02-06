@@ -85,7 +85,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                 : const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      CircularProgressIndicator(color: Colors.teal),
+                      CircularProgressIndicator(color: Colors.green),
                       SizedBox(height: 16),
                       Text("Loading Video...", style: TextStyle(color: Colors.white70)),
                     ],

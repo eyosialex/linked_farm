@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/game_state.dart';
+import 'package:linkedfarm/Widgets/voice_guide_button.dart';
 
 class RatingReportScreen extends StatelessWidget {
   const RatingReportScreen({super.key});
@@ -16,6 +17,16 @@ class RatingReportScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
+        actions: [
+          VoiceGuideButton(
+            messages: [
+              "Review your seasonal performance here.",
+              "Look at your scores for land preparation, crop selection, and management."
+            ],
+            isDark: true,
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(25),
@@ -24,8 +35,8 @@ class RatingReportScreen extends StatelessWidget {
             _buildYieldCard(gameState),
             const SizedBox(height: 30),
             _buildMetricTile("LAND PREPARATION", gameState.landPrepScore, Icons.landscape, Colors.brown),
-            _buildMetricTile("CROP SELECTION", gameState.cropSelectionScore, Icons.psychology, Colors.blue),
-            _buildMetricTile("INPUT MANAGEMENT", gameState.inputManagementScore, Icons.opacity, Colors.cyan),
+            _buildMetricTile("CROP SELECTION", gameState.cropSelectionScore, Icons.psychology, Colors.green),
+            _buildMetricTile("INPUT MANAGEMENT", gameState.inputManagementScore, Icons.opacity, Colors.orange),
             _buildMetricTile("PLANTING PRECISION", gameState.plantingTimeScore, Icons.timer, Colors.orange),
             const SizedBox(height: 40),
             _buildAIInsight(gameState),
@@ -33,7 +44,7 @@ class RatingReportScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
+                backgroundColor: Colors.green[700],
                 minimumSize: const Size(double.infinity, 55),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
               ),
@@ -120,13 +131,13 @@ class RatingReportScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.purpleAccent.withOpacity(0.1),
+        color: Colors.orangeAccent.withOpacity(0.1),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.purpleAccent.withOpacity(0.3)),
+        border: Border.all(color: Colors.orangeAccent.withOpacity(0.3)),
       ),
       child: Row(
         children: [
-          const Icon(Icons.auto_awesome, color: Colors.purpleAccent),
+          const Icon(Icons.auto_awesome, color: Colors.orangeAccent),
           const SizedBox(width: 15),
           Expanded(
             child: Text(

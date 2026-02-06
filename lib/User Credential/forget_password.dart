@@ -1,8 +1,8 @@
-import 'package:echat/User%20Credential/TextField.dart';
-import 'package:echat/User%20Credential/register_page.dart';
+import 'package:linkedfarm/User%20Credential/TextField.dart';
+import 'package:linkedfarm/User%20Credential/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:linkedfarm/l10n/app_localizations.dart';
 class ForgetPassword extends StatefulWidget {
   const ForgetPassword({super.key});
   @override
@@ -107,7 +107,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 child: ElevatedButton(
                   onPressed: _isLoading ? null : resetPassword,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Colors.green,
                     padding: const EdgeInsets.symmetric(vertical: 15),
                   ),
                   child: _isLoading
@@ -127,7 +127,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                       onTap: () {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationPage(onTap: () {})));
                       },
-                      child: Text(AppLocalizations.of(context)!.signUpAction, style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+                      child: Text(AppLocalizations.of(context)!.signUpAction, style: TextStyle(color: Colors.orange[800], fontWeight: FontWeight.bold)),
                     ),
                   ],
                 ),

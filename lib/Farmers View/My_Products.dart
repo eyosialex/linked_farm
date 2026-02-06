@@ -1,12 +1,15 @@
-import 'package:echat/Farmers%20View/Enter_Sell_Item.dart';
-import 'package:echat/Farmers%20View/FireStore_Config.dart';
-import 'package:echat/Farmers%20View/Sell_Item_Model.dart';
-import 'package:echat/Services/local_storage_service.dart';
-import 'package:echat/Services/wifi_share_service.dart';
+import 'package:linkedfarm/Farmers%20View/Enter_Sell_Item.dart';
+import 'package:linkedfarm/Farmers%20View/FireStore_Config.dart';
+import 'package:linkedfarm/Farmers%20View/Sell_Item_Model.dart';
+import 'package:linkedfarm/Services/local_storage_service.dart';
+import 'package:linkedfarm/Services/wifi_share_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'dart:io';
 import 'package:provider/provider.dart';
-import 'package:echat/l10n/app_localizations.dart';
+import 'package:linkedfarm/l10n/app_localizations.dart';
+
+import 'package:linkedfarm/Widgets/voice_guide_button.dart';
 
 class MyProductsScreen extends StatefulWidget {
   const MyProductsScreen({super.key});
@@ -29,30 +32,38 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
   }
 
   Future<void> _deleteProduct(AgriculturalItem product) async {
+    final l10n = AppLocalizations.of(context)!;
+    
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.deleteProductTitle),
-        content: Text(AppLocalizations.of(context)!.deleteProductConfirm(product.name)),
+        title: Text(l10n.deleteProductTitle),
+        content: Text(l10n.deleteProductConfirm(product.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: Text(AppLocalizations.of(context)!.cancelAction),
+            child: Text(l10n.cancelAction),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: Text(AppLocalizations.of(context)!.deleteAction),
+            child: Text(l10n.deleteAction),
           ),
         ],
       ),
     );
 
-    if (confirmed == true && product.id != null) {
-      await _firestoreService.deleteAgriculturalItem(product.id!);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context)!.productDeletedSuccess)),
-      );
+    if (confirmed == true) {
+      try {
+        await _firestoreService.deleteAgriculturalItem(product.id!);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.productDeletedSuccess)),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("${l10n.somethingWentWrong}: $e")),
+        );
+      }
     }
   }
 
@@ -70,6 +81,16 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
         title: Text(AppLocalizations.of(context)!.myProductsTitle),
         backgroundColor: Colors.green[700],
         foregroundColor: Colors.white,
+        actions: [
+          VoiceGuideButton(
+            messages: [
+              AppLocalizations.of(context)!.productInventoryIntro,
+              AppLocalizations.of(context)!.startSellingIntro
+            ],
+            isDark: true,
+          ),
+          const SizedBox(width: 16),
+        ],
       ),
       body: Consumer<LocalStorageService>(
         builder: (context, localStorage, child) {
@@ -122,10 +143,12 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
   }
 
   Widget _buildProductCard(AgriculturalItem product) {
-    return Card(
-      elevation: 2,
-      margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    return Semantics(
+      label: "${product.name}, price ${product.price} ETB, stock ${product.quantity} ${product.unit}",
+      child: Card(
+        elevation: 2,
+        margin: const EdgeInsets.only(bottom: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Row(
@@ -138,13 +161,19 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                 width: 80,
                 height: 80,
                 color: Colors.grey[200],
-                child: product.imageUrls != null && product.imageUrls!.isNotEmpty
-                    ? Image.network(
-                        product.imageUrls![0],
+                child: (product.localImagePaths != null && product.localImagePaths!.isNotEmpty)
+                    ? Image.file(
+                        File(product.localImagePaths![0]),
                         fit: BoxFit.cover,
                         errorBuilder: (_, __, ___) => const Icon(Icons.image_not_supported),
                       )
-                    : const Icon(Icons.image, color: Colors.grey),
+                    : (product.imageUrls != null && product.imageUrls!.isNotEmpty)
+                        ? Image.network(
+                            product.imageUrls![0],
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => const Icon(Icons.image_not_supported),
+                          )
+                        : const Icon(Icons.image, color: Colors.grey),
               ),
             ),
             const SizedBox(width: 12),
@@ -178,11 +207,11 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                           }
                         },
                         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                          const PopupMenuItem<String>(
+                          PopupMenuItem<String>(
                             value: 'edit',
                             child: Row(
                               children: [
-                                Icon(Icons.edit, color: Colors.blue),
+                                Icon(Icons.edit, color: Colors.green),
                                 SizedBox(width: 8),
                                 Text(AppLocalizations.of(context)!.editAction),
                               ],
@@ -302,6 +331,7 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                           children: [
                             _buildStockButton(
                               icon: Icons.remove,
+                              label: "Decrease stock",
                               onTap: product.quantity > 0 
                                   ? () => _updateStock(product, product.quantity - 1)
                                   : null,
@@ -315,6 +345,7 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                             const SizedBox(width: 20),
                             _buildStockButton(
                               icon: Icons.add,
+                              label: "Increase stock",
                               onTap: () => _updateStock(product, product.quantity + 1),
                               color: Colors.green,
                             ),
@@ -327,14 +358,15 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
                   // Stats
                   Row(
                     children: [
-                      _buildStatChip(Icons.remove_red_eye_outlined, AppLocalizations.of(context)!.viewsLabel(product.views), Colors.blue),
+                      _buildStatChip(Icons.remove_red_eye_outlined, AppLocalizations.of(context)!.viewsLabel(product.views), Colors.green, "Total views: ${product.views}"),
                       const SizedBox(width: 8),
-                      _buildStatChip(Icons.favorite_outline, AppLocalizations.of(context)!.likesLabel(product.likes), Colors.red),
+                      _buildStatChip(Icons.favorite_outline, AppLocalizations.of(context)!.likesLabel(product.likes), Colors.red, "Total likes: ${product.likes}"),
                       const Spacer(),
                       _buildStatChip(
                         product.isSynced ? Icons.cloud_done : Icons.cloud_off, 
                         product.isSynced ? AppLocalizations.of(context)!.synced : AppLocalizations.of(context)!.offline, 
-                        product.isSynced ? Colors.green : Colors.orange
+                        product.isSynced ? Colors.green : Colors.orange,
+                        product.isSynced ? "Product is synced to cloud" : "Product is stored locally only"
                       ),
                     ],
                   ),
@@ -344,51 +376,93 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
           ],
         ),
       ),
-    );
+    ),
+  );
   }
 
   void _showPropagateDialog(AgriculturalItem product) {
-    final ipController = TextEditingController();
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(AppLocalizations.of(context)!.shareWifiTitle),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(AppLocalizations.of(context)!.enterFarmerIpLabel),
-            const SizedBox(height: 8),
-            TextField(
-              controller: ipController,
-              decoration: const InputDecoration(
-                hintText: "e.g. 192.168.1.15",
-                border: OutlineInputBorder(),
+        content: FutureBuilder(
+          future: Provider.of<WifiShareService>(context, listen: false)
+              .discoverPeers(timeout: const Duration(seconds: 2)),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  Text("Searching nearby farmers..."),
+                  SizedBox(height: 12),
+                  LinearProgressIndicator(),
+                ],
+              );
+            }
+
+            final services = (snapshot.data as List?)?.cast<dynamic>() ?? const [];
+            if (services.isEmpty) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(AppLocalizations.of(context)!.enterFarmerIpLabel),
+                  const SizedBox(height: 8),
+                  const Text(
+                    "No nearby device found.\nMake sure both phones are connected to the same Wi‑Fi/hotspot.",
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                ],
+              );
+            }
+
+            return SizedBox(
+              width: double.maxFinite,
+              child: ListView.separated(
+                shrinkWrap: true,
+                itemCount: services.length,
+                separatorBuilder: (_, __) => const Divider(height: 1),
+                itemBuilder: (context, i) {
+                  final s = services[i];
+                  // Prefer IP address if available; otherwise use hostname
+                  String host = '';
+                  if (s.addresses != null && s.addresses!.isNotEmpty) {
+                    host = s.addresses!.first.address;
+                  } else if (s.hostname != null) {
+                    host = s.hostname!;
+                  }
+                  final title = (s.name?.toString().isNotEmpty == true) ? s.name.toString() : "Nearby farmer";
+                  return ListTile(
+                    leading: const Icon(Icons.wifi_tethering, color: Colors.orange),
+                    title: Text(title),
+                    subtitle: Text(host.isNotEmpty ? host : "hostname"),
+                    onTap: () async {
+                      Navigator.pop(context);
+                      _showSnackBar("Connecting to $title...");
+
+                      final wifiService = Provider.of<WifiShareService>(context, listen: false);
+                      final success = await wifiService.sendProductBundle(product, host);
+
+                      if (success) {
+                        _showSnackBar("✅ ${AppLocalizations.of(context)!.propagatedSuccess}");
+                      } else {
+                        _showSnackBar("❌ Failed to connect");
+                      }
+                    },
+                  );
+                },
               ),
-              keyboardType: TextInputType.number,
-            ),
-          ],
+            );
+          },
         ),
         actions: [
           TextButton(onPressed: () => Navigator.pop(context), child: Text(AppLocalizations.of(context)!.cancelAction)),
-          ElevatedButton(
-            onPressed: () async {
-              final ip = ipController.text.trim();
-              if (ip.isEmpty) return;
-              
+          TextButton(
+            onPressed: () {
               Navigator.pop(context);
-              _showSnackBar(AppLocalizations.of(context)!.propagatingToIp(ip));
-              
-              final wifiService = Provider.of<WifiShareService>(context, listen: false);
-              final success = await wifiService.sendProduct(product, ip);
-              
-              if (success) {
-                _showSnackBar("✅ ${AppLocalizations.of(context)!.propagatedSuccess}");
-              } else {
-                _showSnackBar("❌ ${AppLocalizations.of(context)!.failedToConnectIp(ip)}");
-              }
-            }, 
-            child: Text(AppLocalizations.of(context)!.sendAction),
-          ),
+              _showSnackBar("Tip: open again to rescan nearby farmers.");
+            },
+            child: const Text("Rescan"),
+          )
         ],
       ),
     );
@@ -400,44 +474,52 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
     );
   }
 
-  Widget _buildStatChip(IconData icon, String label, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 14, color: color),
-          const SizedBox(width: 4),
-          Text(
-            label,
-            style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.w500),
-          ),
-        ],
+  Widget _buildStatChip(IconData icon, String label, Color color, String semanticsLabel) {
+    return Semantics(
+      label: semanticsLabel,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color.withOpacity(0.3)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 14, color: color),
+            const SizedBox(width: 4),
+            Text(
+              label,
+              style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildStockButton({required IconData icon, required VoidCallback? onTap, required Color color}) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(20),
-        child: Container(
-          padding: const EdgeInsets.all(4),
-          decoration: BoxDecoration(
-            border: Border.all(color: onTap == null ? Colors.grey : color),
-            shape: BoxShape.circle,
-          ),
-          child: Icon(
-            icon,
-            size: 20,
-            color: onTap == null ? Colors.grey : color,
+  Widget _buildStockButton({required IconData icon, required String label, required VoidCallback? onTap, required Color color}) {
+    return Semantics(
+      button: true,
+      label: label,
+      enabled: onTap != null,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(20),
+          child: Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              border: Border.all(color: onTap == null ? Colors.grey : color),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              size: 20,
+              color: onTap == null ? Colors.grey : color,
+            ),
           ),
         ),
       ),

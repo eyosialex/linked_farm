@@ -1,19 +1,20 @@
 import 'dart:math';
+import 'package:linkedfarm/Widgets/voice_guide_button.dart';
 
 
-import 'package:echat/Farmers%20View/FireStore_Config.dart';
-import 'package:echat/Vendors%20View/Map_Location_Calculatore.dart';
+import 'package:linkedfarm/Farmers%20View/FireStore_Config.dart';
+import 'package:linkedfarm/Vendors%20View/Map_Location_Calculatore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:echat/Farmers%20View/Sell_Item_Model.dart';
+import 'package:linkedfarm/Farmers%20View/Sell_Item_Model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:echat/Chat/chat_screen.dart';
+import 'package:linkedfarm/Chat/chat_screen.dart';
 import 'package:location/location.dart';
-import 'package:echat/Services/local_storage_service.dart';
+import 'package:linkedfarm/Services/local_storage_service.dart';
 import 'package:provider/provider.dart';
-import 'package:echat/l10n/app_localizations.dart';
+import 'package:linkedfarm/l10n/app_localizations.dart';
 import 'dart:io';
 
 // Product List Screen - Shows all products
@@ -136,8 +137,18 @@ class _ProductListScreenState extends State<ProductListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Products'),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Colors.green[800],
         foregroundColor: Colors.white,
+        actions: [
+          VoiceGuideListener(
+            messages: [
+              AppLocalizations.of(context)!.productListIntro,
+              AppLocalizations.of(context)!.productListSearchInfo,
+              AppLocalizations.of(context)!.productListContactInfo
+            ],
+          ),
+          const SizedBox(width: 16),
+        ],
       ),
 
       body: Column(
@@ -178,7 +189,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   child: ChoiceChip(
                     label: Text(category),
                     selected: isSelected,
-                    selectedColor: Colors.deepPurple,
+                    selectedColor: Colors.orange[700],
                     backgroundColor: Colors.grey[200],
                     labelStyle: TextStyle(
                       color: isSelected ? Colors.white : Colors.black,
@@ -360,25 +371,24 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       ),
                       color: Colors.grey[100],
                     ),
-                    child: product.imageUrls != null && product.imageUrls!.isNotEmpty
+                    child: (product.localImagePaths != null && product.localImagePaths!.isNotEmpty) ||
+                            (product.imageUrls != null && product.imageUrls!.isNotEmpty)
                         ? ClipRRect(
                             borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(16),
                               topRight: Radius.circular(16),
                             ),
-                            child: (product.imageUrls != null && product.imageUrls!.isNotEmpty)
-                                ? Image.network(
-                                    product.imageUrls![0],
+                            child: (product.localImagePaths != null && product.localImagePaths!.isNotEmpty)
+                                ? Image.file(
+                                    File(product.localImagePaths!.first),
                                     fit: BoxFit.cover,
                                     errorBuilder: (context, error, stackTrace) => _buildErrorPlaceholder(),
                                   )
-                                : (product.localImagePaths != null && product.localImagePaths!.isNotEmpty)
-                                    ? Image.file(
-                                        File(product.localImagePaths![0]),
-                                        fit: BoxFit.cover,
-                                        errorBuilder: (context, error, stackTrace) => _buildErrorPlaceholder(),
-                                      )
-                                    : _buildErrorPlaceholder(),
+                                : Image.network(
+                                    product.imageUrls!.first,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) => _buildErrorPlaceholder(),
+                                  ),
                           )
                         : const Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -548,16 +558,16 @@ class _ProductListScreenState extends State<ProductListScreen> {
                             width: 36,
                             height: 36,
                             decoration: BoxDecoration(
-                              color: isSeller ? Colors.grey[300] : Colors.blue[50],
+                              color: isSeller ? Colors.grey[300] : Colors.green[50],
                               shape: BoxShape.circle,
                               border: Border.all(
-                                color: isSeller ? Colors.grey[400]! : Colors.blue[100]!
+                                color: isSeller ? Colors.grey[400]! : Colors.green[100]!
                               ),
                             ),
                             child: Icon(
                               Icons.person,
                               size: 18,
-                              color: isSeller ? Colors.grey[600] : Colors.blue,
+                              color: isSeller ? Colors.grey[600] : Colors.green,
                             ),
                           ),
                         ),
@@ -590,7 +600,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                               Icon(
                                 Icons.remove_red_eye,
                                 size: 14,
-                                color: isSeller ? Colors.grey : Colors.blue[600],
+                                color: isSeller ? Colors.grey : Colors.green[600],
                               ),
                               const SizedBox(width: 5),
                               Expanded(
@@ -1000,46 +1010,69 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
   Widget _buildImageSection(AgriculturalItem item) {
+    final localPaths = item.localImagePaths ?? const <String>[];
+    final remoteUrls = item.imageUrls ?? const <String>[];
+    final hasLocal = localPaths.isNotEmpty;
+    final hasRemote = remoteUrls.isNotEmpty;
+
     return SizedBox(
       height: 250,
-      child: item.imageUrls != null && item.imageUrls!.isNotEmpty
+      child: hasLocal || hasRemote
           ? PageView.builder(
-              itemCount: item.imageUrls!.length,
+              itemCount: hasLocal ? localPaths.length : remoteUrls.length,
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: Image.network(
-                      item.imageUrls![index],
-                      fit: BoxFit.cover,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Container(
-                          color: Colors.grey[200],
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              value: loadingProgress.expectedTotalBytes != null
-                                  ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                                  : null,
-                            ),
+                    child: hasLocal
+                        ? Image.file(
+                            File(localPaths[index]),
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                color: Colors.grey[200],
+                                child: const Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.broken_image, size: 50, color: Colors.grey),
+                                    SizedBox(height: 8),
+                                    Text('Failed to load image'),
+                                  ],
+                                ),
+                              );
+                            },
+                          )
+                        : Image.network(
+                            remoteUrls[index],
+                            fit: BoxFit.cover,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Container(
+                                color: Colors.grey[200],
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    value: loadingProgress.expectedTotalBytes != null
+                                        ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                                        : null,
+                                  ),
+                                ),
+                              );
+                            },
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                color: Colors.grey[200],
+                                child: const Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.broken_image, size: 50, color: Colors.grey),
+                                    SizedBox(height: 8),
+                                    Text('Failed to load image'),
+                                  ],
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: Colors.grey[200],
-                          child: const Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.broken_image, size: 50, color: Colors.grey),
-                              SizedBox(height: 8),
-                              Text('Failed to load image'),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
                   ),
                 );
               },

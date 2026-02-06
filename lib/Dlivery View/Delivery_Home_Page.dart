@@ -1,8 +1,8 @@
 
-import 'package:echat/Dlivery%20View/livelocationtrack.dart';
+import 'package:linkedfarm/Dlivery%20View/livelocationtrack.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:echat/User%20Credential/log_in_page.dart';
+import 'package:linkedfarm/User%20Credential/log_in_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Delivery_Home_Page extends StatefulWidget {
@@ -72,8 +72,8 @@ class _Delivery_Home_PageState extends State<Delivery_Home_Page> {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text("Delivery Dashboard"),
-        backgroundColor: Colors.teal[700],
+        title: const Text("LinkedFarm Delivery"),
+        backgroundColor: Colors.green[800],
         foregroundColor: Colors.white,
         actions: [
           IconButton(
@@ -105,7 +105,7 @@ class _Delivery_Home_PageState extends State<Delivery_Home_Page> {
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: _isOnline ? Colors.green : Colors.grey,
+                        color: _isOnline ? Colors.green[700] : Colors.grey,
                       ),
                     ),
                   ],
@@ -113,7 +113,8 @@ class _Delivery_Home_PageState extends State<Delivery_Home_Page> {
                 Switch(
                   value: _isOnline,
                   onChanged: _toggleOnlineStatus,
-                  activeColor: Colors.green,
+                  activeColor: Colors.orange[700],
+                  activeTrackColor: Colors.orange[100],
                 ),
               ],
             ),

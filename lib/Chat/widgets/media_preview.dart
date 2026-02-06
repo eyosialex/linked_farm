@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:echat/Chat/chat_model.dart';
-import 'package:echat/Chat/widgets/audio_player_widget.dart';
+import 'package:linkedfarm/Chat/chat_model.dart';
+import 'package:linkedfarm/Chat/widgets/audio_player_widget.dart';
 
 class MediaPreview extends StatelessWidget {
   final MessageType type;
@@ -72,7 +72,7 @@ class MediaPreview extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: const BoxDecoration(
-                color: Colors.teal,
+                color: Colors.green,
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.play_arrow, color: Colors.white, size: 30),

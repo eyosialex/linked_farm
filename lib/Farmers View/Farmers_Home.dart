@@ -1,26 +1,28 @@
 
-import 'package:echat/Dlivery%20View/list_deliveryavailable.dart';
-import 'package:echat/Farmers%20View/Enter_Sell_Item.dart';
-import 'package:echat/Vendors%20View/product.dart';
+import 'package:linkedfarm/Dlivery%20View/list_deliveryavailable.dart';
+import 'package:linkedfarm/Farmers%20View/Enter_Sell_Item.dart';
+import 'package:linkedfarm/Vendors%20View/product.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:echat/User%20Credential/log_in_page.dart';
-import 'package:echat/Farmers%20View/Market_Prices.dart';
-import 'package:echat/Farmers%20View/My_Products.dart';
-import 'package:echat/Farmers%20View/advice_feed.dart';
-import 'package:echat/Chat/chat_list.dart';
-import 'package:echat/Game/ui/game_dashboard.dart';
-import 'package:echat/Game/ui/land_selection_screen.dart';
-import 'package:echat/Vendors%20View/NotificationCenterScreen.dart';
-import 'package:echat/Services/farm_persistence_service.dart';
-import 'package:echat/Services/notification_service.dart';
-import 'package:echat/Models/notification_model.dart';
-import 'package:echat/Models/notification_model.dart';
-import 'package:echat/Services/locale_provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:linkedfarm/User%20Credential/log_in_page.dart';
+import 'package:linkedfarm/Farmers%20View/Market_Prices.dart';
+import 'package:linkedfarm/Farmers%20View/My_Products.dart';
+import 'package:linkedfarm/Farmers%20View/advice_feed.dart';
+import 'package:linkedfarm/Chat/chat_list.dart';
+import 'package:linkedfarm/Game/ui/game_dashboard.dart';
+import 'package:linkedfarm/Game/ui/land_selection_screen.dart';
+import 'package:linkedfarm/Vendors%20View/NotificationCenterScreen.dart';
+import 'package:linkedfarm/Services/farm_persistence_service.dart';
+import 'package:linkedfarm/Services/notification_service.dart';
+import 'package:linkedfarm/Models/notification_model.dart';
+import 'package:linkedfarm/Models/notification_model.dart';
+import 'package:linkedfarm/Services/locale_provider.dart';
+import 'package:linkedfarm/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
+import 'package:linkedfarm/Widgets/voice_guide_button.dart';
+import 'package:linkedfarm/Services/voice_guide_service.dart';
 
 class FarmersHomePage extends StatefulWidget {
   const FarmersHomePage({super.key});
@@ -168,14 +170,27 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
-      body: CustomScrollView(
+      body: Stack(
+        children: [
+          // Background Texture/Image for the section
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.2, // Increased visibility
+              child: Image.asset(
+                'assets/farm_header.png',
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(color: Colors.white),
+              ),
+            ),
+          ),
+          CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
           SliverAppBar(
             expandedHeight: 180,
             floating: false,
             pinned: true,
-            backgroundColor: Colors.green[700],
+            backgroundColor: Colors.green[800],
             flexibleSpace: FlexibleSpaceBar(
               background: Stack(
                 fit: StackFit.expand,
@@ -184,7 +199,7 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
                     'assets/farm_header.png',
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
-                      return Container(color: Colors.green[800]);
+                      return Container(color: Colors.green[900]);
                     },
                   ),
                   Container(
@@ -201,9 +216,9 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
                   ),
                 ],
               ),
-              title: Text(
-                l10n.farmerDashboard,
-                style: const TextStyle(
+              title: const Text(
+                "LinkedFarm",
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
@@ -212,6 +227,13 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
             ),
             actions: [
               _buildLanguageSwitcher(context),
+              VoiceGuideButton(
+                messages: [
+                   AppLocalizations.of(context)!.welcomeBack,
+                   AppLocalizations.of(context)!.manageFarm,
+                ],
+                isDark: true,
+              ),
               StreamBuilder<List<AppNotification>>(
                 stream: _persistence.streamNotifications(),
                 builder: (context, snapshot) {
@@ -236,7 +258,7 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
                           top: 8,
                           child: Container(
                             padding: const EdgeInsets.all(4),
-                            decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                            decoration: const BoxDecoration(color: Colors.orange, shape: BoxShape.circle),
                             constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
                             child: Text(
                               unreadCount > 9 ? '9+' : '$unreadCount',
@@ -272,7 +294,7 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
                     ),
                   ),
                   Text(
-                    AppLocalizations.of(context)!.manageFarm,
+                    "farm description",
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey[600],
@@ -304,30 +326,70 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
           ),
         ],
       ),
-    );
-  }
+    ],
+  ),
+);
+}
 
   Widget _buildLanguageSwitcher(BuildContext context) {
     final localeProvider = Provider.of<LocaleProvider>(context);
     final l10n = AppLocalizations.of(context)!;
 
     return PopupMenuButton<String>(
-      icon: const Icon(Icons.language, color: Colors.white),
+      icon: const Icon(Icons.settings, color: Colors.white),
       onSelected: (String code) {
         localeProvider.setLocale(Locale(code));
+        
+        // Voice Feedback for Blind Users
+        final voiceService = Provider.of<VoiceGuideService>(context, listen: false);
+        String message = "Language changed";
+        if (code == 'en') message = "Language changed to English";
+        else if (code == 'am') message = "ቋንቋ ወደ አማርኛ ተቀይሯል"; 
+        else if (code == 'om') message = "Afaan Oromoo jijjiirameera";
+        
+        voiceService.speakQueue([message], Locale(code));
       },
       itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-        const PopupMenuItem<String>(
+        PopupMenuItem<String>(
+          enabled: false,
+          child: Row(
+            children: [
+              Icon(Icons.volume_up, color: Colors.green[300], size: 18),
+              const SizedBox(width: 8),
+              const Text("Select Language", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+            ],
+          ),
+        ),
+        const PopupMenuDivider(),
+        PopupMenuItem<String>(
           value: 'en',
-          child: Text('English'),
+          child: Row(
+            children: const [
+              Icon(Icons.language, color: Colors.grey, size: 18),
+              SizedBox(width: 8),
+              Text('English'),
+            ],
+          ),
         ),
-        const PopupMenuItem<String>(
+        PopupMenuItem<String>(
           value: 'am',
-          child: Text('አማርኛ'),
+          child: Row(
+            children: const [
+              Icon(Icons.language, color: Colors.grey, size: 18),
+              SizedBox(width: 8),
+              Text('አማርኛ'),
+            ],
+          ),
         ),
-        const PopupMenuItem<String>(
+        PopupMenuItem<String>(
           value: 'om',
-          child: Text('Oromiffa'),
+          child: Row(
+            children: const [
+              Icon(Icons.language, color: Colors.grey, size: 18),
+              SizedBox(width: 8),
+              Text('Oromiffa'),
+            ],
+          ),
         ),
       ],
     );
@@ -354,28 +416,74 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            gradient: item['gradient'],
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Stack(
+            fit: StackFit.expand,
             children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  shape: BoxShape.circle,
+              // Background Image
+              ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Image.asset(
+                  item['image'],
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    // Fallback to gradient if image not found
+                    return Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        gradient: item['gradient'],
+                      ),
+                    );
+                  },
                 ),
-                child: Icon(item['icon'], size: 32, color: Colors.white),
               ),
-              const SizedBox(height: 12),
-              Text(
-                item['title'],
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
+              // Dark overlay for better text visibility
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withOpacity(0.1),
+                      Colors.black.withOpacity(0.3),
+                    ],
+                  ),
                 ),
+              ),
+              // Content
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.3),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(item['icon'], size: 32, color: Colors.white),
+                  ),
+                  const SizedBox(height: 12),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(
+                      item['title'],
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        shadows: [
+                          Shadow(
+                            offset: Offset(0, 1),
+                            blurRadius: 3,
+                            color: Colors.black54,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

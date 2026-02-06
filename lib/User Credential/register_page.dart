@@ -1,14 +1,16 @@
 
-import 'package:echat/User%20Credential/create_account.dart';
-import 'package:echat/User%20Credential/forget_password.dart';
-import 'package:echat/User%20Credential/usermodel.dart';
+import 'package:linkedfarm/User%20Credential/create_account.dart';
+import 'package:linkedfarm/User%20Credential/forget_password.dart';
+import 'package:linkedfarm/User%20Credential/usermodel.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:linkedfarm/l10n/app_localizations.dart';
 import 'TextField.dart';
 import 'firebaseauthservice.dart';
 import 'userfirestore.dart';    
+import 'package:linkedfarm/Widgets/voice_guide_button.dart';
+    
 class RegistrationPage extends StatefulWidget {
   final void Function()? onTap;
   const RegistrationPage({super.key, required this.onTap});
@@ -25,6 +27,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final UserRepository _userRepository = UserRepository();
   bool _isLoading = false;
   String? _selectedUserType;
+
   Future<void> register() async {
     final _email = email.text.trim();
     final _password = password.text.trim();
@@ -112,8 +115,29 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.grey[100],
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: [
+          VoiceGuideListener(
+            messages: [
+              l10n.welcomeToAgrilead,
+              l10n.registerSubTitle,
+              l10n.registerFieldsIntro,
+              l10n.fullNameHint,
+              l10n.phoneHint,
+              l10n.selectRole,
+              l10n.emailHint, 
+              l10n.passwordHint,
+              l10n.registerFinishIntro
+            ],
+          ),
+          const SizedBox(width: 16),
+        ],
+      ),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -121,23 +145,23 @@ class _RegistrationPageState extends State<RegistrationPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.agriculture, size: 80, color: Colors.green[700]),
+                Icon(Icons.agriculture, size: 80, color: Colors.green[800]),
                 const SizedBox(height: 20),
                 Text(
                   AppLocalizations.of(context)!.appTitle,
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
-                    color: Colors.green[700],
+                    color: Colors.green[800],
                   ),
                 ),
 
                 const SizedBox(height: 20),
                 Text(
                   AppLocalizations.of(context)!.registerSubTitle,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
-                    color: Colors.grey,
+                    color: Colors.grey[600],
                   ),
                 ),
                 const SizedBox(height: 40),
@@ -194,7 +218,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           value: 'advisor',
                           child: Text(AppLocalizations.of(context)!.roleAdvisor),
                         ),
-                              DropdownMenuItem(
+                               DropdownMenuItem(
                           value: 'delivery',
                           child: Text(AppLocalizations.of(context)!.roleDelivery),
                         ),
@@ -231,14 +255,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
                 // Register Button
                 _isLoading
-                    ? const CircularProgressIndicator()
+                    ? const CircularProgressIndicator(color: Colors.green)
                     : GestureDetector(
                         onTap: register,
                         child: Container(
                           height: 50,
                           width: double.infinity,
                           decoration: BoxDecoration(
-                            color: Colors.green[700],
+                            color: Colors.green[800],
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
@@ -248,10 +272,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               ),
                             ],
                           ),
-                          child: Center(
+                          child: const Center(
                             child: Text(
-                              AppLocalizations.of(context)!.registerButton,
-                              style: const TextStyle(
+                              "Register",
+                              style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -270,7 +294,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       child: Text(
                         AppLocalizations.of(context)!.loginButton,
                         style: TextStyle(
-                          color: Colors.green[700],
+                          color: Colors.orange[800],
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),

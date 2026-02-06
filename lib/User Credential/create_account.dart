@@ -1,12 +1,13 @@
-import 'package:echat/Dlivery%20View/Delivery_Home_Page.dart';
-import 'package:echat/Advisor%20View/Advisor_Home.dart';
-import 'package:echat/Farmers%20View/Farmers_Home.dart';
-import 'package:echat/Vendors%20View/Product_Home.dart';
-import 'package:echat/User%20Credential/userfirestore.dart';
+import 'package:linkedfarm/Dlivery%20View/Delivery_Home_Page.dart';
+import 'package:linkedfarm/Advisor%20View/Advisor_Home.dart';
+import 'package:linkedfarm/Farmers%20View/Farmers_Home.dart';
+import 'package:linkedfarm/Vendors%20View/Product_Home.dart';
+import 'package:linkedfarm/User%20Credential/userfirestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:linkedfarm/l10n/app_localizations.dart';
+import 'package:linkedfarm/Shopper%20View/Shopper_Home.dart';
 import 'log_in_page.dart';
 class CreateAccount extends StatefulWidget {
   const CreateAccount({super.key});
@@ -38,6 +39,8 @@ final TextEditingController _drivinglisence=TextEditingController();
 final TextEditingController _cartype=TextEditingController();
 
 final TextEditingController _qualificationController = TextEditingController();
+  final TextEditingController _specializationController = TextEditingController();
+  final TextEditingController _experienceController = TextEditingController();
 
   // Shopper Controllers
   final TextEditingController _shopNameController = TextEditingController();
@@ -152,8 +155,7 @@ final TextEditingController _qualificationController = TextEditingController();
         targetPage = const Delivery_Home_Page();
       } else if (_userData!['userType'] == 'advisor') {
         targetPage = const AdvisorHomePage();
-      } else if (_userData!['userType'] == 'shopper') {
-        targetPage = const ShopperHomePage();
+   
       } else {
         targetPage = const FarmersHomePage();
       }
@@ -463,8 +465,6 @@ final TextEditingController _qualificationController = TextEditingController();
         ),
         isActive: _currentStep >= 1,
       ),
-    ];
-  }
     ];
   }
 

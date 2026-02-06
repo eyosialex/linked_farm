@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'Agrilead';
+  String get appTitle => 'LinkedFarm';
 
   @override
   String get home => 'Home';
@@ -21,7 +21,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get myProducts => 'My Products';
 
   @override
-  String get sellInputs => 'Sell Agricultural Inputs';
+  String get marketPrices => 'Market Prices';
 
   @override
   String stockLevel(int count, String unit) {
@@ -42,12 +42,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get stock => 'Stock';
-
-  @override
-  String get buyInputs => 'Buy Agricultural Inputs';
-
-  @override
-  String get marketPrices => 'Market Prices';
 
   @override
   String get messages => 'Messages';
@@ -656,8 +650,420 @@ class AppLocalizationsEn extends AppLocalizations {
   String get catFertilizer => 'Fertilizer';
 
   @override
+  String get buyInputs => 'Buy Agricultural Inputs';
+
+  @override
+  String get sellInputs => 'Sell Agricultural Inputs';
+
+  @override
   String get offline => 'Offline';
 
   @override
   String get synced => 'Synced';
+
+  @override
+  String get readMore => 'Read More';
+
+  @override
+  String get noAdvice => 'No advice posts yet.';
+
+  @override
+  String get expertAdviceTitle => 'Expert Advice & Tips';
+
+  @override
+  String get playVoiceGuide => 'Play Voice Guide';
+
+  @override
+  String get stopVoiceGuide => 'Stop Voice Guide';
+
+  @override
+  String byAuthor(Object name) {
+    return 'By $name';
+  }
+
+  @override
+  String get smartAdvisory => 'Smart Advisory';
+
+  @override
+  String get aiAgronomist => 'AI AGRONOMIST';
+
+  @override
+  String get expertPanel => 'EXPERT PANEL';
+
+  @override
+  String get cropHealthAnalysis => 'Crop Health Analysis';
+
+  @override
+  String get excellentCondition => 'EXCELLENT CONDITION';
+
+  @override
+  String get attentionNeeded => 'ATTENTION NEEDED';
+
+  @override
+  String cropHealthSummary(Object crop, Object status) {
+    return 'Based on your latest photo and sensor readings, your $crop is developing $status.';
+  }
+
+  @override
+  String get optimally => 'optimally';
+
+  @override
+  String get slowerThanExpected => 'slower than expected';
+
+  @override
+  String get aiRecommendations => 'AI Recommendations';
+
+  @override
+  String get irrigation => 'Irrigation';
+
+  @override
+  String moistureLow(Object percent) {
+    return 'Soil moisture is critically low ($percent%). Initiate irrigation immediately to prevent wilting.';
+  }
+
+  @override
+  String get moistureOptimal =>
+      'Moisture levels are optimal. No irrigation needed today.';
+
+  @override
+  String get nutrients => 'Nutrients';
+
+  @override
+  String get nutrientsLow =>
+      'NPK levels are depleting. Apply organic compost or NPK 15-15-15 within the next 2 days.';
+
+  @override
+  String get nutrientsStable =>
+      'Nutrient balance is stable. Continue monitoring.';
+
+  @override
+  String get pestDisease => 'Pest & Disease';
+
+  @override
+  String get pestHighRisk =>
+      'High humidity detected. Risk of fungal infection is elevated. Inspect leaves for spots.';
+
+  @override
+  String get pestLowRisk =>
+      'Low pest risk detected. Maintaining field hygiene is recommended.';
+
+  @override
+  String get urgent => 'URGENT';
+
+  @override
+  String get connectWithExperts => 'Connect with Experts';
+
+  @override
+  String get getProfessionalGuidance =>
+      'Get professional guidance for your farm.';
+
+  @override
+  String get requestConsultation => 'Request Consultation';
+
+  @override
+  String get online => 'Online';
+
+  @override
+  String get away => 'Away';
+
+  @override
+  String get crop => 'crop';
+
+  @override
+  String get predictedRain => 'PREDICTED: 8mm RAIN';
+
+  @override
+  String get clearSkies => 'CLEAR SKIES';
+
+  @override
+  String get pest => 'PEST';
+
+  @override
+  String get fungal => 'FUNGAL';
+
+  @override
+  String get weeds => 'WEEDS';
+
+  @override
+  String get soilMoistureProfile => 'SOIL MOISTURE PROFILE';
+
+  @override
+  String dayLabel(Object day) {
+    return 'DAY $day';
+  }
+
+  @override
+  String get vegetativeCycle => 'VEGETATIVE CYCLE';
+
+  @override
+  String get myCustomLandPlan => 'MY CUSTOM LAND PLAN';
+
+  @override
+  String get plannerDetail =>
+      'Enter and track your daily/weekly farming tasks.';
+
+  @override
+  String get dailyLogBtn => 'DAILY\nLOG';
+
+  @override
+  String get plannerBtn => 'PLANNER';
+
+  @override
+  String get advisorBtn => 'ADVISOR';
+
+  @override
+  String get fertilizeBtn => 'FERTILIZE';
+
+  @override
+  String get proceedNextDay => 'PROCEED TO NEXT DAY';
+
+  @override
+  String get tapDeepAnalysis => 'Tap for Deep AI Analysis';
+
+  @override
+  String get aiDeepAnalysisTitle => 'AI DEEP ANALYSIS';
+
+  @override
+  String get gotIt => 'GOT IT';
+
+  @override
+  String get emptyPlanner => 'Your Custom Plan is Empty';
+
+  @override
+  String get emptyPlannerDetail => 'Add your own daily/weekly tasks here.';
+
+  @override
+  String get entryManualPlanTitle => 'ENTRY FOR MANUAL PLAN';
+
+  @override
+  String get cancel => 'CANCEL';
+
+  @override
+  String get savePlan => 'SAVE PLAN';
+
+  @override
+  String get taskTitle => 'Task Title';
+
+  @override
+  String get activityDetail => 'Activity Detail';
+
+  @override
+  String get daily => 'DAILY';
+
+  @override
+  String get weekly => 'WEEKLY';
+
+  @override
+  String get monthly => 'MONTHLY';
+
+  @override
+  String get completed => 'COMPLETED';
+
+  @override
+  String get advicePest =>
+      'Pest activity is increasing due to temperature and wind conditions.';
+
+  @override
+  String get adviceMoistureLow =>
+      'Moisture levels are low. Hope for rain in the forecast soon!';
+
+  @override
+  String get adviceRainy =>
+      'Natural rainfall is replenishing the soil moisture profile.';
+
+  @override
+  String get adviceStable =>
+      'Ecosystem is stable. Rain-dependent growth is within parameters.';
+
+  @override
+  String get virtualFarmSimulator => 'Virtual Farm Simulator';
+
+  @override
+  String get welcomeVirtualFarm => 'Welcome to Your Virtual Farm';
+
+  @override
+  String get gameIntro =>
+      'Learn farming by doing. Make decisions, manage resources, and see how AI predicts your harvest!';
+
+  @override
+  String get startNewFarm => 'Start New Farm';
+
+  @override
+  String continueFarming(Object day) {
+    return 'Continue Farming (Day $day)';
+  }
+
+  @override
+  String get resetStartNew => 'Reset and Start New';
+
+  @override
+  String get myLandsProfile => 'MY LANDS PROFILE';
+
+  @override
+  String get noLandsRegistered => 'No lands registered yet.';
+
+  @override
+  String get startAddingPlot => 'Start by adding your first plot of land.';
+
+  @override
+  String get registerNewLand => 'REGISTER NEW LAND';
+
+  @override
+  String get landNameHint => 'Land Name (e.g. Home Garden)';
+
+  @override
+  String get sizeHectares => 'Size (Hectares)';
+
+  @override
+  String get soilType => 'Soil Type';
+
+  @override
+  String get saveLand => 'SAVE LAND';
+
+  @override
+  String get hectares => 'Hectares';
+
+  @override
+  String get readyPlanting => 'READY FOR PLANTING';
+
+  @override
+  String get cycleCompleted => 'CYCLE COMPLETED';
+
+  @override
+  String dayTrackerTitle(Object day) {
+    return 'Day $day Tracker';
+  }
+
+  @override
+  String get sensorDataCollection => 'Sensor-Based Data Collection';
+
+  @override
+  String get connectCableDetail =>
+      'Connect cable to read soil & environmental data';
+
+  @override
+  String get soilSensorCable => 'Soil Sensor Cable';
+
+  @override
+  String get statusConnected => 'Status: Connected';
+
+  @override
+  String get statusDisconnected => 'Status: Disconnected';
+
+  @override
+  String get connect => 'CONNECT';
+
+  @override
+  String get observations => 'Observations';
+
+  @override
+  String get enterNotes => 'Enter your notes here...';
+
+  @override
+  String get saveDailyLog => 'SAVE DAILY LOG';
+
+  @override
+  String sensorConnectedMsg(Object type) {
+    return '✅ Sensor Connected! Detected: $type soil';
+  }
+
+  @override
+  String get dailyLogSavedMsg => '✅ Daily log saved to Firestore!';
+
+  @override
+  String get moisture => 'Moisture';
+
+  @override
+  String get temp => 'Temp';
+
+  @override
+  String get nitrogen => 'Nitrogen';
+
+  @override
+  String get phosphorus => 'Phosphorus';
+
+  @override
+  String get potassium => 'Potassium';
+
+  @override
+  String get loamy => 'Loamy';
+
+  @override
+  String get silt => 'Silt';
+
+  @override
+  String get clay => 'Clay';
+
+  @override
+  String get sandy => 'Sandy';
+
+  @override
+  String get welcomeToAgrilead => 'Welcome to LinkedFarm.';
+
+  @override
+  String get tapLoginReady => 'Tap the Login button when ready.';
+
+  @override
+  String get productInventoryIntro => 'This is your product inventory.';
+
+  @override
+  String get startSellingIntro =>
+      'Tap \'List Your First Product\' or the + button to start selling.';
+
+  @override
+  String get registerFieldsIntro => 'Complete these fields to register.';
+
+  @override
+  String get registerFinishIntro => 'Tap Register when finished.';
+
+  @override
+  String get dailyTrackerIntro => 'Check today\'s farming tasks here.';
+
+  @override
+  String get farmMainIntro => 'See how your farm is progressing.';
+
+  @override
+  String get gameDashboardIntro => 'Get AI advice for your crops.';
+
+  @override
+  String get sellItemIntro =>
+      'Describe your item, set a price, and add photos to start selling.';
+
+  @override
+  String get growthJournalIntro => 'Review your farm\'s history here.';
+
+  @override
+  String get growthJournalDetail =>
+      'Each card shows your soil and health status for that day.';
+
+  @override
+  String get seasonalReportIntro => 'This is your seasonal success report.';
+
+  @override
+  String get seasonalReportDetail =>
+      'Review your activity completion rate and estimated yield success.';
+
+  @override
+  String get productListIntro =>
+      'Browse seeds, fertilizers, and tools available for purchase.';
+
+  @override
+  String get productListSearchInfo =>
+      'Use the search bar or category chips to find specific items.';
+
+  @override
+  String get productListContactInfo =>
+      'Tap on an item to see details or contact the seller.';
+
+  @override
+  String get marketPricesIntro =>
+      'Check the latest market prices for your crops here.';
+
+  @override
+  String get marketPricesGuidance =>
+      'Compare minimum and maximum prices to decide the best time to sell.';
+
+  @override
+  String get adviceFeedIntro =>
+      'Browse the latest tips and advice from agricultural experts.';
 }

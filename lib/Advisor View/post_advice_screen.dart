@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:echat/Advisor%20View/advice_model.dart';
-import 'package:echat/User%20Credential/userfirestore.dart';
+import 'package:linkedfarm/Advisor%20View/advice_model.dart';
+import 'package:linkedfarm/User%20Credential/userfirestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -72,7 +72,7 @@ class _PostAdviceScreenState extends State<PostAdviceScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Post New Advice"),
-        backgroundColor: Colors.teal[700],
+        backgroundColor: Colors.green[800],
         foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
@@ -134,7 +134,7 @@ class _PostAdviceScreenState extends State<PostAdviceScreen> {
                 child: ElevatedButton(
                   onPressed: _isLoading ? null : _submitAdvice,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal,
+                    backgroundColor: Colors.green,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                   ),

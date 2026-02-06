@@ -4,15 +4,15 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:echat/Services/chat_service.dart';
-import 'package:echat/Chat/chat_model.dart';
-import 'package:echat/Chat/group_model.dart';
-import 'package:echat/Chat/group_info_page.dart';
-import 'package:echat/Chat/comments_page.dart';
-import 'package:echat/Chat/image_preview_page.dart';
-import 'package:echat/Chat/video_player_page.dart';
-import 'package:echat/Chat/widgets/chat_input_field.dart';
-import 'package:echat/Chat/widgets/message_bubble.dart';
+import 'package:linkedfarm/Services/chat_service.dart';
+import 'package:linkedfarm/Chat/chat_model.dart';
+import 'package:linkedfarm/Chat/group_model.dart';
+import 'package:linkedfarm/Chat/group_info_page.dart';
+import 'package:linkedfarm/Chat/comments_page.dart';
+import 'package:linkedfarm/Chat/image_preview_page.dart';
+import 'package:linkedfarm/Chat/video_player_page.dart';
+import 'package:linkedfarm/Chat/widgets/chat_input_field.dart';
+import 'package:linkedfarm/Chat/widgets/message_bubble.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -141,7 +141,7 @@ class _GroupChatPageState extends State<GroupChatPage> {
             ],
           ),
         ),
-        backgroundColor: Colors.teal[700],
+        backgroundColor: Colors.green[800],
         foregroundColor: Colors.white,
         actions: [
           IconButton(
@@ -253,8 +253,8 @@ class _GroupChatPageState extends State<GroupChatPage> {
                   ),
                 );
               },
-              icon: const Icon(Icons.comment_outlined, size: 14, color: Colors.blue),
-              label: const Text("Leave a comment", style: TextStyle(fontSize: 12, color: Colors.blue)),
+              icon: const Icon(Icons.comment_outlined, size: 14, color: Colors.orange),
+              label: const Text("Leave a comment", style: TextStyle(fontSize: 12, color: Colors.orange)),
               style: TextButton.styleFrom(
                 padding: EdgeInsets.zero,
                 minimumSize: const Size(0, 0),

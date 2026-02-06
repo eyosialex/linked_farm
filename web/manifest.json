@@ -1,6 +1,6 @@
 {
-    "name": "echat",
-    "short_name": "echat",
+    "name": "LinkedFarm",
+    "short_name": "LinkedFarm",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

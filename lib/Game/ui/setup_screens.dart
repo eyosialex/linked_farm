@@ -23,8 +23,7 @@ class _SetupScreenState extends State<SetupScreen> {
   @override
   Widget build(BuildContext context) {
     String title = "Setup Your Farm";
-    if (step == 2) title = "Analyze Soil Profile";
-    if (step == 3) title = "Select Predictive Crop";
+    if (step == 2) title = "Select Your Crop";
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
@@ -38,9 +37,7 @@ class _SetupScreenState extends State<SetupScreen> {
         duration: const Duration(milliseconds: 300),
         child: step == 1 
             ? _buildLandDetails() 
-            : step == 2 
-                ? _buildSoilSelection() 
-                : _buildCropSelection(),
+            : _buildCropSelection(),
       ),
     );
   }
@@ -107,7 +104,7 @@ class _SetupScreenState extends State<SetupScreen> {
               minimumSize: const Size(double.infinity, 60),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             ),
-            child: const Text("NEXT: SOIL PROFILE", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            child: const Text("NEXT: SELECT CROP", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           ),
         ],
       ),
@@ -155,7 +152,7 @@ class _SetupScreenState extends State<SetupScreen> {
                             Text(soil.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                             Text(soil.description, style: const TextStyle(fontSize: 12, color: Colors.grey)),
                             const SizedBox(height: 4),
-                            Text("pH: ${soil.phLevel} | OM: ${soil.organicMatter}%", style: const TextStyle(fontSize: 10, color: Colors.blueGrey, fontWeight: FontWeight.bold)),
+                            Text("pH: ${soil.phLevel} | OM: ${soil.organicMatter}%", style: TextStyle(fontSize: 10, color: Colors.grey[600], fontWeight: FontWeight.bold)),
                           ],
                         ),
                       ),
@@ -186,7 +183,9 @@ class _SetupScreenState extends State<SetupScreen> {
   }
 
   Widget _buildCropSelection() {
-    if (selectedSoil == null) return const Center(child: Text("Please select soil first"));
+    // Use default Loamy soil - will be detected via sensors
+    final defaultSoil = Soil.allSoils.firstWhere((s) => s.type == SoilType.loamy);
+    if (selectedSoil == null) selectedSoil = defaultSoil;
 
     final compatibleCrops = Crop.allCrops.toList(); // Show all, highlight compatible
 
@@ -194,7 +193,7 @@ class _SetupScreenState extends State<SetupScreen> {
       children: [
         const Padding(
           padding: EdgeInsets.all(20),
-          child: Text("3. SELECT CROP ALLOCATION", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+          child: Text("2. SELECT CROP ALLOCATION", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
         ),
         Expanded(
           child: ListView.builder(
@@ -213,7 +212,7 @@ class _SetupScreenState extends State<SetupScreen> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(15),
-                    border: Border.all(color: isSelected ? Colors.blue : Colors.transparent, width: 2),
+                    border: Border.all(color: isSelected ? Colors.green[700]! : Colors.transparent, width: 2),
                     boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 5)],
                   ),
                   child: Row(
@@ -237,11 +236,11 @@ class _SetupScreenState extends State<SetupScreen> {
                             ),
                             Text(crop.description, style: const TextStyle(fontSize: 12, color: Colors.grey)),
                             const SizedBox(height: 4),
-                            Text("Demand: W:${crop.waterDemand} N:${crop.nutrientDemand} | Ph Range: ${crop.minPh}-${crop.maxPh}", style: const TextStyle(fontSize: 10, color: Colors.blueGrey)),
+                            Text("Demand: W:${crop.waterDemand} N:${crop.nutrientDemand} | Ph Range: ${crop.minPh}-${crop.maxPh}", style: TextStyle(fontSize: 10, color: Colors.grey[600])),
                           ],
                         ),
                       ),
-                      if (isSelected) const Icon(Icons.check_circle, color: Colors.blue),
+                      if (isSelected) Icon(Icons.check_circle, color: Colors.green[700]),
                     ],
                   ),
                 ),
@@ -253,11 +252,11 @@ class _SetupScreenState extends State<SetupScreen> {
           padding: const EdgeInsets.all(20),
           child: Row(
             children: [
-              TextButton(onPressed: () => setState(() => step = 2), child: const Text("BACK")),
+              TextButton(onPressed: () => setState(() => step = 1), child: const Text("BACK")),
               const Spacer(),
               ElevatedButton(
                 onPressed: selectedCrop == null ? null : _startGame,
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue[800], foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15)),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.green[800], foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15)),
                 child: const Text("START MISSION"),
               ),
             ],

@@ -1,20 +1,20 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:echat/Farmers%20View/Cloudnary_Store.dart';
-import 'package:echat/Farmers%20View/FireStore_Config.dart';
-import 'package:echat/Farmers%20View/Sell_Item_Model.dart';
+import 'package:linkedfarm/Farmers%20View/Cloudnary_Store.dart';
+import 'package:linkedfarm/Farmers%20View/FireStore_Config.dart';
+import 'package:linkedfarm/Farmers%20View/Sell_Item_Model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
-import 'package:echat/Services/farm_persistence_service.dart';
-import 'package:echat/Services/local_storage_service.dart';
-import 'package:echat/Services/wifi_share_service.dart';
-import 'package:echat/l10n/app_localizations.dart';
+import 'package:linkedfarm/Services/farm_persistence_service.dart';
+import 'package:linkedfarm/Services/local_storage_service.dart';
+import 'package:linkedfarm/Services/wifi_share_service.dart';
+import 'package:linkedfarm/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
-import 'Position_Sell_Item.dart';
+import 'package:linkedfarm/Farmers%20View/Position_Sell_Item.dart';
 class SellInputItem extends StatefulWidget {
   final AgriculturalItem? productToEdit;
 
@@ -77,10 +77,10 @@ class _SellInputItemState extends State<SellInputItem> {
       case 'Oil Seeds': return l10n.catOilSeeds;
       case 'Tubers': return l10n.catTubers;
       case 'Livestock': return l10n.catLivestock;
-      case 'Fertilizers': return l10n.catFertilizers;
-      case 'Pesticides': return l10n.catPesticides;
-      case 'Herbicides': return l10n.catHerbicides;
-      case 'Fungicides': return l10n.catFungicides;
+      case 'Fertilizers': return l10n.catFertilizer;
+      case 'Pesticides': return l10n.catPesticide;
+      case 'Herbicides': return l10n.catHerbicide;
+      case 'Fungicides': return l10n.catFungicide;
       default: return l10n.catOthers;
     }
   }
@@ -990,7 +990,7 @@ class _SellInputItemState extends State<SellInputItem> {
         style: const TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
-          color: Colors.blueGrey,
+          color: Colors.green,
         ),
       ),
     );

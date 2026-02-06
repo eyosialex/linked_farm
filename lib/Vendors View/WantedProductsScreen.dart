@@ -23,7 +23,7 @@ class _WantedProductsScreenState extends State<WantedProductsScreen> {
       appBar: AppBar(
         title: const Text("WANTED PRODUCTS", style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.2)),
         centerTitle: true,
-        backgroundColor: Colors.blue[800],
+        backgroundColor: Colors.green[800],
         foregroundColor: Colors.white,
         elevation: 0,
       ),
@@ -62,7 +62,7 @@ class _WantedProductsScreenState extends State<WantedProductsScreen> {
         onPressed: () => _showAddRequestDialog(context),
         label: const Text("POST WANTED PRODUCT", style: TextStyle(fontWeight: FontWeight.bold)),
         icon: const Icon(Icons.add_shopping_cart),
-        backgroundColor: Colors.blue[800],
+        backgroundColor: Colors.green[800],
       ),
     );
   }
@@ -102,8 +102,8 @@ class _WantedProductsScreenState extends State<WantedProductsScreen> {
         children: [
           Container(
             padding: const EdgeInsets.all(15),
-            decoration: BoxDecoration(color: isOwner ? Colors.blue[50] : Colors.orange[50], borderRadius: BorderRadius.circular(15)),
-            child: Icon(Icons.inventory_2, color: isOwner ? Colors.blue[800] : Colors.orange[800], size: 24),
+            decoration: BoxDecoration(color: isOwner ? Colors.green[50] : Colors.orange[50], borderRadius: BorderRadius.circular(15)),
+            child: Icon(Icons.inventory_2, color: isOwner ? Colors.green[800] : Colors.orange[800], size: 24),
           ),
           const SizedBox(width: 20),
           Expanded(
@@ -190,7 +190,7 @@ class _WantedProductsScreenState extends State<WantedProductsScreen> {
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[800],
+                  backgroundColor: Colors.green[800],
                   minimumSize: const Size(double.infinity, 55),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                 ),

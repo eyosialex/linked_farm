@@ -1,10 +1,10 @@
-import 'package:echat/Chat/chat_model.dart';
+import 'package:linkedfarm/Chat/chat_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:echat/User%20Credential/profile_page.dart';
-import 'package:echat/User%20Credential/usermodel.dart';
-import 'package:echat/Services/chat_service.dart';
+import 'package:linkedfarm/User%20Credential/profile_page.dart';
+import 'package:linkedfarm/User%20Credential/usermodel.dart';
+import 'package:linkedfarm/Services/chat_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +36,7 @@ class GroupInfoPage extends StatelessWidget {
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: Text(type == 'channel' ? "Channel Info" : "Group Info"),
-        backgroundColor: Colors.teal[700],
+        backgroundColor: Colors.green[800],
         foregroundColor: Colors.white,
       ),
       body: Column(
@@ -54,13 +54,13 @@ class GroupInfoPage extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 40,
-                        backgroundColor: type == 'channel' ? Colors.blue[100] : Colors.teal[100],
+                        backgroundColor: type == 'channel' ? Colors.orange[100] : Colors.green[100],
                         backgroundImage: groupIconUrl != null ? NetworkImage(groupIconUrl!) : null,
                         child: groupIconUrl == null 
                           ? Icon(
                               type == 'channel' ? Icons.campaign : Icons.group,
                               size: 40,
-                              color: type == 'channel' ? Colors.blue[700] : Colors.teal[700],
+                              color: type == 'channel' ? Colors.orange[700] : Colors.green[700],
                             )
                           : null,
                       ),
@@ -70,7 +70,7 @@ class GroupInfoPage extends StatelessWidget {
                           right: 0,
                           child: Container(
                             padding: const EdgeInsets.all(4),
-                            decoration: const BoxDecoration(color: Colors.teal, shape: BoxShape.circle),
+                            decoration: const BoxDecoration(color: Colors.green, shape: BoxShape.circle),
                             child: const Icon(Icons.camera_alt, color: Colors.white, size: 16),
                           ),
                         ),
@@ -100,7 +100,7 @@ class GroupInfoPage extends StatelessWidget {
                 Text(
                   type == 'channel' ? "SUBSCRIBERS" : "MEMBERS",
                   style: TextStyle(
-                    color: Colors.teal[700],
+                    color: Colors.green[700],
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.2,
                     fontSize: 12,
@@ -149,7 +149,7 @@ class GroupInfoPage extends StatelessWidget {
                         );
                       },
                       leading: CircleAvatar(
-                        backgroundColor: Colors.teal[50],
+                        backgroundColor: Colors.green[50],
                         child: Text(userData['fullName'] != null && userData['fullName'].isNotEmpty 
                           ? userData['fullName'][0].toUpperCase()
                           : "?"),
@@ -162,12 +162,12 @@ class GroupInfoPage extends StatelessWidget {
                               margin: const EdgeInsets.only(left: 8),
                               padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                               decoration: BoxDecoration(
-                                color: Colors.teal[100],
+                                color: Colors.green[100],
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: const Text(
                                 "ADMIN",
-                                style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.teal),
+                                style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.green),
                               ),
                             ),
                         ],
@@ -305,7 +305,7 @@ class _AddMemberSheetState extends State<_AddMemberSheet> {
                       title: Text(userData['fullName']),
                       subtitle: Text(userData['userType']),
                       trailing: IconButton(
-                        icon: const Icon(Icons.person_add_alt_1, color: Colors.teal),
+                        icon: const Icon(Icons.person_add_alt_1, color: Colors.green),
                         onPressed: () async {
                           await widget.chatService.addMemberToGroup(widget.groupId, userDoc.id);
                           Navigator.pop(context); // Close sheet
