@@ -1,0 +1,8 @@
+{
+    "name": "linkedfarm",
+    "version": "1.0.0",
+    "scripts": {
+        "install-flutter": "bash install-flutter.sh",
+        "build": "bash install-flutter.sh && ./flutter/bin/flutter build web --release"
+    }
+}

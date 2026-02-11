@@ -109,7 +109,7 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
       {
         'title': l10n.landPlanner,
         'icon': Icons.landscape,
-        'image': 'assets/land_planner_realistic.png',
+        'image': 'assets/land_planner_realistic.jpg',
         'page': const MyLandsScreen(),
         'gradient': const LinearGradient(
           colors: [Color(0xFF3F51B5), Color(0xFF303F9F)],

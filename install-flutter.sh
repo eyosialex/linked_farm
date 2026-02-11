@@ -2,14 +2,21 @@
 
 # Configuration
 FLUTTER_CHANNEL="stable"
-FLUTTER_VERSION="3.29.0" # Example version, will fetch stable if not specified exactly correctly
 
 echo "--- Installing Flutter SDK ---"
 
+# Use shallow clone for speed
 if [ ! -d "flutter" ]; then
-  git clone https://github.com/flutter/flutter.git -b $FLUTTER_CHANNEL
+  git clone https://github.com/flutter/flutter.git -b $FLUTTER_CHANNEL --depth 1
 fi
 
-./flutter/bin/flutter precache --web
+# Add flutter to PATH
+export PATH="$PATH:$(pwd)/flutter/bin"
+
+flutter doctor -v
+flutter precache --web
+
+echo "--- Installing Dependencies ---"
+flutter pub get
 
 echo "--- Flutter Installation Complete ---"

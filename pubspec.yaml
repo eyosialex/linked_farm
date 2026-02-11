@@ -107,7 +107,7 @@ flutter:
     - assets/sell_produce_realistic.jpg
     - assets/buy_inputs_realistic.png
     - assets/market_prices_realistic.jpg
-    - assets/land_planner_realistic.png
+    - assets/land_planner_realistic.jpg
     - assets/vendors_header.jpg
     - assets/ai.jpg
     - assets/game/
@@ -142,7 +142,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
-flutter_icons:
+flutter_launcher_icons:
   android: true
   ios: true
   image_path: "assets/icons/telegram.png"
