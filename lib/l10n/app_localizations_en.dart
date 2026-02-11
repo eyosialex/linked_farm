@@ -209,7 +209,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get carTypePrefix => 'Car Type:';
 
   @override
-  String get clickCompleteLabel => 'Click Complete to finish your profile setup.';
+  String get clickCompleteLabel =>
+      'Click Complete to finish your profile setup.';
 
   @override
   String get farmInfoTitle => 'Farm Information';
@@ -298,7 +299,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invalidEmailFormat => 'Invalid email format.';
 
   @override
-  String get networkError => 'Network error. Please check your internet connection.';
+  String get networkError =>
+      'Network error. Please check your internet connection.';
 
   @override
   String get passwordRecoveryTitle => 'Password Recovery';
@@ -389,7 +391,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get takeAMoment => 'This may take a few moments';
 
   @override
-  String get savedLocallySyncLater => 'Saved locally! Will sync when internet is back.';
+  String get savedLocallySyncLater =>
+      'Saved locally! Will sync when internet is back.';
 
   @override
   String get errorTitle => 'Error';
@@ -606,13 +609,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unitLiter => 'liter';
 
   @override
-  String get addClearPhotosHint => 'Add clear photos of your product from different angles';
+  String get addClearPhotosHint =>
+      'Add clear photos of your product from different angles';
 
   @override
   String get locationNotFound => 'Location not found';
 
   @override
-  String get unableToFindLocation => 'Unable to find location. Please try again.';
+  String get unableToFindLocation =>
+      'Unable to find location. Please try again.';
 
   @override
   String get searchLocationHint => 'Search location...';
@@ -717,25 +722,30 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get moistureOptimal => 'Moisture levels are optimal. No irrigation needed today.';
+  String get moistureOptimal =>
+      'Moisture levels are optimal. No irrigation needed today.';
 
   @override
   String get nutrients => 'Nutrients';
 
   @override
-  String get nutrientsLow => 'NPK levels are depleting. Apply organic compost or NPK 15-15-15 within the next 2 days.';
+  String get nutrientsLow =>
+      'NPK levels are depleting. Apply organic compost or NPK 15-15-15 within the next 2 days.';
 
   @override
-  String get nutrientsStable => 'Nutrient balance is stable. Continue monitoring.';
+  String get nutrientsStable =>
+      'Nutrient balance is stable. Continue monitoring.';
 
   @override
   String get pestDisease => 'Pest & Disease';
 
   @override
-  String get pestHighRisk => 'High humidity detected. Risk of fungal infection is elevated. Inspect leaves for spots.';
+  String get pestHighRisk =>
+      'High humidity detected. Risk of fungal infection is elevated. Inspect leaves for spots.';
 
   @override
-  String get pestLowRisk => 'Low pest risk detected. Maintaining field hygiene is recommended.';
+  String get pestLowRisk =>
+      'Low pest risk detected. Maintaining field hygiene is recommended.';
 
   @override
   String get urgent => 'URGENT';
@@ -744,7 +754,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get connectWithExperts => 'Connect with Experts';
 
   @override
-  String get getProfessionalGuidance => 'Get professional guidance for your farm.';
+  String get getProfessionalGuidance =>
+      'Get professional guidance for your farm.';
 
   @override
   String get requestConsultation => 'Request Consultation';
@@ -788,7 +799,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get myCustomLandPlan => 'MY CUSTOM LAND PLAN';
 
   @override
-  String get plannerDetail => 'Enter and track your daily/weekly farming tasks.';
+  String get plannerDetail =>
+      'Enter and track your daily/weekly farming tasks.';
 
   @override
   String get dailyLogBtn => 'DAILY\nLOG';
@@ -848,16 +860,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get completed => 'COMPLETED';
 
   @override
-  String get advicePest => 'Pest activity is increasing due to temperature and wind conditions.';
+  String get advicePest =>
+      'Pest activity is increasing due to temperature and wind conditions.';
 
   @override
-  String get adviceMoistureLow => 'Moisture levels are low. Hope for rain in the forecast soon!';
+  String get adviceMoistureLow =>
+      'Moisture levels are low. Hope for rain in the forecast soon!';
 
   @override
-  String get adviceRainy => 'Natural rainfall is replenishing the soil moisture profile.';
+  String get adviceRainy =>
+      'Natural rainfall is replenishing the soil moisture profile.';
 
   @override
-  String get adviceStable => 'Ecosystem is stable. Rain-dependent growth is within parameters.';
+  String get adviceStable =>
+      'Ecosystem is stable. Rain-dependent growth is within parameters.';
 
   @override
   String get virtualFarmSimulator => 'Virtual Farm Simulator';
@@ -866,7 +882,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get welcomeVirtualFarm => 'Welcome to Your Virtual Farm';
 
   @override
-  String get gameIntro => 'Learn farming by doing. Make decisions, manage resources, and see how AI predicts your harvest!';
+  String get gameIntro =>
+      'Learn farming by doing. Make decisions, manage resources, and see how AI predicts your harvest!';
 
   @override
   String get startNewFarm => 'Start New Farm';
@@ -921,7 +938,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sensorDataCollection => 'Sensor-Based Data Collection';
 
   @override
-  String get connectCableDetail => 'Connect cable to read soil & environmental data';
+  String get connectCableDetail =>
+      'Connect cable to read soil & environmental data';
 
   @override
   String get soilSensorCable => 'Soil Sensor Cable';
@@ -989,7 +1007,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get productInventoryIntro => 'This is your product inventory.';
 
   @override
-  String get startSellingIntro => 'Tap \'List Your First Product\' or the + button to start selling.';
+  String get startSellingIntro =>
+      'Tap \'List Your First Product\' or the + button to start selling.';
 
   @override
   String get registerFieldsIntro => 'Complete these fields to register.';
@@ -1007,35 +1026,44 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gameDashboardIntro => 'Get AI advice for your crops.';
 
   @override
-  String get sellItemIntro => 'Describe your item, set a price, and add photos to start selling.';
+  String get sellItemIntro =>
+      'Describe your item, set a price, and add photos to start selling.';
 
   @override
   String get growthJournalIntro => 'Review your farm\'s history here.';
 
   @override
-  String get growthJournalDetail => 'Each card shows your soil and health status for that day.';
+  String get growthJournalDetail =>
+      'Each card shows your soil and health status for that day.';
 
   @override
   String get seasonalReportIntro => 'This is your seasonal success report.';
 
   @override
-  String get seasonalReportDetail => 'Review your activity completion rate and estimated yield success.';
+  String get seasonalReportDetail =>
+      'Review your activity completion rate and estimated yield success.';
 
   @override
-  String get productListIntro => 'Browse seeds, fertilizers, and tools available for purchase.';
+  String get productListIntro =>
+      'Browse seeds, fertilizers, and tools available for purchase.';
 
   @override
-  String get productListSearchInfo => 'Use the search bar or category chips to find specific items.';
+  String get productListSearchInfo =>
+      'Use the search bar or category chips to find specific items.';
 
   @override
-  String get productListContactInfo => 'Tap on an item to see details or contact the seller.';
+  String get productListContactInfo =>
+      'Tap on an item to see details or contact the seller.';
 
   @override
-  String get marketPricesIntro => 'Check the latest market prices for your crops here.';
+  String get marketPricesIntro =>
+      'Check the latest market prices for your crops here.';
 
   @override
-  String get marketPricesGuidance => 'Compare minimum and maximum prices to decide the best time to sell.';
+  String get marketPricesGuidance =>
+      'Compare minimum and maximum prices to decide the best time to sell.';
 
   @override
-  String get adviceFeedIntro => 'Browse the latest tips and advice from agricultural experts.';
+  String get adviceFeedIntro =>
+      'Browse the latest tips and advice from agricultural experts.';
 }

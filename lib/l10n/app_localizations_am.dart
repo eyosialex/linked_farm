@@ -723,7 +723,8 @@ class AppLocalizationsAm extends AppLocalizations {
   String get nutrients => 'ማዕድናት';
 
   @override
-  String get nutrientsLow => 'የNPK መጠን እየቀነሰ ነው። በሚቀጥሉት 2 ቀናት ውስጥ የተፈጥሮ ማዳበሪያ ወይም NPK 15-15-15 ይጠቀሙ።';
+  String get nutrientsLow =>
+      'የNPK መጠን እየቀነሰ ነው። በሚቀጥሉት 2 ቀናት ውስጥ የተፈጥሮ ማዳበሪያ ወይም NPK 15-15-15 ይጠቀሙ።';
 
   @override
   String get nutrientsStable => 'የማዕድን ሚዛን የተረጋጋ ነው። ክትትልዎን ይቀጥሉ::';
@@ -732,7 +733,8 @@ class AppLocalizationsAm extends AppLocalizations {
   String get pestDisease => 'ተባዮች እና በሽታዎች';
 
   @override
-  String get pestHighRisk => 'ከፍተኛ እርጥበት ተገኝቷል። የፈንገስ መኖር እድሉ ከፍተኛ ነው። ቅጠሎቹን ለነጠብጣቦች ይፈትሹ::';
+  String get pestHighRisk =>
+      'ከፍተኛ እርጥበት ተገኝቷል። የፈንገስ መኖር እድሉ ከፍተኛ ነው። ቅጠሎቹን ለነጠብጣቦች ይፈትሹ::';
 
   @override
   String get pestLowRisk => 'ዝቅተኛ የተባይ ስጋት ተገኝቷል። የእርሻ ንፅህናን መጠበቅ ይመከራል።';
@@ -851,13 +853,15 @@ class AppLocalizationsAm extends AppLocalizations {
   String get advicePest => 'በትኩሳት እና በንፋስ ሁኔታዎች ምክንያት የተባይ እንቅስቃሴ እየጨመረ ነው።';
 
   @override
-  String get adviceMoistureLow => 'የእርጥበት መጠን ዝቅተኛ ነው። በቅርቡ ዝናብ እንዲዘንብ ተስፋ እናደርጋለን!';
+  String get adviceMoistureLow =>
+      'የእርጥበት መጠን ዝቅተኛ ነው። በቅርቡ ዝናብ እንዲዘንብ ተስፋ እናደርጋለን!';
 
   @override
   String get adviceRainy => 'ተፈጥሯዊ ዝናብ የአፈርን እርጥበት እየሞላው ነው።';
 
   @override
-  String get adviceStable => 'ሥነ ምህዳሩ የተረጋጋ ነው። በዝናብ ላይ የተመሰረተ እድገት በጥሩ ሁኔታ ላይ ነው።';
+  String get adviceStable =>
+      'ሥነ ምህዳሩ የተረጋጋ ነው። በዝናብ ላይ የተመሰረተ እድገት በጥሩ ሁኔታ ላይ ነው።';
 
   @override
   String get virtualFarmSimulator => 'ምናባዊ የእርሻ ሲሙሌተር';
@@ -866,7 +870,8 @@ class AppLocalizationsAm extends AppLocalizations {
   String get welcomeVirtualFarm => 'ወደ ምናባዊ እርሻዎ እንኳን ደህና መጡ';
 
   @override
-  String get gameIntro => 'በመስራት ግብርናን ይማሩ። ውሳኔዎችን ይወስኑ፣ ሀብቶችን ያስተዳድሩ እና AI ምርትዎን እንዴት እንደሚተነብይ ይመልቱ!';
+  String get gameIntro =>
+      'በመስራት ግብርናን ይማሩ። ውሳኔዎችን ይወስኑ፣ ሀብቶችን ያስተዳድሩ እና AI ምርትዎን እንዴት እንደሚተነብይ ይመልቱ!';
 
   @override
   String get startNewFarm => 'አዲስ እርሻ ጀምር';
@@ -989,7 +994,8 @@ class AppLocalizationsAm extends AppLocalizations {
   String get productInventoryIntro => 'ይህ የእርስዎ ምርቶች ዝርዝር ነው።';
 
   @override
-  String get startSellingIntro => 'ለመሸጥ \'+\' ምልክቱን ወይም \'የመጀመሪያ ምርትዎን ያቅርቡ\' የሚለውን ይጫኑ።';
+  String get startSellingIntro =>
+      'ለመሸጥ \'+\' ምልክቱን ወይም \'የመጀመሪያ ምርትዎን ያቅርቡ\' የሚለውን ይጫኑ።';
 
   @override
   String get registerFieldsIntro => 'ለመመዝገብ እነዚህን መስኮች ይሙሉ::';
@@ -1019,13 +1025,16 @@ class AppLocalizationsAm extends AppLocalizations {
   String get seasonalReportIntro => 'ይህ የእርስዎ ወቅታዊ የውጤት ሪፖርት ነው::';
 
   @override
-  String get seasonalReportDetail => 'የስራ አፈጻጸምዎን እና የሚጠበቀውን የጥራት ደረጃ እዚህ ይመልከቱ::';
+  String get seasonalReportDetail =>
+      'የስራ አፈጻጸምዎን እና የሚጠበቀውን የጥራት ደረጃ እዚህ ይመልከቱ::';
 
   @override
-  String get productListIntro => 'ለመግዛት የሚገኙ ዘሮችን፣ ማዳበሪያዎችን እና መሳሪያዎችን እዚህ ይፈልጉ::';
+  String get productListIntro =>
+      'ለመግዛት የሚገኙ ዘሮችን፣ ማዳበሪያዎችን እና መሳሪያዎችን እዚህ ይፈልጉ::';
 
   @override
-  String get productListSearchInfo => 'የፍለጋ አሞሌውን ወይም ምድቦችን በመጠቀም የሚፈልጉትን ምርት ያግኙ::';
+  String get productListSearchInfo =>
+      'የፍለጋ አሞሌውን ወይም ምድቦችን በመጠቀም የሚፈልጉትን ምርት ያግኙ::';
 
   @override
   String get productListContactInfo => 'ዝርዝሩን ለማየት ወይም ሻጩን ለማነጋገር ምርቱን ይንኩ::';
@@ -1034,8 +1043,10 @@ class AppLocalizationsAm extends AppLocalizations {
   String get marketPricesIntro => 'እዚህ ለሰብሎችዎ የቅርብ የገበያ ዋጋዎችን ማረጋገጥ ይችላሉ።';
 
   @override
-  String get marketPricesGuidance => 'ለመሸጥ ምርጥ ጊዜን ለመወሰን ዝቅተኛ እና ከፍተኛ ዋጋዎችን ያወዳድሩ።';
+  String get marketPricesGuidance =>
+      'ለመሸጥ ምርጥ ጊዜን ለመወሰን ዝቅተኛ እና ከፍተኛ ዋጋዎችን ያወዳድሩ።';
 
   @override
-  String get adviceFeedIntro => 'ከግብርና ባለሙያዎች የሚመጡ የቅርብ ጊዜ ምክሮችን እና መረጃዎችን ይቃኙ።';
+  String get adviceFeedIntro =>
+      'ከግብርና ባለሙያዎች የሚመጡ የቅርብ ጊዜ ምክሮችን እና መረጃዎችን ይቃኙ።';
 }

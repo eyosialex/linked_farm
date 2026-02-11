@@ -107,7 +107,8 @@ class AppLocalizationsOm extends AppLocalizations {
   String get somethingWentWrong => 'Wanti tokko dogoggoreera';
 
   @override
-  String get completeProfileSetup => 'Maaloo qindaa\'ina piroofaayila kee xumuri.';
+  String get completeProfileSetup =>
+      'Maaloo qindaa\'ina piroofaayila kee xumuri.';
 
   @override
   String get completeProfile => 'Maaloo piroofaayila kee xumuri.';
@@ -152,7 +153,8 @@ class AppLocalizationsOm extends AppLocalizations {
   String get passwordsNotMatch => 'Jechi icciitii wal hin fudhatu';
 
   @override
-  String get passwordTooShort => 'Jechi icciitii yoo xiqqaate mallattoo 6 ta\'uu qaba';
+  String get passwordTooShort =>
+      'Jechi icciitii yoo xiqqaate mallattoo 6 ta\'uu qaba';
 
   @override
   String get registrationSuccess => 'Galmeen milkaa\'inaan xumurameera!';
@@ -176,7 +178,8 @@ class AppLocalizationsOm extends AppLocalizations {
   String get userDataNotFound => 'Wanti fayyadamaa hin argamne';
 
   @override
-  String get profileCompletedSuccess => 'Piroofaayilli milkaa\'inaan xumurameera!';
+  String get profileCompletedSuccess =>
+      'Piroofaayilli milkaa\'inaan xumurameera!';
 
   @override
   String get profileCompletedFailed => 'Piroofaayila xumuruun hin danda\'amne';
@@ -209,7 +212,8 @@ class AppLocalizationsOm extends AppLocalizations {
   String get carTypePrefix => 'Gosa Konkolaataa:';
 
   @override
-  String get clickCompleteLabel => 'Qindaa\'ina piroofaayila kee xumuruuf Xumuri kan jedhu cuqaasi.';
+  String get clickCompleteLabel =>
+      'Qindaa\'ina piroofaayila kee xumuruuf Xumuri kan jedhu cuqaasi.';
 
   @override
   String get farmInfoTitle => 'Odeeffannoo Qubannaa';
@@ -298,7 +302,8 @@ class AppLocalizationsOm extends AppLocalizations {
   String get invalidEmailFormat => 'Invalid email format.';
 
   @override
-  String get networkError => 'Dogoggora netwoorkii. Maaloo interneetii kee mirkaneessi.';
+  String get networkError =>
+      'Dogoggora netwoorkii. Maaloo interneetii kee mirkaneessi.';
 
   @override
   String get passwordRecoveryTitle => 'Password Recovery';
@@ -375,7 +380,8 @@ class AppLocalizationsOm extends AppLocalizations {
   String get enterContactInfo => 'Maaloo odeeffannoo qunnamtii galchi';
 
   @override
-  String get addAtLeastOnePhoto => 'Maaloo yoo xiqqaate fakkii omiishaa tokko dabali';
+  String get addAtLeastOnePhoto =>
+      'Maaloo yoo xiqqaate fakkii omiishaa tokko dabali';
 
   @override
   String get uploading => 'Olif fe\'amaa jira...';
@@ -389,7 +395,8 @@ class AppLocalizationsOm extends AppLocalizations {
   String get takeAMoment => 'Kun yeroo murasase fudhachuu danda\'a';
 
   @override
-  String get savedLocallySyncLater => 'Bakka kanatti kuufameera! Yeroo interneetiin deebi\'u ni fe\'ama.';
+  String get savedLocallySyncLater =>
+      'Bakka kanatti kuufameera! Yeroo interneetiin deebi\'u ni fe\'ama.';
 
   @override
   String get errorTitle => 'Dogoggora';
@@ -499,7 +506,8 @@ class AppLocalizationsOm extends AppLocalizations {
   String get myProductsTitle => 'Omiishawwan koo';
 
   @override
-  String get noProductsListed => 'Hamma amማatti omiishaa tokko illee hin gabaasne';
+  String get noProductsListed =>
+      'Hamma amማatti omiishaa tokko illee hin gabaasne';
 
   @override
   String get listFirstProductButton => 'Omiishaa kee isa jalqabaa gabaasi';
@@ -524,7 +532,8 @@ class AppLocalizationsOm extends AppLocalizations {
   String get shareWifiTitle => 'Wi-Fi\'n qoodi';
 
   @override
-  String get enterFarmerIpLabel => 'Teessoo IP qonnaan bulaa dhiyoo jiru galchi:';
+  String get enterFarmerIpLabel =>
+      'Teessoo IP qonnaan bulaa dhiyoo jiru galchi:';
 
   @override
   String propagatingToIp(String ip) {
@@ -606,13 +615,15 @@ class AppLocalizationsOm extends AppLocalizations {
   String get unitLiter => 'liter';
 
   @override
-  String get addClearPhotosHint => 'Fakkiiwwan omiishaa kee kallattii garagaraan qulqulleessii dabali';
+  String get addClearPhotosHint =>
+      'Fakkiiwwan omiishaa kee kallattii garagaraan qulqulleessii dabali';
 
   @override
   String get locationNotFound => 'Bakki hin argamne';
 
   @override
-  String get unableToFindLocation => 'Bakka argachuun hin danda\'amne. Maaloo irra deebi\'ii yaali.';
+  String get unableToFindLocation =>
+      'Bakka argachuun hin danda\'amne. Maaloo irra deebi\'ii yaali.';
 
   @override
   String get searchLocationHint => 'Bakka barbaadi...';
@@ -717,25 +728,30 @@ class AppLocalizationsOm extends AppLocalizations {
   }
 
   @override
-  String get moistureOptimal => 'Sadarkaan jiidhaa gaarii dha. Har\'a obaasuu hin barbaachisu.';
+  String get moistureOptimal =>
+      'Sadarkaan jiidhaa gaarii dha. Har\'a obaasuu hin barbaachisu.';
 
   @override
   String get nutrients => 'Nutrients';
 
   @override
-  String get nutrientsLow => 'NPK hir\'achaa jira. Guyyaa 2 gidduutti xaa\'oo uumamaa ykn NPK 15-15-15 itti naqi.';
+  String get nutrientsLow =>
+      'NPK hir\'achaa jira. Guyyaa 2 gidduutti xaa\'oo uumamaa ykn NPK 15-15-15 itti naqi.';
 
   @override
-  String get nutrientsStable => 'Nutrient balance jabaataa dha. Itti fufi hordofi.';
+  String get nutrientsStable =>
+      'Nutrient balance jabaataa dha. Itti fufi hordofi.';
 
   @override
   String get pestDisease => 'Iilaanii fi Dhukkuba';
 
   @override
-  String get pestHighRisk => 'Jiidhinni guddaan argameera. Dhukkubni fangasii uumamuu danda\'a. Baala hordofi.';
+  String get pestHighRisk =>
+      'Jiidhinni guddaan argameera. Dhukkubni fangasii uumamuu danda\'a. Baala hordofi.';
 
   @override
-  String get pestLowRisk => 'Sodaan iilaanii xiqqaa dha. Qulqullina maasii eeguun gorfama.';
+  String get pestLowRisk =>
+      'Sodaan iilaanii xiqqaa dha. Qulqullina maasii eeguun gorfama.';
 
   @override
   String get urgent => 'ARIIFFACCHII';
@@ -788,7 +804,8 @@ class AppLocalizationsOm extends AppLocalizations {
   String get myCustomLandPlan => 'KAROORA LAFAA KOO';
 
   @override
-  String get plannerDetail => 'Hojiiwwan qonnaa guyyaa/torbee kee galchiif hordofi.';
+  String get plannerDetail =>
+      'Hojiiwwan qonnaa guyyaa/torbee kee galchiif hordofi.';
 
   @override
   String get dailyLogBtn => 'Daily\nLog';
@@ -848,16 +865,19 @@ class AppLocalizationsOm extends AppLocalizations {
   String get completed => 'XUMURAMEERA';
 
   @override
-  String get advicePest => 'Sababa ho\'aa fi bubbeetiin sochii iilaanii dabalaa jira.';
+  String get advicePest =>
+      'Sababa ho\'aa fi bubbeetiin sochii iilaanii dabalaa jira.';
 
   @override
-  String get adviceMoistureLow => 'Sadarkaan jiidhaa gad-aanaa dha. Dhiyootti bokkaa ni rooba jennee abdanna!';
+  String get adviceMoistureLow =>
+      'Sadarkaan jiidhaa gad-aanaa dha. Dhiyootti bokkaa ni rooba jennee abdanna!';
 
   @override
   String get adviceRainy => 'Bokkaa uumamaa jiidhinna biyyoo dabalaa jira.';
 
   @override
-  String get adviceStable => 'Ecosystem nagaa dha. Guddinni bokkaa irratti hundaa\'e gaarii dha.';
+  String get adviceStable =>
+      'Ecosystem nagaa dha. Guddinni bokkaa irratti hundaa\'e gaarii dha.';
 
   @override
   String get virtualFarmSimulator => 'Simulator Qonnaa Virtual';
@@ -866,7 +886,8 @@ class AppLocalizationsOm extends AppLocalizations {
   String get welcomeVirtualFarm => 'Baga Gara Qonna Keessan Virtual Dhuftan';
 
   @override
-  String get gameIntro => 'Hojjechuun qonna baradhu. Murtee dabarsi, qabeenya bulchi, akkasumas AI akkaataa oomisha keessan proognoosii godhu ilaali!';
+  String get gameIntro =>
+      'Hojjechuun qonna baradhu. Murtee dabarsi, qabeenya bulchi, akkasumas AI akkaataa oomisha keessan proognoosii godhu ilaali!';
 
   @override
   String get startNewFarm => 'Qonna Haaraa Jalqabi';
@@ -886,7 +907,8 @@ class AppLocalizationsOm extends AppLocalizations {
   String get noLandsRegistered => 'Lafli galmee irra jiru hin jiru.';
 
   @override
-  String get startAddingPlot => 'Lafa keessan isa jalqabaa galmeessuun jalqabaa.';
+  String get startAddingPlot =>
+      'Lafa keessan isa jalqabaa galmeessuun jalqabaa.';
 
   @override
   String get registerNewLand => 'LAFA HAARAA GALMEESSI';
@@ -921,7 +943,8 @@ class AppLocalizationsOm extends AppLocalizations {
   String get sensorDataCollection => 'Funaansa Data Sensor Irratti Hundaa\'e';
 
   @override
-  String get connectCableDetail => 'Data biyyoo fi naannoo dubbisuuf keebilii walitti qabsiisi';
+  String get connectCableDetail =>
+      'Data biyyoo fi naannoo dubbisuuf keebilii walitti qabsiisi';
 
   @override
   String get soilSensorCable => 'Keebilii Sensor Biyyoo';
@@ -950,7 +973,8 @@ class AppLocalizationsOm extends AppLocalizations {
   }
 
   @override
-  String get dailyLogSavedMsg => '✅ Galmeen guyyaa Firestore irratti ol-kaayamee jira!';
+  String get dailyLogSavedMsg =>
+      '✅ Galmeen guyyaa Firestore irratti ol-kaayamee jira!';
 
   @override
   String get moisture => 'Jiidhinna';
@@ -983,22 +1007,27 @@ class AppLocalizationsOm extends AppLocalizations {
   String get welcomeToAgrilead => 'Baga nagaan gara Agrilead dhuftan.';
 
   @override
-  String get tapLoginReady => 'Yommuu qophooftan mallattoo \'Seeni\' jedhu cuqaasaa.';
+  String get tapLoginReady =>
+      'Yommuu qophooftan mallattoo \'Seeni\' jedhu cuqaasaa.';
 
   @override
-  String get productInventoryIntro => 'Kun tarreeffama oomishawwan keessaniiti.';
+  String get productInventoryIntro =>
+      'Kun tarreeffama oomishawwan keessaniiti.';
 
   @override
-  String get startSellingIntro => 'Gurguruuf mallattoo \'+\' ykn \'Oomishaa kee isa jalqabaa gabaasi\' kan jedhu cuqaasaa.';
+  String get startSellingIntro =>
+      'Gurguruuf mallattoo \'+\' ykn \'Oomishaa kee isa jalqabaa gabaasi\' kan jedhu cuqaasaa.';
 
   @override
   String get registerFieldsIntro => 'Galmaa\'uuf bakka kana guutaa.';
 
   @override
-  String get registerFinishIntro => 'Yommuu xumurtan \'Galmaa\'i\' kan jedhu cuqaasaa.';
+  String get registerFinishIntro =>
+      'Yommuu xumurtan \'Galmaa\'i\' kan jedhu cuqaasaa.';
 
   @override
-  String get dailyTrackerIntro => 'Hojiiwwan qonnaa guyyaa har\'aa asitti ilaalaa.';
+  String get dailyTrackerIntro =>
+      'Hojiiwwan qonnaa guyyaa har\'aa asitti ilaalaa.';
 
   @override
   String get farmMainIntro => 'Haala qonna keessanii asitti hordofaa.';
@@ -1007,35 +1036,45 @@ class AppLocalizationsOm extends AppLocalizations {
   String get gameDashboardIntro => 'Oomisha keessaniif gorsa AI argadhaa.';
 
   @override
-  String get sellItemIntro => 'Oomisha keessan ibsaa, gatii mureessaa, akkasumas fakkii dabaluun gurgurta jalqabaa.';
+  String get sellItemIntro =>
+      'Oomisha keessan ibsaa, gatii mureessaa, akkasumas fakkii dabaluun gurgurta jalqabaa.';
 
   @override
   String get growthJournalIntro => 'Seenaa qonna keessanii asitti hordofaa.';
 
   @override
-  String get growthJournalDetail => 'Kaardiin hundi haala biyyoo fi fayyaa guyyaa sanaa agarsiisa.';
+  String get growthJournalDetail =>
+      'Kaardiin hundi haala biyyoo fi fayyaa guyyaa sanaa agarsiisa.';
 
   @override
-  String get seasonalReportIntro => 'Kun gabaasa milkaa\'ina waqtii keessaniiti.';
+  String get seasonalReportIntro =>
+      'Kun gabaasa milkaa\'ina waqtii keessaniiti.';
 
   @override
-  String get seasonalReportDetail => 'Sadarkaa dandeettii hojii fi oomisha eegamu asitti ilaalaa.';
+  String get seasonalReportDetail =>
+      'Sadarkaa dandeettii hojii fi oomisha eegamu asitti ilaalaa.';
 
   @override
-  String get productListIntro => 'Sanyiiwwan, xaa\'oo fi meeshaalee gurgurtaaf dhiyaatan asitti ilaalaa.';
+  String get productListIntro =>
+      'Sanyiiwwan, xaa\'oo fi meeshaalee gurgurtaaf dhiyaatan asitti ilaalaa.';
 
   @override
-  String get productListSearchInfo => 'Meeshaalee barbaaddan argachuuf saanduqa barbaachaatti fayyadamaa.';
+  String get productListSearchInfo =>
+      'Meeshaalee barbaaddan argachuuf saanduqa barbaachaatti fayyadamaa.';
 
   @override
-  String get productListContactInfo => 'Bal\'ina isaa arguuf ykn gurgurtuuf bilbiluuf meeshaa sana tuqaa.';
+  String get productListContactInfo =>
+      'Bal\'ina isaa arguuf ykn gurgurtuuf bilbiluuf meeshaa sana tuqaa.';
 
   @override
-  String get marketPricesIntro => 'Waliigaltee gatii gabaa omiishannaa keessanii dhiyoo jiru asitti hordofaa.';
+  String get marketPricesIntro =>
+      'Waliigaltee gatii gabaa omiishannaa keessanii dhiyoo jiru asitti hordofaa.';
 
   @override
-  String get marketPricesGuidance => 'Yeroo gurgurtaaf mijaawaa ta\'e murteessuuf gatii xiqqaa fi guddaa wal bira qabaa ilaalaa.';
+  String get marketPricesGuidance =>
+      'Yeroo gurgurtaaf mijaawaa ta\'e murteessuuf gatii xiqqaa fi guddaa wal bira qabaa ilaalaa.';
 
   @override
-  String get adviceFeedIntro => 'Gorsawwan fi qajeelfamoota ogeeyyii qonnaa asitti dhiyaatan dubbisaa.';
+  String get adviceFeedIntro =>
+      'Gorsawwan fi qajeelfamoota ogeeyyii qonnaa asitti dhiyaatan dubbisaa.';
 }

@@ -94,15 +94,11 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - assets/sell_item.jpg
     - assets/product.png
     - assets/chat.jpg
-    - assets/weather.png
     - assets/price.jpg
     - assets/advice.jpg
     - assets/farm_headers.png
-    - assets/promotional_banner.png
-    - assets/agrilead.png
     - assets/games.png
     - assets/profile.jpg
     - assets/my_products.jpg
@@ -114,8 +110,8 @@ flutter:
     - assets/land_planner_realistic.png
     - assets/vendors_header.jpg
     - assets/ai.jpg
-
     - assets/game/
+    - assets/icons/
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
