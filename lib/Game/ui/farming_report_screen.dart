@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:linkedfarm/l10n/app_localizations.dart';
-import 'package:linkedfarm/Widgets/voice_guide_button.dart';
+import 'package:linkedfarm/l10n/app_localizations.dart';
 import '../models/game_state.dart';
 
 class FarmingReportScreen extends StatelessWidget {
@@ -22,13 +22,7 @@ class FarmingReportScreen extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
         actions: [
-          VoiceGuideButton(
-            messages: [
-              AppLocalizations.of(context)!.seasonalReportIntro,
-              AppLocalizations.of(context)!.seasonalReportDetail
-            ],
-            isDark: true,
-          ),
+          const SizedBox(width: 16),
           const SizedBox(width: 16),
         ],
       ),

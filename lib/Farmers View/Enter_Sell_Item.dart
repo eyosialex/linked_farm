@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'dart:io';
-import 'package:linkedfarm/Widgets/voice_guide_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:linkedfarm/Farmers%20View/Cloudnary_Store.dart';
 import 'package:linkedfarm/Farmers%20View/FireStore_Config.dart';
@@ -16,7 +14,6 @@ import 'package:linkedfarm/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:linkedfarm/User%20Credential/TextField.dart';
-import 'package:linkedfarm/Services/voice_guide_service.dart';
 import 'Position_Sell_Item.dart';
 
 class SellItem extends StatefulWidget {
@@ -582,18 +579,6 @@ class _SellItemState extends State<SellItem> {
         centerTitle: true,
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
-        actions: [
-          VoiceGuideButton(
-            messages: [
-              AppLocalizations.of(context)!.sellItemIntro,
-              AppLocalizations.of(context)!.addPhotosTitle,
-              AppLocalizations.of(context)!.productInformation,
-              AppLocalizations.of(context)!.doneAction
-            ],
-            isDark: true,
-          ),
-          const SizedBox(width: 16),
-        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -922,22 +907,7 @@ class _SellItemState extends State<SellItem> {
 
             const SizedBox(height: 30),
 
-            // Read Summary Button
-            Container(
-              width: double.infinity,
-              margin: const EdgeInsets.only(bottom: 12),
-              child: OutlinedButton.icon(
-                onPressed: _readSummary,
-                icon: const Icon(Icons.record_voice_over),
-                label: const Text("Read Summary (Line by Line)"),
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-              ),
-            ),
+            const SizedBox(height: 12),
 
             // Submit Button
             Container(
@@ -982,43 +952,17 @@ class _SellItemState extends State<SellItem> {
     );
   }
 
-  void _readSummary() {
-    final l10n = AppLocalizations.of(context)!;
-    List<String> summaryLines = [];
-    
-    if (_nameController.text.isNotEmpty) summaryLines.add("${l10n.productNameLabel}: ${_nameController.text}");
-    if (_selectedCategory.isNotEmpty) summaryLines.add("${l10n.categoryLabel}: ${_getLocalizedCategory(context, _selectedCategory)}");
-    if (_priceController.text.isNotEmpty) summaryLines.add("${l10n.priceEtbLabel}: ${_priceController.text}");
-    if (_quantityController.text.isNotEmpty) summaryLines.add("${l10n.quantityLabel}: ${_quantityController.text} $_selectedUnit");
-    if (_descriptionController.text.isNotEmpty) summaryLines.add("${l10n.descriptionLabel}: ${_descriptionController.text}");
-    
-    if (summaryLines.isEmpty) {
-      summaryLines.add("No information entered yet.");
-    }
-
-    final service = Provider.of<VoiceGuideService>(context, listen: false);
-    service.speakQueue(summaryLines, Localizations.localeOf(context));
-  }
+  // _readSummary removed.
 
   Widget _buildDescriptionField(BuildContext context) {
-    return Focus(
-      onFocusChange: (hasFocus) {
-        if (hasFocus) {
-          final service = Provider.of<VoiceGuideService>(context, listen: false);
-          if (service.isAccessibilityModeEnabled) {
-            service.speakQueue([AppLocalizations.of(context)!.descriptionLabel], Localizations.localeOf(context));
-          }
-        }
-      },
-      child: TextField(
-        controller: _descriptionController,
-        maxLines: 4,
-        decoration: InputDecoration(
-          labelText: AppLocalizations.of(context)!.descriptionLabel,
-          border: const OutlineInputBorder(),
-          hintText: AppLocalizations.of(context)!.describeProductDetail,
-          alignLabelWithHint: true,
-        ),
+    return TextField(
+      controller: _descriptionController,
+      maxLines: 4,
+      decoration: InputDecoration(
+        labelText: AppLocalizations.of(context)!.descriptionLabel,
+        border: const OutlineInputBorder(),
+        hintText: AppLocalizations.of(context)!.describeProductDetail,
+        alignLabelWithHint: true,
       ),
     );
   }

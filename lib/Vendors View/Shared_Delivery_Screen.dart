@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:linkedfarm/Services/farm_persistence_service.dart';
 import 'package:linkedfarm/User Credential/usermodel.dart';
-import 'package:linkedfarm/Widgets/voice_guide_button.dart';
 
 class SharedDeliveryScreen extends StatefulWidget {
   const SharedDeliveryScreen({super.key});
@@ -20,16 +19,6 @@ class _SharedDeliveryScreenState extends State<SharedDeliveryScreen> {
       appBar: AppBar(
         title: const Text("DELIVERY POOLING", style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.transparent,
-        elevation: 0,
-        actions: [
-          VoiceGuideButton(
-            messages: [
-              "Reduce your transport costs by sharing delivery with nearby vendors. Coordinate pooling with those on this list.",
-            ],
-            isDark: true,
-          ),
-          const SizedBox(width: 8),
-        ],
       ),
       body: _buildNearbyVendorsList(),
     );

@@ -141,7 +141,19 @@ class _Delivery_Home_PageState extends State<Delivery_Home_Page> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.local_shipping_outlined, size: 60, color: Colors.grey[400]),
+                          // Delivery Hero Image
+                          Container(
+                            height: 200,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              image: const DecorationImage(
+                                image: AssetImage('assets/delivery_realistic.jpg'),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
                           const SizedBox(height: 16),
                           Text(
                             "No Delivery Requests Yet",

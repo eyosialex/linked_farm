@@ -1,12 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:linkedfarm/Advisor%20View/advice_model.dart';
-import 'package:linkedfarm/Services/voice_guide_service.dart';
 import 'package:linkedfarm/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-
-import 'package:linkedfarm/Widgets/voice_guide_button.dart';
 
 class AdviceFeedScreen extends StatelessWidget {
   const AdviceFeedScreen({super.key});
@@ -19,13 +15,6 @@ class AdviceFeedScreen extends StatelessWidget {
         title: Text(l10n.expertAdviceTitle),
         backgroundColor: Colors.green[700],
         foregroundColor: Colors.white,
-        actions: [
-          VoiceGuideButton(
-            messages: [l10n.adviceFeedIntro],
-            isDark: true,
-          ),
-          const SizedBox(width: 8),
-        ],
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
@@ -136,14 +125,6 @@ class AdviceFeedScreen extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        IconButton(
-                          icon: const Icon(Icons.volume_up, color: Colors.green),
-                          onPressed: () {
-                            final voiceService = Provider.of<VoiceGuideService>(context, listen: false);
-                            voiceService.speak("${advice.title}. ${advice.content}", Localizations.localeOf(context));
-                          },
-                          tooltip: l10n.playVoiceGuide,
-                        ),
                         TextButton(
                           onPressed: () {
                              _showAdviceDetails(context, advice);
@@ -224,18 +205,14 @@ class AdviceFeedScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 32),
                 Center(
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      final voiceService = Provider.of<VoiceGuideService>(modalContext, listen: false);
-                      voiceService.speak("${advice.title}. ${advice.content}", locale);
-                    },
-                    icon: const Icon(Icons.volume_up),
-                    label: Text(l10n.playVoiceGuide),
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                     ),
+                    child: Text(l10n.gotIt),
                   ),
                 ),
               ],

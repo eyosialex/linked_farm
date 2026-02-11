@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:linkedfarm/l10n/app_localizations.dart';
-import 'package:linkedfarm/Widgets/voice_guide_button.dart';
 
 class MarketPricesPage extends StatelessWidget {
   const MarketPricesPage({super.key});
@@ -25,16 +24,6 @@ class MarketPricesPage extends StatelessWidget {
         title: Text(l10n.marketPrices),
         backgroundColor: Colors.green[700],
         foregroundColor: Colors.white,
-        actions: [
-          VoiceGuideButton(
-            messages: [
-              l10n.marketPricesIntro,
-              l10n.marketPricesGuidance
-            ],
-            isDark: true,
-          ),
-          const SizedBox(width: 8),
-        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

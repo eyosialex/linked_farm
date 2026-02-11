@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/game_state.dart';
-import 'package:linkedfarm/Widgets/voice_guide_button.dart';
+import '../models/game_state.dart';
 
 class RatingReportScreen extends StatelessWidget {
   const RatingReportScreen({super.key});
@@ -18,13 +18,7 @@ class RatingReportScreen extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
         actions: [
-          VoiceGuideButton(
-            messages: [
-              "Review your seasonal performance here.",
-              "Look at your scores for land preparation, crop selection, and management."
-            ],
-            isDark: true,
-          ),
+          const SizedBox(width: 8),
           const SizedBox(width: 8),
         ],
       ),

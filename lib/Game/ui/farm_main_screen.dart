@@ -1,6 +1,6 @@
 import 'package:linkedfarm/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:linkedfarm/Widgets/voice_guide_button.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../Services/locale_provider.dart';
 import '../models/game_state.dart';
@@ -126,14 +126,7 @@ class FarmMainScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              VoiceGuideButton(
-                messages: [
-                  AppLocalizations.of(context)!.farmMainIntro,
-                  AppLocalizations.of(context)!.tapDeepAnalysis,
-                  AppLocalizations.of(context)!.proceedNextDay
-                ],
-                isDark: true,
-              ),
+              const SizedBox(width: 8),
             ],
           ),
         ),

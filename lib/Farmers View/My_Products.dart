@@ -9,8 +9,6 @@ import 'dart:io';
 import 'package:provider/provider.dart';
 import 'package:linkedfarm/l10n/app_localizations.dart';
 
-import 'package:linkedfarm/Widgets/voice_guide_button.dart';
-
 class MyProductsScreen extends StatefulWidget {
   const MyProductsScreen({super.key});
 
@@ -81,16 +79,6 @@ class _MyProductsScreenState extends State<MyProductsScreen> {
         title: Text(AppLocalizations.of(context)!.myProductsTitle),
         backgroundColor: Colors.green[700],
         foregroundColor: Colors.white,
-        actions: [
-          VoiceGuideButton(
-            messages: [
-              AppLocalizations.of(context)!.productInventoryIntro,
-              AppLocalizations.of(context)!.startSellingIntro
-            ],
-            isDark: true,
-          ),
-          const SizedBox(width: 16),
-        ],
       ),
       body: Consumer<LocalStorageService>(
         builder: (context, localStorage, child) {

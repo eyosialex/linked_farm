@@ -38,7 +38,7 @@ class _vendors_pageState extends State<vendors_page> {
     {
       'title': 'Browse Crops',
       'icon': Icons.search,
-      'image': 'assets/products.png', 
+      'image': 'assets/product.png',
       'page': const ProductListScreen(),
       'gradient': const LinearGradient(
         colors: [Color(0xFF4CAF50), Color(0xFF2E7D32)],
@@ -49,7 +49,7 @@ class _vendors_pageState extends State<vendors_page> {
     {
       'title': 'Orders',
       'icon': Icons.shopping_cart,
-      'image': 'assets/delivery.png',
+      'image': 'assets/delivery.jpg',
       'page': const WantedProductsScreen(), // View market demand
       'gradient': const LinearGradient(
         colors: [Color(0xFF9C27B0), Color(0xFF7B1FA2)],
@@ -60,7 +60,7 @@ class _vendors_pageState extends State<vendors_page> {
     {
       'title': 'Market Trends',
       'icon': Icons.trending_up,
-      'image': 'assets/prices.png',
+      'image': 'assets/price.jpg',
       'page': const VendorPricePredictionScreen(),
       'gradient': const LinearGradient(
         colors: [Color(0xFF3F51B5), Color(0xFF303F9F)],
@@ -82,7 +82,7 @@ class _vendors_pageState extends State<vendors_page> {
     {
       'title': 'Delivery Pool',
       'icon': Icons.local_shipping,
-      'image': 'assets/delivery.png',
+      'image': 'assets/delivery.jpg',
       'page': const SharedDeliveryScreen(),
       'gradient': const LinearGradient(
         colors: [Color(0xFF607D8B), Color(0xFF455A64)],
@@ -93,7 +93,7 @@ class _vendors_pageState extends State<vendors_page> {
     {
       'title': 'Vendor Advisor',
       'icon': Icons.psychology,
-      'image': 'assets/advice.png',
+      'image': 'assets/advice.jpg',
       'page': const VendorAdvisoryScreen(),
       'gradient': const LinearGradient(
         colors: [Color(0xFF795548), Color(0xFF5D4037)],
@@ -104,7 +104,7 @@ class _vendors_pageState extends State<vendors_page> {
     {
       'title': 'Messages',
       'icon': Icons.chat_bubble,
-      'image': 'assets/chat.png',
+      'image': 'assets/chat.jpg',
       'page': const ChatListScreen(),
       'gradient': const LinearGradient(
         colors: [Color(0xFF00BCD4), Color(0xFF0097A7)],
@@ -169,7 +169,7 @@ class _vendors_pageState extends State<vendors_page> {
             child: Opacity(
               opacity: 0.2, // Increased visibility
               child: Image.asset(
-                'assets/farm_header.png',
+                'assets/vendors_header.jpg',
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) => Container(color: Colors.white),
               ),
@@ -188,7 +188,7 @@ class _vendors_pageState extends State<vendors_page> {
                 fit: StackFit.expand,
                 children: [
                   Image.asset(
-                    'assets/farm_header.png', // Reuse or add vendor specific image
+                    'assets/vendors_header.jpg', // Reuse or add vendor specific image
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(color: Colors.green[900]);
@@ -307,12 +307,11 @@ class _vendors_pageState extends State<vendors_page> {
               ),
             ),
           ),
+        ]),
         ],
       ),
-    ],
-  ),
-);
-}
+    );
+  }
 
   Widget _buildMenuCard(Map<String, dynamic> item, BuildContext context) {
     return Card(

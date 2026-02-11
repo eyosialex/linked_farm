@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../models/game_state.dart';
 import '../../Services/gemini_service.dart';
 import 'rating_report_screen.dart';
-import 'package:linkedfarm/Widgets/voice_guide_button.dart';
+import 'rating_report_screen.dart';
 
 class YieldResultsScreen extends StatefulWidget {
   const YieldResultsScreen({super.key});
@@ -63,13 +63,7 @@ class _YieldResultsScreenState extends State<YieldResultsScreen> {
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 1.5),
                 ),
-                VoiceGuideButton(
-                  messages: [
-                    "Predictive Analysis is complete.",
-                    localAnalysis
-                  ],
-                  isDark: true,
-                ),
+                const SizedBox(height: 10),
                 const SizedBox(height: 10),
                 const SizedBox(height: 40),
                 

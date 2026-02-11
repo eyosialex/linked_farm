@@ -1,11 +1,9 @@
 import 'dart:io';
-import 'package:linkedfarm/Services/voice_guide_service.dart';
 import 'package:linkedfarm/l10n/app_localizations.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/game_state.dart';
-
-import 'package:linkedfarm/Widgets/voice_guide_button.dart';
 
 class AdvisorScreen extends StatelessWidget {
   const AdvisorScreen({super.key});
@@ -23,14 +21,7 @@ class AdvisorScreen extends StatelessWidget {
           foregroundColor: Colors.white,
           elevation: 0,
           actions: [
-            VoiceGuideButton(
-              messages: [
-                l10n.gameDashboardIntro,
-                l10n.aiDeepAnalysisTitle,
-                l10n.tapDeepAnalysis
-              ],
-              isDark: true,
-            ),
+            const SizedBox(width: 8),
             const SizedBox(width: 8),
           ],
           bottom: TabBar(
@@ -222,14 +213,6 @@ class AiAdvisorTab extends StatelessWidget {
                           ),
                         ],
                       ],
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.volume_up, size: 20, color: Colors.green),
-                      onPressed: () {
-                        Provider.of<VoiceGuideService>(context, listen: false).speak("$title. $advice", Localizations.localeOf(context));
-                      },
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
                     ),
                   ],
                 ),

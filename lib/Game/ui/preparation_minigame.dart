@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/game_state.dart';
 import 'farm_main_screen.dart';
-import 'package:linkedfarm/Widgets/voice_guide_button.dart';
+import 'farm_main_screen.dart';
 
 class PreparationScreen extends StatefulWidget {
   const PreparationScreen({super.key});
@@ -48,14 +48,7 @@ class _PreparationScreenState extends State<PreparationScreen> with SingleTicker
         backgroundColor: Colors.brown[700],
         foregroundColor: Colors.white,
         actions: [
-          VoiceGuideButton(
-            messages: [
-              "Prepare your land by plowing and leveling.",
-              "Each action costs 10 energy and increases soil readiness.",
-              "Reach 90 percent readiness to start planting."
-            ],
-            isDark: true,
-          ),
+          const SizedBox(width: 8),
           const SizedBox(width: 8),
         ],
       ),

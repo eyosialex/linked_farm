@@ -21,8 +21,6 @@ import 'package:linkedfarm/Services/locale_provider.dart';
 import 'package:linkedfarm/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
-import 'package:linkedfarm/Widgets/voice_guide_button.dart';
-import 'package:linkedfarm/Services/voice_guide_service.dart';
 
 class FarmersHomePage extends StatefulWidget {
   const FarmersHomePage({super.key});
@@ -45,7 +43,7 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
       {
         'title': l10n.sellProduce,
         'icon': Icons.sell,
-        'image': 'assets/sell_item.jpg',
+        'image': 'assets/sell_produce_realistic.jpg',
         'page': SellItem(),
         'gradient': const LinearGradient(
           colors: [Color(0xFF4CAF50), Color(0xFF2E7D32)],
@@ -56,7 +54,7 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
       {
         'title': l10n.myProducts,
         'icon': Icons.inventory,
-        'image': 'assets/my_products.png',
+        'image': 'assets/my_products.jpg',
         'page': const MyProductsScreen(),
         'gradient': const LinearGradient(
           colors: [Color(0xFFFF9800), Color(0xFFF57C00)],
@@ -67,7 +65,7 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
       {
         'title': l10n.buyInputs,
         'icon': Icons.shopping_bag,
-        'image': 'assets/products.png',
+        'image': 'assets/buy_inputs_realistic.png',
         'page': const ProductListScreen(),
         'gradient': const LinearGradient(
           colors: [Color(0xFF2196F3), Color(0xFF0D47A1)],
@@ -78,7 +76,7 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
       {
         'title': l10n.marketPrices,
         'icon': Icons.currency_exchange,
-        'image': 'assets/prices.png',
+        'image': 'assets/market_prices_realistic.jpg',
         'page': const MarketPricesPage(),
         'gradient': const LinearGradient(
           colors: [Color(0xFF9C27B0), Color(0xFF6A1B9A)],
@@ -89,17 +87,18 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
       {
         'title': l10n.messages,
         'icon': Icons.chat,
-        'image': 'assets/chat.png',
+        'image': 'assets/chat.jpg',
         'gradient': const LinearGradient(
           colors: [Color(0xFF607D8B), Color(0xFF455A64)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
+        'page': const ChatListScreen(), 
       },
       {
         'title': l10n.expertAdvice,
         'icon': Icons.school,
-        'image': 'assets/advice.png',
+        'image': 'assets/advice.jpg',
         'page': const AdviceFeedScreen(),
         'gradient': const LinearGradient(
           colors: [Color(0xFFE91E63), Color(0xFFC2185B)],
@@ -110,7 +109,7 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
       {
         'title': l10n.landPlanner,
         'icon': Icons.landscape,
-        'image': 'assets/game.png',
+        'image': 'assets/land_planner_realistic.png',
         'page': const MyLandsScreen(),
         'gradient': const LinearGradient(
           colors: [Color(0xFF3F51B5), Color(0xFF303F9F)],
@@ -177,7 +176,7 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
             child: Opacity(
               opacity: 0.2, // Increased visibility
               child: Image.asset(
-                'assets/farm_header.png',
+                'assets/farm_headers.png',
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) => Container(color: Colors.white),
               ),
@@ -196,8 +195,9 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
                 fit: StackFit.expand,
                 children: [
                   Image.asset(
-                    'assets/farm_header.png',
+                    'assets/farm_headers.png', // Updated header
                     fit: BoxFit.cover,
+
                     errorBuilder: (context, error, stackTrace) {
                       return Container(color: Colors.green[900]);
                     },
@@ -227,13 +227,6 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
             ),
             actions: [
               _buildLanguageSwitcher(context),
-              VoiceGuideButton(
-                messages: [
-                   AppLocalizations.of(context)!.welcomeBack,
-                   AppLocalizations.of(context)!.manageFarm,
-                ],
-                isDark: true,
-              ),
               StreamBuilder<List<AppNotification>>(
                 stream: _persistence.streamNotifications(),
                 builder: (context, snapshot) {
@@ -339,15 +332,6 @@ class _FarmersHomePageState extends State<FarmersHomePage> {
       icon: const Icon(Icons.settings, color: Colors.white),
       onSelected: (String code) {
         localeProvider.setLocale(Locale(code));
-        
-        // Voice Feedback for Blind Users
-        final voiceService = Provider.of<VoiceGuideService>(context, listen: false);
-        String message = "Language changed";
-        if (code == 'en') message = "Language changed to English";
-        else if (code == 'am') message = "ቋንቋ ወደ አማርኛ ተቀይሯል"; 
-        else if (code == 'om') message = "Afaan Oromoo jijjiirameera";
-        
-        voiceService.speakQueue([message], Locale(code));
       },
       itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
         PopupMenuItem<String>(

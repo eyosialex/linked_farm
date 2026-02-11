@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:linkedfarm/Services/locale_provider.dart';
-import 'package:linkedfarm/Services/voice_guide_service.dart';
+import 'package:linkedfarm/Services/locale_provider.dart';
 
 class ProfilePage extends StatefulWidget {
   final String userId;
@@ -302,41 +302,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
 
-            // Accessibility Section
-            Consumer<VoiceGuideService>(
-              builder: (context, voiceService, child) {
-                return _buildInfoCard(
-                  title: "Accessibility & Language",
-                  children: [
-                    SwitchListTile(
-                      title: const Text("Voice Accessibility Mode", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                      subtitle: const Text("Automatically play voice guides on screen entry", style: TextStyle(fontSize: 12)),
-                      secondary: Icon(Icons.record_voice_over, color: Colors.green[300]),
-                      activeColor: Colors.orange,
-                      value: voiceService.isAccessibilityModeEnabled,
-                      onChanged: (bool value) {
-                        voiceService.setAccessibilityMode(value);
-                      },
-                    ),
-                    const Divider(height: 1),
-                    ListTile(
-                      title: const Text("App Language", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                      subtitle: const Text("Select your preferred language", style: TextStyle(fontSize: 12)),
-                      leading: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.volume_up, color: Colors.green[300], size: 20),
-                          const SizedBox(width: 4),
-                          Icon(Icons.language, color: Colors.green[300], size: 20),
-                        ],
-                      ),
-                      trailing: const Icon(Icons.chevron_right),
-                      onTap: () => _showLanguageDialog(context),
-                    ),
-                  ],
-                );
-              },
-            ),
+            const SizedBox(height: 10),
             const SizedBox(height: 40),
             if (widget.isMe)
               Padding(

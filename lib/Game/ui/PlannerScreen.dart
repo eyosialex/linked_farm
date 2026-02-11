@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../models/game_state.dart';
-import 'package:linkedfarm/Widgets/voice_guide_button.dart';
+import 'package:intl/intl.dart';
 import 'package:linkedfarm/l10n/app_localizations.dart';
 
 class PlannerScreen extends StatefulWidget {
@@ -36,13 +36,7 @@ class _PlannerScreenState extends State<PlannerScreen> with SingleTickerProvider
         backgroundColor: Colors.green[700],
         foregroundColor: Colors.white,
         actions: [
-          VoiceGuideButton(
-            messages: [
-              l10n.plannerDetail,
-              l10n.emptyPlannerDetail
-            ],
-            isDark: true,
-          ),
+          const SizedBox(width: 8),
           const SizedBox(width: 8),
         ],
         bottom: TabBar(

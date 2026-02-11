@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../Services/voice_guide_service.dart';
+import 'package:provider/provider.dart';
 
 class Mytextfield extends StatefulWidget {
   final TextEditingController con;
@@ -38,14 +38,7 @@ class _MytextfieldState extends State<Mytextfield> {
     super.dispose();
   }
 
-  void _onFocusChange() {
-    if (_focusNode.hasFocus) {
-      final service = Provider.of<VoiceGuideService>(context, listen: false);
-      if (service.isAccessibilityModeEnabled) {
-        service.speakQueue([widget.voiceLabel ?? widget.HintText], Localizations.localeOf(context));
-      }
-    }
-  }
+  void _onFocusChange() {}
 
   @override
   Widget build(BuildContext context) {

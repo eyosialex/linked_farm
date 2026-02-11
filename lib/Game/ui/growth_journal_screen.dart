@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:linkedfarm/l10n/app_localizations.dart';
-import 'package:linkedfarm/Widgets/voice_guide_button.dart';
+import 'package:linkedfarm/l10n/app_localizations.dart';
 import '../models/game_state.dart';
 
 class GrowthJournalScreen extends StatelessWidget {
@@ -50,13 +50,7 @@ class GrowthJournalScreen extends StatelessWidget {
                         ),
                       ),
                       const Spacer(),
-                      VoiceGuideButton(
-                        messages: [
-                          AppLocalizations.of(context)!.growthJournalIntro,
-                          AppLocalizations.of(context)!.growthJournalDetail
-                        ],
-                        isDark: true,
-                      ),
+                      const SizedBox(width: 16),
                       const SizedBox(width: 16),
                     ],
                   ),

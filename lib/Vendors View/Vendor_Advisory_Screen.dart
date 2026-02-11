@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:linkedfarm/Services/gemini_service.dart';
-import 'package:linkedfarm/Widgets/voice_guide_button.dart';
 import 'package:linkedfarm/l10n/app_localizations.dart';
 
 class VendorAdvisoryScreen extends StatefulWidget {
@@ -54,15 +53,6 @@ class _VendorAdvisoryScreenState extends State<VendorAdvisoryScreen> {
         title: const Text("VENDOR ADVISOR", style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        actions: [
-          VoiceGuideButton(
-            messages: [
-              "Welcome to the Vendor Advisor. Type your business questions below to get expert AI guidance on pricing and inventory.",
-            ],
-            isDark: true,
-          ),
-          const SizedBox(width: 8),
-        ],
       ),
       body: Column(
         children: [

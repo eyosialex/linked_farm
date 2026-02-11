@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
-import 'package:linkedfarm/Widgets/voice_guide_button.dart';
 import 'package:linkedfarm/Services/gemini_service.dart';
 import 'package:linkedfarm/l10n/app_localizations.dart';
 import 'dart:ui' as ui;
@@ -58,16 +57,6 @@ class _VendorPricePredictionScreenState extends State<VendorPricePredictionScree
         title: const Text("MARKET TRENDS", style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.2)),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        actions: [
-          VoiceGuideButton(
-            messages: [
-              "Welcome to Market Trends. Here you can see price predictions for various crops.",
-              _aiAdvice,
-            ],
-            isDark: true,
-          ),
-          const SizedBox(width: 8),
-        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),

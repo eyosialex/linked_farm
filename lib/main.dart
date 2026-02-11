@@ -13,7 +13,6 @@ import 'package:linkedfarm/Services/wifi_share_service.dart';
 import 'package:linkedfarm/Services/sync_service.dart';
 import 'package:linkedfarm/Farmers%20View/FireStore_Config.dart';
 import 'package:linkedfarm/Services/locale_provider.dart';
-import 'package:linkedfarm/Services/voice_guide_service.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:linkedfarm/l10n/app_localizations.dart';
 import 'package:linkedfarm/l10n/fallback_localization.dart';
@@ -44,7 +43,6 @@ void main() async {
         Provider<FirestoreService>.value(value: firestoreService),
         Provider<SyncService>.value(value: syncService),
         ChangeNotifierProvider(create: (_) => LocaleProvider()),
-        ChangeNotifierProvider(create: (_) => VoiceGuideService(localStorage)),
       ],
       child: const MyApp(),
     ),

@@ -5,8 +5,6 @@ import '../models/game_state.dart';
 import 'land_selection_screen.dart';
 import 'farm_main_screen.dart';
 
-import 'package:linkedfarm/Widgets/voice_guide_button.dart';
-
 class GameDashboard extends StatelessWidget {
   const GameDashboard({super.key});
 
@@ -20,15 +18,8 @@ class GameDashboard extends StatelessWidget {
         backgroundColor: Colors.green[800],
         foregroundColor: Colors.white,
         actions: [
-          VoiceGuideButton(
-            messages: [
-              l10n.welcomeVirtualFarm,
-              "${l10n.startNewFarm}",
-              "${l10n.continueFarming(gameState.currentDay)}"
-            ],
-            isDark: true,
-          ),
         ],
+        
       ),
       body: Container(
         decoration: BoxDecoration(

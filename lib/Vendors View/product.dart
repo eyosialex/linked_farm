@@ -1,7 +1,4 @@
 import 'dart:math';
-import 'package:linkedfarm/Widgets/voice_guide_button.dart';
-
-
 import 'package:linkedfarm/Farmers%20View/FireStore_Config.dart';
 import 'package:linkedfarm/Vendors%20View/Map_Location_Calculatore.dart';
 import 'package:flutter/material.dart';
@@ -139,16 +136,6 @@ class _ProductListScreenState extends State<ProductListScreen> {
         title: const Text('Products'),
         backgroundColor: Colors.green[800],
         foregroundColor: Colors.white,
-        actions: [
-          VoiceGuideListener(
-            messages: [
-              AppLocalizations.of(context)!.productListIntro,
-              AppLocalizations.of(context)!.productListSearchInfo,
-              AppLocalizations.of(context)!.productListContactInfo
-            ],
-          ),
-          const SizedBox(width: 16),
-        ],
       ),
 
       body: Column(

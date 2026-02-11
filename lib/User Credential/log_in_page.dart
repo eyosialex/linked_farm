@@ -12,8 +12,6 @@ import 'package:linkedfarm/l10n/app_localizations.dart';
 import 'TextField.dart';
 import 'firebaseauthservice.dart';
 
-import 'package:linkedfarm/Widgets/voice_guide_button.dart';
-
 class LogInPage extends StatefulWidget {
   final void Function()? onTap;
   const LogInPage({super.key, required this.onTap});
@@ -123,18 +121,6 @@ class _LogInPageState extends State<LogInPage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        actions: [
-          VoiceGuideListener(
-            messages: [
-              l10n.welcomeToAgrilead,
-              l10n.loginSubTitle,
-              l10n.emailHint, 
-              l10n.passwordHint,
-              l10n.tapLoginReady
-            ],
-          ),
-          const SizedBox(width: 16),
-        ],
       ),
       body: SafeArea(
         child: Center(

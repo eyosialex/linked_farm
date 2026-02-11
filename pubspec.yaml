@@ -39,7 +39,7 @@ dependencies:
   firebase_core: 4.1.1
   firebase_auth: ^6.1.0
   cloud_firestore: ^6.0.2
-  firebase_storage: ^13.0.2
+ 
   provider: ^6.1.2
   google_generative_ai: ^0.4.5
   web_socket_channel: ^3.0.3
@@ -67,7 +67,6 @@ dependencies:
   uuid: ^4.5.1
   nsd: ^4.1.0
   path_provider: ^2.1.5
-  flutter_tts: ^4.2.2
 
 
 dev_dependencies:
@@ -96,23 +95,26 @@ flutter:
   uses-material-design: true
   assets:
     - assets/sell_item.jpg
-    - assets/products.png
-    - assets/chat.png
+    - assets/product.png
+    - assets/chat.jpg
     - assets/weather.png
-    - assets/prices.png
-    - assets/advice.png
-    - assets/farm_header.png
+    - assets/price.jpg
+    - assets/advice.jpg
+    - assets/farm_headers.png
     - assets/promotional_banner.png
     - assets/agrilead.png
-    - assets/game.png
+    - assets/games.png
     - assets/profile.jpg
-    - assets/my_products.png
-    - assets/delivery.png
-    - assets/crops html/maiz.html
-    - assets/crops html/teff.html
-    - assets/crops html/onion.html
-    - assets/crops html/tomato.html
-    - assets/crops html/wheat.html
+    - assets/my_products.jpg
+    - assets/delivery.jpg
+    - assets/delivery_realistic.jpg
+    - assets/sell_produce_realistic.jpg
+    - assets/buy_inputs_realistic.png
+    - assets/market_prices_realistic.jpg
+    - assets/land_planner_realistic.png
+    - assets/vendors_header.jpg
+    - assets/ai.jpg
+
     - assets/game/
   # To add assets to your application, add an assets section, like this:
   # assets:

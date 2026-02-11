@@ -8,8 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:linkedfarm/l10n/app_localizations.dart';
 import 'TextField.dart';
 import 'firebaseauthservice.dart';
-import 'userfirestore.dart';    
-import 'package:linkedfarm/Widgets/voice_guide_button.dart';
+import 'userfirestore.dart';
     
 class RegistrationPage extends StatefulWidget {
   final void Function()? onTap;
@@ -121,22 +120,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        actions: [
-          VoiceGuideListener(
-            messages: [
-              l10n.welcomeToAgrilead,
-              l10n.registerSubTitle,
-              l10n.registerFieldsIntro,
-              l10n.fullNameHint,
-              l10n.phoneHint,
-              l10n.selectRole,
-              l10n.emailHint, 
-              l10n.passwordHint,
-              l10n.registerFinishIntro
-            ],
-          ),
-          const SizedBox(width: 16),
-        ],
       ),
       body: SafeArea(
         child: Center(

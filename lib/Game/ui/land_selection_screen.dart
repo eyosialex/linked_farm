@@ -6,7 +6,7 @@ import '../models/game_state.dart';
 import 'setup_screens.dart';
 import 'farm_main_screen.dart';
 
-import 'package:linkedfarm/Widgets/voice_guide_button.dart';
+import 'package:provider/provider.dart';
 
 class MyLandsScreen extends StatelessWidget {
   const MyLandsScreen({super.key});
@@ -25,13 +25,7 @@ class MyLandsScreen extends StatelessWidget {
         foregroundColor: Colors.white,
         elevation: 0,
         actions: [
-          VoiceGuideButton(
-            messages: [
-              l10n.myLandsProfile,
-              l10n.startAddingPlot
-            ],
-            isDark: true,
-          ),
+          const SizedBox(width: 8),
           const SizedBox(width: 8),
         ],
       ),

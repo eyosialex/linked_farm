@@ -1,6 +1,6 @@
 import 'package:linkedfarm/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:linkedfarm/Widgets/voice_guide_button.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../models/game_state.dart';
@@ -99,14 +99,7 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
         backgroundColor: Colors.green[700],
         foregroundColor: Colors.white,
         actions: [
-          VoiceGuideButton(
-            messages: [
-              l10n.dailyTrackerIntro,
-              l10n.sensorDataCollection,
-              l10n.connectCableDetail
-            ],
-            isDark: true,
-          ),
+          const SizedBox(width: 16),
           const SizedBox(width: 16),
         ],
       ),

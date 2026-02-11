@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:linkedfarm/Services/farm_persistence_service.dart';
 import 'package:linkedfarm/User Credential/usermodel.dart';
-import 'package:linkedfarm/Widgets/voice_guide_button.dart';
 
 class TrustedFarmersScreen extends StatefulWidget {
   const TrustedFarmersScreen({super.key});
@@ -21,16 +20,6 @@ class _TrustedFarmersScreenState extends State<TrustedFarmersScreen> {
       appBar: AppBar(
         title: const Text("TRUSTED FARMERS", style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.transparent,
-        elevation: 0,
-        actions: [
-          VoiceGuideButton(
-            messages: [
-              "These are our most reliable farmers based on community feedback. Use the filter to find specialists.",
-            ],
-            isDark: true,
-          ),
-          const SizedBox(width: 8),
-        ],
       ),
       body: Column(
         children: [
